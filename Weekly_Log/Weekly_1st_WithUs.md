@@ -406,7 +406,7 @@
 
 - 테이블의 컬럼을 어떻게 둘것인가 ?
 
-![erd_20220808_01.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/eabd7d1f-6e9d-4211-9ca1-9697bdb54825/erd_20220808_01.png)
+![erd_20220808_01.png](https://i.imgur.com/1lbDx7J.png)
 
 1. 제약 조건으로 무엇을 둘것인가 ? ( 미해결 ) 
 2. 중복을 줄이기 위해 사용자의 입력값에 따라 테이블을 생성할 수 있는가? ( 미해결 )
@@ -444,4 +444,4 @@
 
 ## 😀With Us 팀원들의 모습
 
-[1주차 With us 팀원들의 모습](https://i.imgur.com/MxLe9Ze.jpg)   
+![1주차 With us 팀원들의 모습](https://i.imgur.com/MxLe9Ze.jpg)   
