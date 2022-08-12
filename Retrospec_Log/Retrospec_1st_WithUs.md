@@ -91,24 +91,41 @@ Git 에 대한 지식이 별로 없었는데 가장 최근에 배웠던 rebase�
 
 이번 주  (08일 월요일 ~ 11일 목요일) 까지의 회고 댓글 모음입니다. <br>
 
-<details>
-<summary> 08일 월요일 ( 추천 회고 : [동현님 회고](https://www.notion.so/8a761f4e54394c0d8c8d883c90176b03) )</summary>
-   <div> ![08-08](https://i.imgur.com/ZZ274o8.png)</div>
+<details open>
+<summary> 
+
+08일 월요일 ( 추천 회고 : [동현님 회고](https://www.notion.so/8a761f4e54394c0d8c8d883c90176b03) )</summary>
+  
+![08-08](https://i.imgur.com/ZZ274o8.png)
+
 </details>
 
-<details>
-<summary> 09일 화요일 (추천 회고 : [재순님 회고](https://www.notion.so/a74a0078e6f44a408c17e03a7b74865b) )</summary>
-   <div> ![08-09](https://i.imgur.com/sOkYJMI.png)</div>
+<details open>
+<summary> 
+
+09일 화요일 ( 추천 회고 : [재순님 회고](https://www.notion.so/a74a0078e6f44a408c17e03a7b74865b) )</summary>
+
+![08-09](https://i.imgur.com/sOkYJMI.png)
 </details>
 
-<details>
-<summary> 10일 수요일 ( 추천 회고 : [지원님 회고](https://www.notion.so/e0b19aaaa01d45329d5a15d59aa252d0) )</summary>
-   <div> ![08-10](https://i.imgur.com/30jtqA2.png)</div>
+<details open>
+<summary> 
+
+10일 수요일 ( 추천 회고 : [지원님 회고](https://www.notion.so/e0b19aaaa01d45329d5a15d59aa252d0) )
+</summary> 
+
+![08-10](https://i.imgur.com/30jtqA2.png)
 </details>
 
-<details>
-<summary> 11 목요일 ( 추천 회고 : [동현님 회고](https://www.notion.so/265167494e374c839f519a67a186b373) )</summary>
-   <div> ![08-11](https://i.imgur.com/WOhKoR2.png)</div>
+<details open>
+<summary> 
+
+11일 목요일 ( 추천 회고 : 
+[동현님 회고](https://www.notion.so/265167494e374c839f519a67a186b373)
+)
+</summary>
+
+![08-11](https://i.imgur.com/WOhKoR2.png)
 </details>
 
 
