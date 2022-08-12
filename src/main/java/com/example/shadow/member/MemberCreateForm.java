@@ -10,9 +10,13 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 public class MemberCreateForm {
+
+    @NotEmpty(message = "사용자이름은 필수항목입니다.")
+    private String member_name;
+
     @Size(min = 3, max = 25)
     @NotEmpty(message = "사용자ID는 필수항목입니다.")
-    private String member_name;
+    private String member_id;
 
     @NotEmpty(message = "비밀번호는 필수항목입니다.")
     private String member_pwd1;
@@ -24,5 +28,5 @@ public class MemberCreateForm {
     @Email
     private String member_email;
 
-    private Boolean login_status;
+    private Boolean member_login_status;
 }

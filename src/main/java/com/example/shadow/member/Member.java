@@ -12,16 +12,21 @@ import javax.persistence.*;
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long member_id;
+    private Long member_uid;
 
-    @Column(unique = true)
+    @Column(name="member_name")
     private String member_name;
 
+    @Column(unique = true,name="member_id")
+    private String member_id;
+
+    @Column(name="member_pwd")
     private String member_pwd;
 
-    @Column(unique = true)
+    @Column(unique = true,name="member_email")
     private String member_email;
 
-    private Boolean login_status;
+    @Column(name="member_login_status")
+    private Boolean member_login_status;
 
 }
