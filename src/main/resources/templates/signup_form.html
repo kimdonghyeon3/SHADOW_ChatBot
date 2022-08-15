@@ -9,27 +9,27 @@
         <div th:replace="form_errors :: formErrorsFragment"></div>
 
         <div class="mb-3">
-            <label for="member_name" class="form-label">이름</label>
-            <input type="text" th:field="*{member_name}" class="form-control">
+            <label for="memberName" class="form-label">이름</label>
+            <input type="text" th:field="*{memberName}" class="form-control">
         </div>
         <div class="mb-3">
-            <label for="member_id" class="form-label">ID</label>
-            <input type="text" th:field="*{member_id}" class="form-control">
+            <label for="memberId" class="form-label">ID</label>
+            <input type="text" th:field="*{memberId}" class="form-control">
         </div>
         <div class="mb-3">
-            <label for="member_pwd" class="form-label">비밀번호</label>
-            <input type="password" th:field="*{member_pwd1}" class="form-control">
+            <label for="memberPwd" class="form-label">비밀번호</label>
+            <input type="password" th:field="*{memberPwd1}" class="form-control">
         </div>
         <div class="mb-3">
-            <label for="member_pwd" class="form-label">비밀번호 확인</label>
-            <input type="password" th:field="*{member_pwd2}" class="form-control">
+            <label for="memberPwd" class="form-label">비밀번호 확인</label>
+            <input type="password" th:field="*{memberPwd2}" class="form-control">
         </div>
         <div class="mb-3">
-            <label for="member_email" class="form-label">이메일</label>
-            <input type="email" th:field="*{member_email}" class="form-control">
+            <label for="memberEmail" class="form-label">이메일</label>
+            <input type="email" th:field="*{memberEmail}" class="form-control">
         </div>
         <div class="mb-3">
-            <input type="hidden" th:field="*{member_login_status}" class="form-control">
+            <input type="hidden" th:field="*{memberLoginStatus}" class="form-control">
         </div>
         <button type="submit" class="btn btn-primary">회원가입</button>
     </form>

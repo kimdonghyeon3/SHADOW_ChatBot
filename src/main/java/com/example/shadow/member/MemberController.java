@@ -29,19 +29,19 @@ public class MemberController {
             return "signup_form";
         }
 
-        System.out.println("pw1 : " + memberCreateForm.getMember_pwd1() + " pw2 : " + memberCreateForm.getMember_pwd2());
-        if (!memberCreateForm.getMember_pwd1().equals(memberCreateForm.getMember_pwd2())) {
-            bindingResult.rejectValue("member_pwd2", "passwordInCorrect",
+        System.out.println("pw1 : " + memberCreateForm.getMemberPwd1() + " pw2 : " + memberCreateForm.getMemberPwd2());
+        if (!memberCreateForm.getMemberPwd1().equals(memberCreateForm.getMemberPwd2())) {
+            bindingResult.rejectValue("memberPwd2", "passwordInCorrect",
                     "2개의 패스워드가 일치하지 않습니다.");
             return "signup_form";
         }
 
         try {
             memberService.create(
-                    memberCreateForm.getMember_name(),
-                    memberCreateForm.getMember_id(),
-                    memberCreateForm.getMember_pwd1(),
-                    memberCreateForm.getMember_email(),
+                    memberCreateForm.getMemberName(),
+                    memberCreateForm.getMemberId(),
+                    memberCreateForm.getMemberPwd1(),
+                    memberCreateForm.getMemberEmail(),
                     false);
         } catch (DataIntegrityViolationException e) {
             e.printStackTrace();
