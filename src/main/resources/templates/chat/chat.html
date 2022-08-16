@@ -42,10 +42,17 @@
             var socket = new SockJS('/shadow-websocket');
             stompClient = Stomp.over(socket);
             stompClient.connect({}, function (frame) {
+
                 setConnected(true);
                 console.log('Connected: ' + frame);
+
                 stompClient.subscribe('/topic/greetings', function (message) {
+
+                    console.log('Message: ' + message);
+                    console.log('JSON.parse(message.body): ' + JSON.parse(message.body));
+
                     showGreeting(JSON.parse(message.body).content);
+
                 });
             });
         }
@@ -59,11 +66,16 @@
         }
 
         function sendName() {
+
+            var input = $("#content").val();
+
+            $("#greetings").append("<tr><td> Q : " + input + "</td></tr>");
+
             stompClient.send("/app/hello", {}, JSON.stringify({'content': $("#content").val()}));
         }
 
         function showGreeting(message) {
-            $("#greetings").append("<tr><td>" + message + "</td></tr>");
+            $("#greetings").append("<tr><td> A : " + message + "</td></tr>");
         }
 
         $(function () {
@@ -96,9 +108,9 @@
             <form class="form-inline">
                 <div class="form-group">
                     <label for="content">Chatting</label>
-                    <input type="text" id="content" class="form-control" placeholder="Chatting here...">
+                    <input type="text" id="content" name="content" class="form-control" placeholder="Chatting here...">
                 </div>
-                <button id="send" class="btn btn-default" type="submit">Send</button>
+                <button id="send" name="send" class="btn btn-default" type="submit">Send</button>
             </form>
         </div>
     </div>
