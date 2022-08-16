@@ -32,7 +32,7 @@ public class ShadowController {
 
         URL url = new URL(apiUrl);
 
-        String message =  getReqMessage(chatMessage); // JSON 형식으로 묶어준 message
+        String message = getReqMessage(chatMessage);
         String encodeBase64String = makeSignature(message, secretKey);
 
         //api서버 접속 (서버 -> 서버 통신)
@@ -40,22 +40,22 @@ public class ShadowController {
         con.setRequestMethod("POST");
         con.setRequestProperty("Content-Type", "application/json;UTF-8");
         con.setRequestProperty("X-NCP-CHATBOT_SIGNATURE", encodeBase64String);
+        /**/
+        System.out.println("Success Connect");
 
+        // post request
         con.setDoOutput(true);
         DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-
         wr.write(message.getBytes("UTF-8"));
         wr.flush();
         wr.close();
+        /**/
+        System.out.println("Success request");
+
         int responseCode = con.getResponseCode();
 
-        BufferedReader br;
-
         if(responseCode==200) { // 정상 호출
-
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(
-                            con.getInputStream(), "UTF-8"));
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
             String decodedString;
             String jsonString = "";
             while ((decodedString = in.readLine()) != null) {
@@ -72,6 +72,8 @@ public class ShadowController {
                 String description = "";
                 description = (String)data.get("description");
                 chatMessage = description;
+                System.out.println(chatMessage);
+
             } catch (Exception e) {
                 System.out.println("error");
                 e.printStackTrace();
@@ -98,6 +100,8 @@ public class ShadowController {
 
             byte[] rawHmac = mac.doFinal(message.getBytes("UTF-8"));
             encodeBase64String = Base64.encodeBase64String(rawHmac);
+            /**/
+            System.out.println("Success makeSignature");
 
             return encodeBase64String;
 
@@ -110,7 +114,7 @@ public class ShadowController {
     }
 
     //보낼 메세지를 네이버 챗봇에 포맷으로 변경해주는 메소드
-    public static String getReqMessage(String voiceMessage) {
+    public static String getReqMessage(String chatMessage) {
 
         String requestBody = "";
 
@@ -123,7 +127,7 @@ public class ShadowController {
             System.out.println("##"+timestamp); // timestamp 출력
 
             obj.put("version", "v2");
-            obj.put("userId", "U47b00b58c90f8e47428af8b7bddc1231heo2");
+            obj.put("userId", "U47b00b58c90f8e47428af8b7bddcda3d");
             obj.put("timestamp", timestamp);
 
             JSONObject bubbles_obj = new JSONObject();
@@ -131,7 +135,8 @@ public class ShadowController {
             bubbles_obj.put("type", "text");
 
             JSONObject data_obj = new JSONObject();
-            data_obj.put("description", voiceMessage);
+            chatMessage = chatMessage.replace("\"", "");
+            data_obj.put("description", chatMessage);
 
             bubbles_obj.put("type", "text");
             bubbles_obj.put("data", data_obj);
@@ -143,6 +148,9 @@ public class ShadowController {
             obj.put("event", "send");
 
             requestBody = obj.toString();
+            /**/
+            System.out.println("success getReqMessage");
+            System.out.println(requestBody);
 
         } catch (Exception e){
             System.out.println("## Exception : " + e);

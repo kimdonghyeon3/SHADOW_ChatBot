@@ -26,7 +26,7 @@ function connect() {
 }
 
 function disconnect() {
-    if (stompClient != null) {
+    if (stompClient !== null) {
         stompClient.disconnect();
     }
     setConnected(false);
