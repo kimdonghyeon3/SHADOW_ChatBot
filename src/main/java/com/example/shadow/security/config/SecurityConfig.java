@@ -1,6 +1,6 @@
-package com.example.shadow;
+package com.example.shadow.security.config;
 
-import com.example.shadow.member.MemberSecurityService;
+import com.example.shadow.security.service.MemberSecurityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,8 +32,6 @@ public class SecurityConfig {
                     .addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))
                 .and()
                     .formLogin()
-                    .usernameParameter("memberId")
-                    .passwordParameter("memberPwd")
                     .loginPage("/member/login")
                     .defaultSuccessUrl("/")
                 .and()
