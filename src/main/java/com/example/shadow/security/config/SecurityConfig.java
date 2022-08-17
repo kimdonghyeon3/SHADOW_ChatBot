@@ -38,7 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String[] AUTH_WHITELIST_STATIC = {"/css/**", "/js/**", "/assets/**", "/error"}; // 정적 파일 인가 없이 모두 허용
     private static final String[] AUTH_ALL_LIST = {"/singup/**", "/login/**"}; // 모두 허용
     private static final String[] AUTH_ADMIN_LIST = {"/admin"}; // admin 롤 만 허용
-    private static final String[] AUTH_AUTHENTICATED_LIST = {"/shadows/**", "/flowcharts/**", "/main/**"}; // 인가 필요
+    private static final String[] AUTH_AUTHENTICATED_LIST = {"/members/**", "/flowcharts/**", "/main/**"}; // 인가 필요
 
     private final MemberSecurityService customUserDetailsService;
     private final AuthenticationFailureHandler customFailureHandler;

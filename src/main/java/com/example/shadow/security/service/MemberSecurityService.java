@@ -3,6 +3,7 @@ package com.example.shadow.security.service;
 import com.example.shadow.domain.member.entity.Member;
 import com.example.shadow.domain.member.entity.MemberRole;
 import com.example.shadow.domain.member.repository.MemberRepository;
+import com.example.shadow.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +31,7 @@ public class MemberSecurityService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         Member member = memberRepository.findByUsername(username)
-                .orElseThrow(()->new UsernameNotFoundException("사용자을 찾을 수 없습니다."));
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
         List<GrantedAuthority> authorities = new ArrayList<>();
 
