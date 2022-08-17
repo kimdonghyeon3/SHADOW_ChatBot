@@ -11,6 +11,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.AuthenticationException;
@@ -30,17 +31,40 @@ import java.io.IOException;
 
 @RequiredArgsConstructor
 @Configuration
-//@EnableWebSecurity
+@EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /* 인가 구분을 위한 url path 지정 */
-    private static final String[] AUTH_WHITELIST_STATIC = {"/css/**", "/js/**", "/assert/*.ico"}; // 정적 파일 인가 없이 모두 허용
+    private static final String[] AUTH_WHITELIST_STATIC = {"/css/**", "/js/**", "/assets/**", "/error"}; // 정적 파일 인가 없이 모두 허용
     private static final String[] AUTH_ALL_LIST = {"/singup/**", "/login/**"}; // 모두 허용
     private static final String[] AUTH_ADMIN_LIST = {"/admin"}; // admin 롤 만 허용
     private static final String[] AUTH_AUTHENTICATED_LIST = {"/shadows/**", "/flowcharts/**", "/main/**"}; // 인가 필요
 
     private final MemberSecurityService customUserDetailsService;
     private final AuthenticationFailureHandler customFailureHandler;
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        daoAuthenticationProvider.setUserDetailsService(customUserDetailsService);
+        return daoAuthenticationProvider;
+    }
+
+    @Bean
+    public AuthenticationSuccessHandler customSuccessHandler() {
+        return new CustomSuccessHandler("/");
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers(AUTH_WHITELIST_STATIC);
+    }
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
@@ -54,8 +78,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .headers()
                 .addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN));
-        //http    .exceptionHandling()// auth 실패할때 handling
-
         http
                 .formLogin()
                 .loginPage("/login")
@@ -72,37 +94,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         ;
     }
 
-
-    @Bean
-    public AuthenticationSuccessHandler customSuccessHandler() {
-        return new CustomSuccessHandler("/");
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    // client -> daoAuthenticationprovider : 인증 처리 위임
-    // daoAuthenticationProvider -> UserDetailService 사용자 정보 가져오게 한다.
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
-
-/*
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(daoAuthenticationProvider());
     }
-    @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider() {
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-        daoAuthenticationProvider.setUserDetailsService(customUserDetailsService);
-        return daoAuthenticationProvider;
-    }
-*/
+
 
 }
