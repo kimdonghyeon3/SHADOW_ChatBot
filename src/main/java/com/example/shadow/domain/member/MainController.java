@@ -10,5 +10,12 @@ public class MainController {
     public String root() {
         return "index";
     }
-
+    @RequestMapping("/admin")
+    public String admin() {
+        return "index";
+    }
+    @RequestMapping("/main")
+    public String main() {
+        return "index";
+    }
 }
