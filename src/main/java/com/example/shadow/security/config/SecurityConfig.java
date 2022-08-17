@@ -19,29 +19,39 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final MemberSecurityService memberSecurityService;
+    /* 인가 구분을 위한 url path 지정 */
+    private static final String[] AUTH_WHITELIST_STATIC = {"/css/**", "/js/**", "/assert/*.ico"}; // 정적 파일 인가 없이 모두 허용
+    private static final String[] AUTH_ALL_LIST = {"/singup/**", "/login/**"}; // 모두 허용
+    private static final String[] AUTH_ADMIN_LIST = {"/admin"}; // admin 롤 만 허용
+    private static final String[] AUTH_AUTHENTICATED_LIST = {"/shadows/**", "/flowcharts/**", "/main/**"}; // 인가 필요
 
+    private final MemberSecurityService memberSecurityService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/**").permitAll()
-                .and()
-                    .csrf().ignoringAntMatchers("/h2-console/**")
-                .and()
-                    .headers()
-                    .addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))
-                .and()
-                    .formLogin()
-                    .loginPage("/member/login")
-                    .defaultSuccessUrl("/")
-                .and()
-                    .logout()
-                    .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
-                    .logoutSuccessUrl("/")
-                    .invalidateHttpSession(true)
+        http
+            .authorizeRequests()
+            .antMatchers(AUTH_ADMIN_LIST).hasRole("ADMIN")
+            .antMatchers(AUTH_AUTHENTICATED_LIST).authenticated()
+            .antMatchers(AUTH_ALL_LIST).permitAll();
+        http
+            .csrf().ignoringAntMatchers("/h2-console/**")
+            .and()
+            .headers()
+            .addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))
+            .and()
+            .formLogin()
+            .loginPage("/member/login")
+            .defaultSuccessUrl("/")
+            .and()
+            .logout()
+            .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
+            .logoutSuccessUrl("/")
+            .invalidateHttpSession(true)
         ;
         return http.build();
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -49,7 +59,6 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-
         return authenticationConfiguration.getAuthenticationManager();
     }
 }
