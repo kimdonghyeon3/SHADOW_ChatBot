@@ -1,5 +1,8 @@
-package com.example.shadow.member;
+package com.example.shadow.security.service;
 
+import com.example.shadow.domain.member.entity.Member;
+import com.example.shadow.domain.member.entity.MemberRole;
+import com.example.shadow.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -22,10 +25,10 @@ public class MemberSecurityService implements UserDetailsService {
 
 
     @Override
-    public UserDetails loadUserByUsername(String memberId) throws UsernameNotFoundException {
-        Member member = findByMemberId(memberId);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Member member = findByMemberId(username);
         List<GrantedAuthority> authorities = getAuthorities(member);
-        return new User(member.getMemberId(), member.getMemberPwd(), authorities);
+        return new User(member.getUsername(), member.getPassword(), authorities);
     }
 
     private Member findByMemberId(String memberId){
@@ -36,7 +39,7 @@ public class MemberSecurityService implements UserDetailsService {
         return _member.get();
     }
     private List<GrantedAuthority> getAuthorities(Member member){
-        String memberId=member.getMemberId();
+        String memberId=member.getUsername();
         List<GrantedAuthority> authorities = new ArrayList<>();
         if ("admin".equals(memberId)) {
             authorities.add(new SimpleGrantedAuthority(MemberRole.ADMIN.getValue()));
