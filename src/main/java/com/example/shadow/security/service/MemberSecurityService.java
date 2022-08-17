@@ -5,6 +5,7 @@ import com.example.shadow.domain.member.entity.MemberRole;
 import com.example.shadow.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -12,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,30 +25,23 @@ public class MemberSecurityService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
 
-
+    @Transactional
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Member member = findByMemberId(username);
-        List<GrantedAuthority> authorities = getAuthorities(member);
-        return new User(member.getUsername(), member.getPassword(), authorities);
-    }
 
-    private Member findByMemberId(String username){
-        Optional<Member> _member= this.memberRepository.findByUsername(username);
-        if (_member.isEmpty()) {
-            throw new UsernameNotFoundException("사용자를 찾을수 없습니다.");
-        }
-        return _member.get();
-    }
-    private List<GrantedAuthority> getAuthorities(Member member){
-        String memberId=member.getUsername();
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(()->new UsernameNotFoundException("사용자을 찾을 수 없습니다."));
+
         List<GrantedAuthority> authorities = new ArrayList<>();
-        if ("admin".equals(memberId)) {
+
+        if (("admin").equals(username)) {
             authorities.add(new SimpleGrantedAuthority(MemberRole.ADMIN.getValue()));
+            member.setRole(MemberRole.ADMIN);
         } else {
             authorities.add(new SimpleGrantedAuthority(MemberRole.MEMBER.getValue()));
+            member.setRole(MemberRole.MEMBER);
         }
-        return authorities;
+        return new User(member.getUsername(), member.getPassword(), authorities);
     }
 
 }

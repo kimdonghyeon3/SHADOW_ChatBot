@@ -3,7 +3,9 @@ package com.example.shadow.domain.member.controller;
 import com.example.shadow.web.MemberCreateForm;
 import com.example.shadow.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +21,7 @@ import javax.validation.Valid;
 public class MemberController {
 
     private final MemberService memberService;
-
+    private PasswordEncoder passwordEncoder;
     @GetMapping("/signup")
     public String signup(MemberCreateForm memberCreateForm) {
         return "signup_form";
@@ -57,7 +59,7 @@ public class MemberController {
     }
 
     @GetMapping("/login")
-    public String login() {
+    public String login(MemberCreateForm memberCreateForm) {
         return "login_form.html";
     }
 

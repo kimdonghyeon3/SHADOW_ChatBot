@@ -57,5 +57,5 @@ public class Member {
     public void setEncryptedPassword(String encryptedPassword) {
         this.password = encryptedPassword;
     }
-
+    public void setRole(MemberRole role) {this.role=role;}
 }
