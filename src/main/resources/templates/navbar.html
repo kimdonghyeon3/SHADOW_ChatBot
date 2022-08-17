@@ -8,9 +8,9 @@
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav ms-auto py-4 py-lg-0">
         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" th:href="@{/}">모두허용</a></li>
-        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" sec:authorize="isAnonymous()" th:href="@{/member/login}">로그인</a></li>
-        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" sec:authorize="isAnonymous()" th:href="@{/member/signup}">회원가입</a></li>
-        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" sec:authorize="isAuthenticated()" th:href="@{/member/logout}">로그아웃</a></li>
+        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" sec:authorize="isAnonymous()" th:href="@{/login}">로그인</a></li>
+        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" sec:authorize="isAnonymous()" th:href="@{/signup}">회원가입</a></li>
+        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" sec:authorize="isAuthenticated()" th:href="@{/logout}">로그아웃</a></li>
         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="/admin">admin</a></li>
         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="/main">인증필요</a></li>
       </ul>

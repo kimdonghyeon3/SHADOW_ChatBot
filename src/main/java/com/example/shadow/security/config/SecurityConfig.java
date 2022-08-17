@@ -31,9 +31,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeRequests()
-            .antMatchers(AUTH_ADMIN_LIST).hasRole("ADMIN")
-            .antMatchers(AUTH_AUTHENTICATED_LIST).authenticated()
-            .antMatchers(AUTH_ALL_LIST).permitAll();
+                .antMatchers(AUTH_ALL_LIST).permitAll()
+                .antMatchers(AUTH_ADMIN_LIST).hasRole("ADMIN")
+                .antMatchers(AUTH_AUTHENTICATED_LIST).authenticated();
         http
             .csrf().ignoringAntMatchers("/h2-console/**")
             .and()
@@ -41,11 +41,11 @@ public class SecurityConfig {
             .addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))
             .and()
             .formLogin()
-            .loginPage("/member/login")
+            .loginPage("/login")
             .defaultSuccessUrl("/")
             .and()
             .logout()
-            .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
+            .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
             .logoutSuccessUrl("/")
             .invalidateHttpSession(true)
         ;
