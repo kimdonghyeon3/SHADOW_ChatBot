@@ -31,8 +31,8 @@ public class MemberSecurityService implements UserDetailsService {
         return new User(member.getUsername(), member.getPassword(), authorities);
     }
 
-    private Member findByMemberId(String memberId){
-        Optional<Member> _member= this.memberRepository.findByMemberId(memberId);
+    private Member findByMemberId(String username){
+        Optional<Member> _member= this.memberRepository.findByUsername(username);
         if (_member.isEmpty()) {
             throw new UsernameNotFoundException("사용자를 찾을수 없습니다.");
         }
