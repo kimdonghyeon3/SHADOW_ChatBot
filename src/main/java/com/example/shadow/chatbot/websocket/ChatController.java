@@ -24,9 +24,7 @@ public class ChatController {
 
     @RequestMapping("/chat2")
     public String chat2(){
-
         log.info("제대로 실행되니?");
-
         return "chat/chat1";
     }
 
