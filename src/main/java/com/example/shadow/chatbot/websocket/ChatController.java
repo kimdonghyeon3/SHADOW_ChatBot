@@ -22,6 +22,14 @@ public class ChatController {
         return "chat/chat";
     }
 
+    @RequestMapping("/chat2")
+    public String chat2(){
+
+        log.info("제대로 실행되니?");
+
+        return "chat/chat1";
+    }
+
     @MessageMapping("/hello")
     @SendTo("/topic/greetings")
     public ResponseMessage messageGet(RequestMessage requestMessage) throws Exception {
