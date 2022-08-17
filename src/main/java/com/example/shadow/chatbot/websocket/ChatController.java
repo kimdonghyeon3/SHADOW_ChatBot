@@ -29,6 +29,7 @@ public class ChatController {
         Thread.sleep(500); // simulated delay
         ResponseMessage responseMessage = new ResponseMessage();
 
+        //예시 코드 (이부분은 clova랑 합시다)
         if(requestMessage.getContent().equals("반품 어떻게 해요?") || requestMessage.getContent().equals("반품")){
             responseMessage.setContent(HtmlUtils.htmlEscape("반품은 이곳 -> 이곳 -> 이곳으로 이동해주세요"));
         }
