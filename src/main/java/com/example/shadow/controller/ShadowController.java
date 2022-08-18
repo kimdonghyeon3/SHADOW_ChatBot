@@ -26,10 +26,10 @@ public class ShadowController {
     private static String apiUrl = "https://z16j1lin9x.apigw.ntruss.com/custom/v1/7654/bb5bef27a0dd572b921c6b22c71e79115c1d4cca1dcbd766d269fa6c2d5bd9ad";
 
     @MessageMapping("/sendMessage")
-    @SendTo("/topic/public")
-    public String sendMessage(@Payload String chatMessage) throws IOException
+    // chatbot으로 보낸다. (chatbot url : /topic/shadow)
+    @SendTo("/topic/shadow")
+    public String sendMessage(@Payload String chatMessage) throws IOException // @Payload는 websocket에서 요청할 메시지의 meta 데이터
     {
-
         URL url = new URL(apiUrl);
 
         String message = getReqMessage(chatMessage);
@@ -73,7 +73,6 @@ public class ShadowController {
                 description = (String)data.get("description");
                 chatMessage = description;
                 System.out.println(chatMessage);
-
             } catch (Exception e) {
                 System.out.println("error");
                 e.printStackTrace();
@@ -157,6 +156,5 @@ public class ShadowController {
         }
 
         return requestBody;
-
     }
 }
