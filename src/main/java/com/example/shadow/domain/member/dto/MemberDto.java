@@ -1,4 +1,4 @@
-package com.example.shadow.web;
+package com.example.shadow.domain.member.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 
 @Getter
 @Setter
-public class MemberCreateForm {
+public class MemberDto {
 
     @NotEmpty(message = "사용자이름은 필수항목입니다.")
     private String name;

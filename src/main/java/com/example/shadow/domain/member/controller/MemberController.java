@@ -1,10 +1,9 @@
 package com.example.shadow.domain.member.controller;
 
+import com.example.shadow.domain.member.dto.MemberDto;
 import com.example.shadow.domain.member.entity.Member;
-import com.example.shadow.web.MemberCreateForm;
 import com.example.shadow.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -13,7 +12,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.websocket.server.PathParam;
 import java.security.Principal;
 
 
@@ -25,18 +23,18 @@ public class MemberController {
     private final MemberService memberService;
     private PasswordEncoder passwordEncoder;
     @GetMapping("/signup")
-    public String signup(MemberCreateForm memberCreateForm) {
+    public String signup(MemberDto memberDto) {
         return "signup_form";
     }
 
     @PostMapping("/signup")
-    public String signup(@Valid MemberCreateForm memberCreateForm, BindingResult bindingResult) {
+    public String signup(@Valid MemberDto memberDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "signup_form";
         }
 
-        System.out.println("pw1 : " + memberCreateForm.getPassword1() + " pw2 : " + memberCreateForm.getPassword2());
-        if (!memberCreateForm.getPassword1().equals(memberCreateForm.getPassword2())) {
+        System.out.println("pw1 : " + memberDto.getPassword1() + " pw2 : " + memberDto.getPassword2());
+        if (!memberDto.getPassword1().equals(memberDto.getPassword2())) {
             bindingResult.rejectValue("memberPwd2", "passwordInCorrect",
                     "2개의 패스워드가 일치하지 않습니다.");
             return "signup_form";
@@ -44,10 +42,10 @@ public class MemberController {
 
         try {
             memberService.create(
-                    memberCreateForm.getName(),
-                    memberCreateForm.getUsername(),
-                    memberCreateForm.getPassword1(),
-                    memberCreateForm.getEmail());
+                    memberDto.getName(),
+                    memberDto.getUsername(),
+                    memberDto.getPassword1(),
+                    memberDto.getEmail());
         } catch (DataIntegrityViolationException e) {
             e.printStackTrace();
             bindingResult.reject("signupFailed", "이미 등록된 사용자입니다.");
@@ -61,7 +59,7 @@ public class MemberController {
     }
 
     @GetMapping("/login")
-    public String login(MemberCreateForm memberCreateForm) {
+    public String login(MemberDto memberDto) {
         return "login_form";
     }
 
@@ -78,7 +76,7 @@ public class MemberController {
         return "redirect:/logout";
     }
     @GetMapping("/members/{id}")
-    public String modify(@PathVariable("id") Long id, Model model, MemberCreateForm memberCreateForm) {
+    public String modify(@PathVariable("id") Long id, Model model, MemberDto memberDto) {
         Member member = memberService.findById(id);
         model.addAttribute("member", member);
         return "member_modify";
