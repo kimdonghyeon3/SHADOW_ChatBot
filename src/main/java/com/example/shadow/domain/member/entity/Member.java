@@ -34,7 +34,7 @@ public class Member {
     @Column(name="member_name", nullable = false, length = 20)
     private String name;
 
-    @Column(name="member_email")
+    @Column(name="member_email", unique = true)
     private String email;
 
     @Builder
