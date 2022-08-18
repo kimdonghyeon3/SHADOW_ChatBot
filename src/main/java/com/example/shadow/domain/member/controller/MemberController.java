@@ -1,6 +1,7 @@
 package com.example.shadow.domain.member.controller;
 
 import com.example.shadow.domain.member.dto.MemberDto;
+import com.example.shadow.domain.member.dto.MemberUpdateDto;
 import com.example.shadow.domain.member.entity.Member;
 import com.example.shadow.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -76,13 +77,23 @@ public class MemberController {
         return "redirect:/logout";
     }
     @GetMapping("/members/{id}")
-    public String modify(@PathVariable("id") Long id, Model model, MemberDto memberDto) {
+    public String modify(@PathVariable("id") Long id, Model model, MemberUpdateDto memberUpdateDto) {
         Member member = memberService.findById(id);
         model.addAttribute("member", member);
-        return "member_modify";
+        return "member_form";
     }
     @PutMapping("/members/{id}")
-    public String update(@PathVariable Long id, Member newMember) {
+    public String update(@PathVariable Long id, Member newMember, @Valid @ModelAttribute("memberUpdateDto") MemberUpdateDto memberUpdateDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "member_form";
+        }
+
+        System.out.println("pw1 : " + memberUpdateDto.getPassword1() + " pw2 : " + memberUpdateDto.getPassword2());
+        if (!memberUpdateDto.getPassword1().equals(memberUpdateDto.getPassword2())) {
+            bindingResult.rejectValue("memberPwd2", "passwordInCorrect",
+                    "2개의 패스워드가 일치하지 않습니다.");
+            return "member_form";
+        }
         Member orgMember = memberService.findById(id);
         memberService.update(orgMember,newMember);
         return "redirect:/";
