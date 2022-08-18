@@ -38,10 +38,10 @@ public class Member {
     private String email;
 
     @Builder
-    public Member(String username, String name, String password, String email) {
+    public Member(String username, String password, String name, String email) {
         this.username = username;
-        this.name = name;
         this.password = password;
+        this.name = name;
         this.email = email;
     }
 

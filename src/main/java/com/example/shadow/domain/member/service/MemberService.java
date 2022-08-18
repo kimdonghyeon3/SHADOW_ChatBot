@@ -2,7 +2,10 @@ package com.example.shadow.domain.member.service;
 
 import com.example.shadow.domain.member.entity.Member;
 import com.example.shadow.domain.member.repository.MemberRepository;
+import com.example.shadow.exception.SignupEmailDuplicatedException;
+import com.example.shadow.exception.SignupUsernameDuplicatedException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,13 +18,27 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public Member create(String name, String username, String password, String email) {
-        Member member = new Member();
-        member.updateName(name);
-        member.updateUsername(username);
-        member.setEncryptedPassword(passwordEncoder.encode(password));
-        member.updateEmail(email);
-        this.memberRepository.save(member);
+    public Member create(String username,String password, String name,  String email) throws SignupUsernameDuplicatedException, SignupEmailDuplicatedException {
+
+        Member member = new Member(
+                username,
+                passwordEncoder.encode(password),
+                name,
+                email
+        );
+
+        try {
+            memberRepository.save(member);
+        } catch (DataIntegrityViolationException e) {
+
+            if (memberRepository.existsByUsername(username)) {
+                throw new SignupUsernameDuplicatedException("중복된 ID 입니다.");
+            } else {
+                throw new SignupEmailDuplicatedException("중복된 이메일 입니다.");
+            }
+        }
+
+
         return member;
     }
 

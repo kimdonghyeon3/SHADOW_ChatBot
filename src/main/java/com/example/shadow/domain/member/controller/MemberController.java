@@ -4,6 +4,8 @@ import com.example.shadow.domain.member.dto.MemberDto;
 import com.example.shadow.domain.member.dto.MemberUpdateDto;
 import com.example.shadow.domain.member.entity.Member;
 import com.example.shadow.domain.member.service.MemberService;
+import com.example.shadow.exception.SignupEmailDuplicatedException;
+import com.example.shadow.exception.SignupUsernameDuplicatedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -34,7 +36,6 @@ public class MemberController {
             return "signup_form";
         }
 
-        System.out.println("pw1 : " + memberDto.getPassword1() + " pw2 : " + memberDto.getPassword2());
         if (!memberDto.getPassword1().equals(memberDto.getPassword2())) {
             bindingResult.rejectValue("memberPwd2", "passwordInCorrect",
                     "2개의 패스워드가 일치하지 않습니다.");
@@ -43,17 +44,18 @@ public class MemberController {
 
         try {
             memberService.create(
-                    memberDto.getName(),
                     memberDto.getUsername(),
                     memberDto.getPassword1(),
-                    memberDto.getEmail());
-        } catch (DataIntegrityViolationException e) {
+                    memberDto.getName(),
+                    memberDto.getEmail()
+            );
+        } catch (SignupUsernameDuplicatedException e) {
             e.printStackTrace();
-            bindingResult.reject("signupFailed", "이미 등록된 사용자입니다.");
+            bindingResult.reject("signupUsernameDuplicated", e.getMessage());
             return "signup_form";
-        } catch (Exception e) {
+        } catch (SignupEmailDuplicatedException e) {
             e.printStackTrace();
-            bindingResult.reject("signupFailed", e.getMessage());
+            bindingResult.reject("signupEmailDuplicated", e.getMessage());
             return "signup_form";
         }
         return "redirect:/";
