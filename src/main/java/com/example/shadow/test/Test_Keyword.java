@@ -1,12 +1,10 @@
 package com.example.shadow.test;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import javax.persistence.*;
 
-@Getter
-@Setter
+@Data
 @Entity
 public class Test_Keyword {
     @Id

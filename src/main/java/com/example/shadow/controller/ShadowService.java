@@ -23,7 +23,7 @@ public class ShadowService {
         shadowRepository.save(t);
     }
 
-//    public boolean existByQuestion() {
-//        return shadowRepository.existsByQuestion();
-//    }
+    public boolean existByQuestion(String question) {
+        return shadowRepository.existsByQuestion(question);
+    }
 }

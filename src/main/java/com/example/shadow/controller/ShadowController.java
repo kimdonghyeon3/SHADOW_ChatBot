@@ -1,6 +1,5 @@
 package com.example.shadow.controller;
 
-import com.example.shadow.test.Test_Keyword;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.json.simple.JSONArray;
@@ -10,7 +9,6 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -36,7 +34,6 @@ public class ShadowController {
     {
         String reqMessage = chatMessage;
         reqMessage = reqMessage.replace("\"", "");
-        System.out.println(reqMessage);
 
         URL url = new URL(apiUrl);
 
@@ -48,8 +45,6 @@ public class ShadowController {
         con.setRequestMethod("POST");
         con.setRequestProperty("Content-Type", "application/json;UTF-8");
         con.setRequestProperty("X-NCP-CHATBOT_SIGNATURE", encodeBase64String);
-        /**/
-        System.out.println("Success Connect");
 
         // post request
         con.setDoOutput(true);
@@ -57,8 +52,6 @@ public class ShadowController {
         wr.write(message.getBytes("UTF-8"));
         wr.flush();
         wr.close();
-        /**/
-        System.out.println("Success request");
 
         int responseCode = con.getResponseCode();
 
@@ -82,8 +75,10 @@ public class ShadowController {
                 chatMessage = description;
                 String respMessage = chatMessage;
 
-                create(reqMessage, respMessage);
-
+                if(!shadowService.existByQuestion(reqMessage)) { // DB에 저장이 안되어 있을 경우
+                    // DB저장
+                    create(reqMessage, respMessage);
+                }
             } catch (Exception e) {
                 System.out.println("error");
                 e.printStackTrace();
@@ -109,8 +104,6 @@ public class ShadowController {
 
             byte[] rawHmac = mac.doFinal(message.getBytes("UTF-8"));
             encodeBase64String = Base64.encodeBase64String(rawHmac);
-            /**/
-            System.out.println("Success makeSignature");
 
             return encodeBase64String;
 
@@ -156,10 +149,6 @@ public class ShadowController {
             obj.put("event", "send");
 
             requestBody = obj.toString();
-            /**/
-            System.out.println("success getReqMessage");
-            System.out.println(requestBody);
-
         } catch (Exception e) {
             System.out.println("## Exception : " + e);
         }
@@ -169,7 +158,5 @@ public class ShadowController {
 
     public void create(String question, String keyword) {
         shadowService.create(question, keyword);
-        System.out.println(question);
-        System.out.println(keyword);
     }
 }
