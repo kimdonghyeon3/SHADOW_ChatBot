@@ -62,10 +62,10 @@ public class MemberService {
         memberRepository.delete(findById(id));
     }
 
-    public void update(Member member, Member newMember) throws SignupUsernameDuplicatedException, SignupEmailDuplicatedException {
-        member.updateName(newMember.getName());
-        member.updateEmail(newMember.getEmail());
-        member.setEncryptedPassword(newMember.getPassword());
+    public void update(Member member, String password, String name, String email ) throws SignupUsernameDuplicatedException, SignupEmailDuplicatedException {
+        member.setEncryptedPassword(password);
+        member.updateName(name);
+        member.updateEmail(email);
         save(member);
     }
 }

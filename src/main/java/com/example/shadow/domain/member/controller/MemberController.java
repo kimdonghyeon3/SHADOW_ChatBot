@@ -85,12 +85,10 @@ public class MemberController {
         return "member_form";
     }
     @PutMapping("/members/{id}")
-    public String update(@PathVariable Long id, @RequestParam Member newMember, @Valid @ModelAttribute("memberUpdateDto") MemberUpdateDto memberUpdateDto, BindingResult bindingResult) {
+    public String update(@PathVariable Long id, @Valid @ModelAttribute("memberUpdateDto") MemberUpdateDto memberUpdateDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "member_form";
         }
-
-        System.out.println("pw1 : " + memberUpdateDto.getPassword1() + " pw2 : " + memberUpdateDto.getPassword2());
         if (!memberUpdateDto.getPassword1().equals(memberUpdateDto.getPassword2())) {
             bindingResult.rejectValue("memberPwd2", "passwordInCorrect",
                     "2개의 패스워드가 일치하지 않습니다.");
@@ -99,7 +97,12 @@ public class MemberController {
         Member member = memberService.findById(id);
 
         try {
-            memberService.update(member,newMember);
+            memberService.update(
+                    member,
+                    memberUpdateDto.getPassword1(),
+                    memberUpdateDto.getName(),
+                    memberUpdateDto.getEmail()
+                    );
         } catch (SignupUsernameDuplicatedException e) {
             e.printStackTrace();
             bindingResult.reject("signupUsernameDuplicated", e.getMessage());
