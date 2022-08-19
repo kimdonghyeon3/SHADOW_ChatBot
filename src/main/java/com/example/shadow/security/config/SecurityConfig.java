@@ -27,16 +27,20 @@ public class SecurityConfig {
             "/css/**",
             "/js/**",
             "/assets/**",
-            "/error/**"}; // 정적 파일 인가 없이 모두 허용
+            "/error/**"
+    }; // 정적 파일 인가 없이 모두 허용
     private static final String[] AUTH_ALL_LIST = {
             "/singup/**",
-            "/login/**"}; // 모두 허용
+            "/login/**"
+    }; // 모두 허용
     private static final String[] AUTH_ADMIN_LIST = {
-            "/admin/**"}; // admin 롤 만 허용
+            "/admin/**"
+    }; // admin 롤 만 허용
     private static final String[] AUTH_AUTHENTICATED_LIST = {
             "/members/**",
-            "/flowcharts/**",
-            "/main/**"}; // 인가 필요
+            "/chat/**",
+            "/main/**"
+    }; // 인가 필요
 
     private final MemberSecurityService customUserDetailsService;
     private final AuthenticationFailureHandler customFailureHandler;
@@ -58,12 +62,13 @@ public class SecurityConfig {
     public AuthenticationSuccessHandler customSuccessHandler() {
         return new CustomSuccessHandler("/");
     }
-/*
+
+    /*  스프링에서 보안상의 이슈로 ignoring() 을 권장하지 않음.
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() throws Exception {
         return (web) -> web.ignoring().antMatchers(AUTH_WHITELIST_STATIC);
     }
-*/
+    */
     @Bean
     @Order(0)
     SecurityFilterChain resources(HttpSecurity http) throws Exception {

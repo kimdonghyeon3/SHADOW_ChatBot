@@ -10,7 +10,6 @@ import javax.validation.constraints.NotEmpty;
 @Setter
 public class MemberUpdateDto {
 
-
     @NotEmpty(message = "사용자이름은 필수항목입니다.")
     private String name;
 

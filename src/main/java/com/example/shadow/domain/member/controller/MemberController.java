@@ -85,7 +85,7 @@ public class MemberController {
         return "member_form";
     }
     @PutMapping("/members/{id}")
-    public String update(@PathVariable Long id, Member newMember, @Valid @ModelAttribute("memberUpdateDto") MemberUpdateDto memberUpdateDto, BindingResult bindingResult) {
+    public String update(@PathVariable Long id, @RequestParam Member newMember, @Valid @ModelAttribute("memberUpdateDto") MemberUpdateDto memberUpdateDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "member_form";
         }
@@ -96,8 +96,19 @@ public class MemberController {
                     "2개의 패스워드가 일치하지 않습니다.");
             return "member_form";
         }
-        Member orgMember = memberService.findById(id);
-        memberService.update(orgMember,newMember);
+        Member member = memberService.findById(id);
+
+        try {
+            memberService.update(member,newMember);
+        } catch (SignupUsernameDuplicatedException e) {
+            e.printStackTrace();
+            bindingResult.reject("signupUsernameDuplicated", e.getMessage());
+            return "member_form";
+        } catch (SignupEmailDuplicatedException e) {
+            e.printStackTrace();
+            bindingResult.reject("signupEmailDuplicated", e.getMessage());
+            return "member_form";
+        }
         return "redirect:/";
     }
 

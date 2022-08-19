@@ -1,5 +1,6 @@
 package com.example.shadow.domain.member.service;
 
+import com.example.shadow.domain.member.dto.MemberUpdateDto;
 import com.example.shadow.domain.member.entity.Member;
 import com.example.shadow.domain.member.repository.MemberRepository;
 import com.example.shadow.exception.SignupEmailDuplicatedException;
@@ -27,20 +28,25 @@ public class MemberService {
                 email
         );
 
+        save(member);
+
+        return member;
+    }
+
+    public void save(Member member) throws SignupUsernameDuplicatedException, SignupEmailDuplicatedException {
         try {
             memberRepository.save(member);
         } catch (DataIntegrityViolationException e) {
 
-            if (memberRepository.existsByUsername(username)) {
+            if (memberRepository.existsByUsername(member.getUsername())) {
                 throw new SignupUsernameDuplicatedException("중복된 ID 입니다.");
             } else {
                 throw new SignupEmailDuplicatedException("중복된 이메일 입니다.");
             }
         }
 
-
-        return member;
     }
+
 
     public Member findByUsername(String username) {
         return memberRepository.findByUsername(username)
@@ -56,9 +62,10 @@ public class MemberService {
         memberRepository.delete(findById(id));
     }
 
-    public void update(Member orgMember, Member newMember) {
-        orgMember.updateName(newMember.getName());
-        orgMember.updateEmail(newMember.getEmail());
-        orgMember.setEncryptedPassword(newMember.getPassword());
+    public void update(Member member, Member newMember) throws SignupUsernameDuplicatedException, SignupEmailDuplicatedException {
+        member.updateName(newMember.getName());
+        member.updateEmail(newMember.getEmail());
+        member.setEncryptedPassword(newMember.getPassword());
+        save(member);
     }
 }
