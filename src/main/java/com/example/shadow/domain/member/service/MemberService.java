@@ -38,7 +38,7 @@ public class MemberService {
             memberRepository.save(member);
         } catch (DataIntegrityViolationException e) {
 
-            if (memberRepository.existsByUsername(member.getUsername())) {
+            if (existsByUsername(member.getUsername())) {
                 throw new SignupUsernameDuplicatedException("중복된 ID 입니다.");
             } else {
                 throw new SignupEmailDuplicatedException("중복된 이메일 입니다.");
@@ -67,5 +67,13 @@ public class MemberService {
         member.updateName(name);
         member.updateEmail(email);
         save(member);
+    }
+
+    public boolean existsByUsername(String username) {
+        return memberRepository.existsByUsername(username);
+    }
+
+    public boolean existsByEmail(String email) {
+        return memberRepository.existsByEmail(email);
     }
 }

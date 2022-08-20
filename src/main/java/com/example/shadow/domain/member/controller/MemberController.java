@@ -7,6 +7,7 @@ import com.example.shadow.domain.member.service.MemberService;
 import com.example.shadow.exception.SignupEmailDuplicatedException;
 import com.example.shadow.exception.SignupUsernameDuplicatedException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,7 @@ import java.security.Principal;
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/")
+@Slf4j
 public class MemberController {
 
     private final MemberService memberService;
@@ -59,6 +61,25 @@ public class MemberController {
             return "signup_form";
         }
         return "redirect:/";
+    }
+
+    @PostMapping("/signup/usernameCheck")
+    @ResponseBody
+    public String usernameCheck(@RequestParam String username) {
+        if(memberService.existsByUsername(username)){
+            log.debug("username already exists : "+ username);
+            return "1";
+        }
+        return "0";
+    }
+    @PostMapping("/signup/emailCheck")
+    @ResponseBody
+    public String emailCheck(@RequestParam String email) {
+        if(memberService.existsByEmail(email)){
+            log.debug("email already exists : "+email);
+            return "1";
+        }
+        return "0";
     }
 
     @GetMapping("/login")

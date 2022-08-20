@@ -3,6 +3,8 @@
         xmlns:th="http://www.thymeleaf.org"
         layout:decorate="~{layout}">
 <div layout:fragment="content" class="container my-3">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
     <!-- 헤더-->
     <nav th:replace="header :: headerFragment"></nav>
     <div class="my-3 border-bottom">
@@ -20,6 +22,7 @@
         <div class="mb-3">
             <label for="username" class="form-label">ID</label>
             <input type="text" th:field="*{username}" class="form-control">
+            <button type="button" class="btn btn-primary" id="checkUsernameBtn">아이디 중복 확인</button>
         </div>
         <div class="mb-3">
             <label for="password" class="form-label">비밀번호</label>
@@ -32,8 +35,58 @@
         <div class="mb-3">
             <label for="email" class="form-label">이메일</label>
             <input type="email" th:field="*{email}" class="form-control">
+            <button type="button" class="btn btn-primary" id="checkEmailBtn">이메일 중복 확인</button>
         </div>
         <button type="submit" class="btn btn-primary">회원가입</button>
     </form>
+
+    <script>
+    $('#checkUsernameBtn').on('click', function(){
+      console.log('click check username');
+      $.ajax({
+        url: '/signup/usernameCheck',
+        type: 'POST',
+        data: { username : $("#username").val()
+        },
+        success: function(data){
+          if(data == 0){
+            console.log("아이디 없음");
+            alert("사용하실 수 있는 아이디입니다.");
+          }else{
+            console.log("아이디 있음");
+            alert("중복된 아이디가 존재합니다.");
+            $('#username').val('');
+            $('#username').focus();
+          }
+        },
+        error: function (){
+        }
+      });
+    });
+
+    $('#checkEmailBtn').on('click', function(){
+      console.log('click check email');
+      $.ajax({
+        url: '/signup/emailCheck',
+        type: 'POST',
+        data: { email : $("#email").val()
+        },
+        success: function(data){
+          if(data == 0){
+            console.log("이메일 없음");
+            alert("사용하실 수 있는 이메일입니다.");
+          }else{
+            console.log("이메일 있음");
+            alert("중복된 이메일이 존재합니다.");
+            $('#email').val('');
+            $('#email').focus();
+          }
+        },
+        error: function (){
+        }
+      });
+    });
+    </script>
+
 </div>
 </html>
