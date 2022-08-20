@@ -16,6 +16,8 @@
 <section>
 
     <form th:action="@{|/members/${member.id}|}" th:object="${memberUpdateDto}" method="post">
+        <div th:replace="form_errors :: formErrorsFragment"></div>
+        <div id="resultDiv" th:replace="login_errors :: loginAlertFragment(${alert}, ${msg})"></div>
         <input type="hidden" name="_method" value="put"/>
 
         <div class="mb-3">
@@ -33,7 +35,8 @@
 
         <div class="mb-3">
             <label for="email" class="form-label">이메일</label>
-            <input type="email" th:name="email" th:value="${member.email}" class="form-control">
+            <input type="email" id="email" th:name="email" th:value="${member.email}" class="form-control">
+            <button type="button" class="btn btn-primary" id="checkEmailBtn">이메일 중복 확인</button>
         </div>
 
         <button type="submit" class="btn btn-primary">수정</button>
@@ -71,35 +74,58 @@
 
 
     <script>
-          // 모달 버튼에 이벤트를 건다.
-          $('#openModalBtn').on('click', function(){
-          $('#modalBox').modal('show');
-          console.log("click open");
-          });
-          // 모달 안의 취소 버튼에 이벤트를 건다.
-          $('#closeModalBtn').on('click', function(){
-          $('#modalBox').modal('hide');
-          console.log("click close");
-          });
-          $('#modalBox').on('show.bs.modal', function (e) {
-          console.log("show.bs.modal");
-          });
-          $('#modalBox').on('shown.bs.modal', function (e) {
-          console.log("shown.bs.modal");
-          });
-          $('#modalBox').on('hide.bs.modal', function (e) {
-          console.log("hide.bs.modal");
-          });
-          $('#modalBox').on('hidden.bs.modal', function (e) {
-          console.log("hidden.bs.modal");
-          });
 
-          function savePassword(form) {
-            $('#password1').val($('#mpassword1').val());
-            $('#password2').val($('#mpassword2').val());
-            $('#modalBox').modal('hide');
-          }
 
+
+      // 모달 버튼에 이벤트를 건다.
+      $('#openModalBtn').on('click', function(){
+      $('#modalBox').modal('show');
+      console.log("click open");
+      });
+      // 모달 안의 취소 버튼에 이벤트를 건다.
+      $('#closeModalBtn').on('click', function(){
+      $('#modalBox').modal('hide');
+      console.log("click close");
+      });
+      $('#modalBox').on('show.bs.modal', function (e) {
+      console.log("show.bs.modal");
+      });
+      $('#modalBox').on('shown.bs.modal', function (e) {
+      console.log("shown.bs.modal");
+      });
+      $('#modalBox').on('hide.bs.modal', function (e) {
+      console.log("hide.bs.modal");
+      });
+      $('#modalBox').on('hidden.bs.modal', function (e) {
+      console.log("hidden.bs.modal");
+      });
+
+      function savePassword(form) {
+        $('#password1').val($('#mpassword1').val());
+        $('#password2').val($('#mpassword2').val());
+        $('#modalBox').modal('hide');
+      }
+
+    var urlPath = $(location).attr('pathname');
+
+    $('#checkEmailBtn').on('click', function(){
+      console.log('click check email');
+      console.log($(location).attr('pathname'));
+      console.log(urlPath);
+
+      $.ajax({
+        url: urlPath+'/emailCheck',
+        type: 'POST',
+        data: { email : $("#email").val()
+        },
+        success: function(result){
+            $("#resultDiv").replaceWith(result);
+            $('#email').focus();
+        },
+        error: function (){
+        }
+      });
+    });
 
     </script>
 

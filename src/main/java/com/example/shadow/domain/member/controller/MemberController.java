@@ -157,5 +157,25 @@ public class MemberController {
         }
         return "redirect:/";
     }
+    @PostMapping("/members/{id}/emailCheck")
+    public String updateEmailCheck(@PathVariable long id, @RequestParam String email, Model model) {
+        if(memberService.findById(id).getEmail().equals(email)){
+            return "member_form :: #resultDiv";
+        }
+        try{
+            memberService.emailCheck(email);
+            model.addAttribute("alert", "success");
+            model.addAttribute("msg", "사용할 수 있는 이메일 입니다.");
+            emailChecked=true;
+            return "member_form :: #resultDiv";
+        } catch (SignupEmailDuplicatedException e) {
+            log.debug("email already exists : "+ email);
+            e.printStackTrace();
+            model.addAttribute("alert", "danger");
+            model.addAttribute("msg", e.getMessage());
+            return "member_form :: #resultDiv";
+        }
+    }
+
 
 }

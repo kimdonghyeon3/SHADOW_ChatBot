@@ -42,12 +42,13 @@
 
     <script th:inline="javascript">
 
+    var urlPath = $(location).attr('pathname');
 
     $('#checkUsernameBtn').on('click', function(){
       console.log('click check username');
 
       $.ajax({
-        url: '/signup/usernameCheck',
+        url: urlPath+'/usernameCheck',
         type: 'POST',
         data: { username : $("#username").val()
         },
@@ -64,7 +65,7 @@
       console.log('click check email');
 
       $.ajax({
-        url: '/signup/emailCheck',
+        url: urlPath+'/emailCheck',
         type: 'POST',
         data: { email : $("#email").val()
         },
