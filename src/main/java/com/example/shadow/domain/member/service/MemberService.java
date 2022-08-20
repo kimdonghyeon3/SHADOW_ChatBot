@@ -63,7 +63,7 @@ public class MemberService {
     }
 
     public void update(Member member, String password, String name, String email ) throws SignupUsernameDuplicatedException, SignupEmailDuplicatedException {
-        member.setEncryptedPassword(password);
+        member.setEncryptedPassword(passwordEncoder.encode(password));
         member.updateName(name);
         member.updateEmail(email);
         save(member);
