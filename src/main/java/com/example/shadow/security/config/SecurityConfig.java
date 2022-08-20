@@ -89,7 +89,9 @@ public class SecurityConfig {
                 .antMatchers(AUTH_ADMIN_LIST).hasRole("ADMIN")
                 .antMatchers(AUTH_AUTHENTICATED_LIST).authenticated();
         http
-                .csrf().ignoringAntMatchers("/h2-console/**");
+                .csrf()
+                .disable();
+                //.ignoringAntMatchers("/h2-console/**");
         http
                 .headers()
                 .addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN));
