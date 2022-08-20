@@ -27,6 +27,8 @@ public class MemberController {
 
     private final MemberService memberService;
     private PasswordEncoder passwordEncoder;
+    private static boolean usernameChecked;
+    private static boolean emailChecked;
     @GetMapping("/signup")
     public String signup(MemberDto memberDto) {
         return "signup_form";
@@ -37,10 +39,16 @@ public class MemberController {
         if (bindingResult.hasErrors()) {
             return "signup_form";
         }
-
+        if(!usernameChecked){
+            bindingResult.rejectValue("username","usernameNotCheck","아이디 중복 확인이 필요합니다.");
+            return "signup_form";
+        }
+        if(!emailChecked){
+            bindingResult.rejectValue("email","emailNotCheck","이메일 중복 확인이 필요합니다.");
+            return "signup_form";
+        }
         if (!memberDto.getPassword1().equals(memberDto.getPassword2())) {
-            bindingResult.rejectValue("memberPwd2", "passwordInCorrect",
-                    "2개의 패스워드가 일치하지 않습니다.");
+            bindingResult.rejectValue("memberPwd2", "passwordInCorrect", "2개의 패스워드가 일치하지 않습니다.");
             return "signup_form";
         }
 
@@ -64,22 +72,36 @@ public class MemberController {
     }
 
     @PostMapping("/signup/usernameCheck")
-    @ResponseBody
-    public String usernameCheck(@RequestParam String username) {
-        if(memberService.existsByUsername(username)){
+    public String usernameCheck(@RequestParam String username, Model model) {
+        try{
+            memberService.usernameCheck(username);
+            model.addAttribute("alert", "success");
+            model.addAttribute("msg", "사용할 수 있는 아이디 입니다.");
+            usernameChecked=true;
+            return "signup_form :: #resultDiv";
+        } catch (SignupUsernameDuplicatedException e) {
             log.debug("username already exists : "+ username);
-            return "1";
+            e.printStackTrace();
+            model.addAttribute("alert", "danger");
+            model.addAttribute("msg", e.getMessage());
+            return "signup_form :: #resultDiv";
         }
-        return "0";
     }
     @PostMapping("/signup/emailCheck")
-    @ResponseBody
-    public String emailCheck(@RequestParam String email) {
-        if(memberService.existsByEmail(email)){
-            log.debug("email already exists : "+email);
-            return "1";
+    public String emailCheck(@RequestParam String email, Model model) {
+        try{
+            memberService.emailCheck(email);
+            model.addAttribute("alert", "success");
+            model.addAttribute("msg", "사용할 수 있는 이메일 입니다.");
+            emailChecked=true;
+            return "signup_form :: #resultDiv";
+        } catch (SignupEmailDuplicatedException e) {
+            log.debug("email already exists : "+ email);
+            e.printStackTrace();
+            model.addAttribute("alert", "danger");
+            model.addAttribute("msg", e.getMessage());
+            return "signup_form :: #resultDiv";
         }
-        return "0";
     }
 
     @GetMapping("/login")

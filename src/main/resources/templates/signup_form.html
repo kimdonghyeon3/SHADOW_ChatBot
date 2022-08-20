@@ -14,7 +14,7 @@
     </div>
     <form th:action="@{/signup}" th:object="${memberDto}" method="post">
         <div th:replace="form_errors :: formErrorsFragment"></div>
-
+        <div id="resultDiv" th:replace="login_errors :: loginAlertFragment(${alert}, ${msg})"></div>
         <div class="mb-3">
             <label for="name" class="form-label">이름</label>
             <input type="text" th:field="*{name}" class="form-control">
@@ -40,24 +40,20 @@
         <button type="submit" class="btn btn-primary">회원가입</button>
     </form>
 
-    <script>
+    <script th:inline="javascript">
+
+
     $('#checkUsernameBtn').on('click', function(){
       console.log('click check username');
+
       $.ajax({
         url: '/signup/usernameCheck',
         type: 'POST',
         data: { username : $("#username").val()
         },
-        success: function(data){
-          if(data == 0){
-            console.log("아이디 없음");
-            alert("사용하실 수 있는 아이디입니다.");
-          }else{
-            console.log("아이디 있음");
-            alert("중복된 아이디가 존재합니다.");
-            $('#username').val('');
+        success: function(result){
+            $("#resultDiv").replaceWith(result);
             $('#username').focus();
-          }
         },
         error: function (){
         }
@@ -66,21 +62,15 @@
 
     $('#checkEmailBtn').on('click', function(){
       console.log('click check email');
+
       $.ajax({
         url: '/signup/emailCheck',
         type: 'POST',
         data: { email : $("#email").val()
         },
-        success: function(data){
-          if(data == 0){
-            console.log("이메일 없음");
-            alert("사용하실 수 있는 이메일입니다.");
-          }else{
-            console.log("이메일 있음");
-            alert("중복된 이메일이 존재합니다.");
-            $('#email').val('');
+        success: function(result){
+            $("#resultDiv").replaceWith(result);
             $('#email').focus();
-          }
         },
         error: function (){
         }
