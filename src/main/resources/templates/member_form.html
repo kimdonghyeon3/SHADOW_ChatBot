@@ -44,8 +44,6 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">×</span></button>
                     <h4 class="modal-title" id="myModalLabel">비밀 번호 변경</h4></div>
                 <div class="modal-body">
                     <form onsubmit="savePassword(this); return false;" th:object="${memberUpdateDto}" >
@@ -97,18 +95,8 @@
           });
 
           function savePassword(form) {
-           // form.password1.value = form.password1.value.trim();
-           // console.log($(form).closest('section').find('form').password1.value);
-            //console.log($(form).closest('section'));
-           // console.log($(form).closest('section').find('form'));
-            //console.log($(form).closest('section').find('form').password1);
-            //console.log($('#mpassword1').val());
-           // console.log($('#password1').val());
             $('#password1').val($('#mpassword1').val());
             $('#password2').val($('#mpassword2').val());
-            //console.log($('#password1').val());
-         //   $(form).closest('section').find('form').password1.value=form.password1.value;
-         //   $(form).closest('section').find('form').password2.value=form.password2.value;
             $('#modalBox').modal('hide');
           }
 
