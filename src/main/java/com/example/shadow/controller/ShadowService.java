@@ -26,4 +26,8 @@ public class ShadowService {
     public boolean existByQuestion(String question) {
         return shadowRepository.existsByQuestion(question);
     }
+
+    public Test_Keyword findByQuestion(String question) {
+        return shadowRepository.findByQuestion(question);
+    }
 }

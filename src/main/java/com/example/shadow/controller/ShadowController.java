@@ -1,5 +1,6 @@
 package com.example.shadow.controller;
 
+import com.example.shadow.test.Test_Keyword;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.json.simple.JSONArray;
@@ -30,64 +31,70 @@ public class ShadowController {
     @MessageMapping("/sendMessage")
 // 우리가 구독하고 있는 /topic에서 메시지를 보낼 곳으로 이동시킨다. 우리의 prefix는 /shadow이다.(/shadow -> /topic -> CLOVA로 보내기)
     @SendTo("/topic/shadow")
-    public String sendMessage(@Payload String chatMessage) throws IOException // @Payload는 websocket에서 요청할 메시지의 meta 데이터
-    {
+    public String sendMessage(@Payload String chatMessage) throws IOException { // @Payload는 websocket에서 요청할 메시지의 meta 데이터
         String reqMessage = chatMessage;
         reqMessage = reqMessage.replace("\"", "");
 
-        URL url = new URL(apiUrl);
+        if (shadowService.existByQuestion(reqMessage)) {
+            Test_Keyword keywords = shadowService.findByQuestion(reqMessage);
+            String keyword = keywords.getKeyword();
+            return keyword;
+        } else {
+            URL url = new URL(apiUrl);
 
-        String message = getReqMessage(chatMessage);
-        String encodeBase64String = makeSignature(message, secretKey);
+            String message = getReqMessage(chatMessage);
+            String encodeBase64String = makeSignature(message, secretKey);
 
-        //api서버 접속 (서버 -> 서버 통신)
-        HttpURLConnection con = (HttpURLConnection)url.openConnection();
-        con.setRequestMethod("POST");
-        con.setRequestProperty("Content-Type", "application/json;UTF-8");
-        con.setRequestProperty("X-NCP-CHATBOT_SIGNATURE", encodeBase64String);
+            //api서버 접속 (서버 -> 서버 통신)
+            HttpURLConnection con = (HttpURLConnection)url.openConnection();
+            con.setRequestMethod("POST");
+            con.setRequestProperty("Content-Type", "application/json;UTF-8");
+            con.setRequestProperty("X-NCP-CHATBOT_SIGNATURE", encodeBase64String);
+            System.out.println("API 호출 완료");
 
-        // post request
-        con.setDoOutput(true);
-        DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-        wr.write(message.getBytes("UTF-8"));
-        wr.flush();
-        wr.close();
+            // post request
+            con.setDoOutput(true);
+            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+            wr.write(message.getBytes("UTF-8"));
+            wr.flush();
+            wr.close();
 
-        int responseCode = con.getResponseCode();
+            int responseCode = con.getResponseCode();
 
-        if(responseCode==200) { // 정상 호출
-            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
-            String decodedString;
-            String jsonString = "";
-            while ((decodedString = in.readLine()) != null) {
-                jsonString = decodedString;
-            }
-
-            //받아온 값을 세팅하는 부분
-            JSONParser jsonparser = new JSONParser();
-            try {
-                JSONObject json = (JSONObject)jsonparser.parse(jsonString);
-                JSONArray bubblesArray = (JSONArray)json.get("bubbles");
-                JSONObject bubbles = (JSONObject)bubblesArray.get(0);
-                JSONObject data = (JSONObject)bubbles.get("data");
-                String description = "";
-                description = (String)data.get("description");
-                chatMessage = description;
-                String respMessage = chatMessage;
-
-                if(!shadowService.existByQuestion(reqMessage)) { // DB에 저장이 안되어 있을 경우
-                    // DB저장
-                    create(reqMessage, respMessage);
+            if(responseCode==200) { // 정상 호출
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
+                String decodedString;
+                String jsonString = "";
+                while ((decodedString = in.readLine()) != null) {
+                    jsonString = decodedString;
                 }
-            } catch (Exception e) {
-                System.out.println("error");
-                e.printStackTrace();
+
+                //받아온 값을 세팅하는 부분
+                JSONParser jsonparser = new JSONParser();
+                try {
+                    JSONObject json = (JSONObject)jsonparser.parse(jsonString);
+                    JSONArray bubblesArray = (JSONArray)json.get("bubbles");
+                    JSONObject bubbles = (JSONObject)bubblesArray.get(0);
+                    JSONObject data = (JSONObject)bubbles.get("data");
+                    String description = "";
+                    description = (String)data.get("description");
+                    chatMessage = description;
+                    String respMessage = chatMessage;
+
+                    if(!shadowService.existByQuestion(reqMessage)) { // DB에 저장이 안되어 있을 경우
+                        // DB저장
+                        create(reqMessage, respMessage);
+                    }
+                } catch (Exception e) {
+                    System.out.println("error");
+                    e.printStackTrace();
+                }
+                in.close();
+            } else {  // 에러 발생
+                chatMessage = con.getResponseMessage();
             }
-            in.close();
-        } else {  // 에러 발생
-            chatMessage = con.getResponseMessage();
+            return chatMessage;
         }
-        return chatMessage;
     }
 
     //보낼 메세지를 네이버에서 제공해준 암호화로 변경해주는 메소드

@@ -15,4 +15,6 @@ import java.util.Date;
 public interface ShadowRepository extends JpaRepository<Test_Keyword, Integer> {
 
     boolean existsByQuestion(String question);
+
+    Test_Keyword findByQuestion(String question);
 }
