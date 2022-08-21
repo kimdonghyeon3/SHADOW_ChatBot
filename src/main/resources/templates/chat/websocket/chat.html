@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hello WebSocket</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!--<link href="/main.css" rel="stylesheet">-->
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.0/css/bootstrap.min.css">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Lato:400,700');
+
+        a {
+            color: #F9FBFF;
+            text-decoration: none;
+        }
+
+        /*챗봇 off상태 말풍선*/
+        .ch-button{
+            position: fixed;
+            width: 84px;
+            height: 84px;
+            bottom: 40px;
+            right: 40px;
+            border: 0;
+            outline: 0;
+            color: #79C7C5;
+            background-color: transparent;
+         }
+
+        /*챗봇 on상태 채팅창*/
+        .chat_container {
+            display: none;
+            position: fixed;
+            width : 30%;
+            height : 50%;
+            bottom : 0;
+            right : 0;
+            margin : 0 10px 20px 0;
+            background: linear-gradient(to bottom left,  #79C7C5 40%, #F9FBFF 100%);
+            border-radius: 10px;
+            border : 1px solid #79C7C5;
+        }
+
+        .chatbox {
+            width:100%;
+            height:100%;
+        }
+
+        /*챗봇 상단*/
+        .top-bar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 13%;
+            background:#F9FBFF;
+            border-radius: 10px 10px 0 0;
+            gap : 8px;
+        }
+
+        .avatar {
+            display : flex;
+            justify-content: center;
+            align-items: center;
+            width: 35px;
+            height: 35px;
+            margin-left: 3%;
+            background: linear-gradient(to bottom left, #79C7C5 20%, #A1E2D9 100%);
+            border-radius: 50%;
+            color: #79C7C5;
+        }
+
+        .name {
+            text-transform: uppercase;
+            color: #777777;
+            font-size: 1em;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        .gap{
+            flex-grow : 1;
+        }
+
+        .btn-close{
+            border: 0;
+            font-size: 1em;
+            color:#A1E2D9;
+            margin-right: 3%;
+            opacity: 0.8;
+            cursor: pointer;
+        }
+
+        /*챗봇 중단*/
+        .middle {
+            display : flex;
+            flex-direction: column;
+            /*position: absolute;*/
+            padding: 10px;
+            background: #F9FBFF;
+            width: 100%;
+            opacity: 0.85;
+            top: 60px;
+            height: 75%;
+            overflow-y: auto;
+        }
+        /*스크롤바 */
+        .middle::-webkit-scrollbar {
+            width: 10px;  /* 스크롤바의 너비 */
+        }
+
+        .middle::-webkit-scrollbar-thumb {
+            height: 30%; /* 스크롤바의 길이 */
+            background: #79C7C5; /* 스크롤바의 색상 */
+            border-radius: 10px;
+        }
+
+        .middle::-webkit-scrollbar-track {
+            background: rgba(33, 122, 244, .1);  /*스크롤바 뒷 배경 색상*/
+        }
+
+        /*말풍선 사용자 채팅*/
+        .incoming
+        {
+            font-family: 'Lato', sans-serif;
+            position: relative;
+            width: fit-content;
+            margin : 1% auto 1% 5%;
+            padding:10px;
+            background: #79C7C5;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+            border-radius: 10px;
+        }
+        .incoming:after
+        {
+            content: '';
+            position: absolute;
+            border-style: solid;
+            border-width: 6px 10px 6px 0;
+            border-color: transparent #79C7C5;
+            display: block;
+            width: 0;
+            z-index: 1;
+            left: -10px;
+            top: 12px;
+        }
+
+        .outgoing
+        {
+            font-family: 'Lato', sans-serif;
+            position: relative;
+            width: fit-content;
+            padding: 10px;
+            margin : 1% 5% 1% auto;
+            background: #79C7C5;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+            border-radius: 10px;
+        }
+
+        .outgoing:after
+        {
+            content: '';
+            position: absolute;
+            border-style: solid;
+            border-width: 6px 0 6px 10px;
+            border-color: transparent #79C7C5;
+            display: block;
+            width: 0;
+            z-index: 1;
+            right: -10px;
+            top: 12px;
+        }
+
+        /*챗봇 하단*/
+        .bottom-bar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 12%;
+            background: #F9FBFF;
+            border-radius: 0 0 10px 10px;
+        }
+
+        .send-form{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
+
+        input {
+            width: 80%;
+            border: 0;
+            background:#F9FBFF;
+            color: #79C7C5;
+            font-size: 18px;
+        }
+
+        input::placeholder {
+            color:#A1E2D9;
+        }
+
+        input:focus {
+            color: #777777;
+            outline: 0;
+        }
+
+        #send{
+            color:#A1E2D9;
+            opacity: 0.8;
+            cursor: pointer;
+            border: 0;
+            background-color: transparent;
+        }
+
+        @keyframes bounce {
+            30% { transform: translateY(-2px); }
+            60% { transform: translateY(0px); }
+            80% { transform: translateY(2px); }
+            100% { transform: translateY(0px); opacity: 0.5;  }
+        }
+</style>
+
+    <script>
+        var stompClient = null;
+
+        function setConnected(connected) {
+
+            $("#connect").prop("disabled", connected);
+            $("#disconnect").prop("disabled", !connected);
+
+            //$("#greetings").html("");
+        }
+
+        function connect() {
+
+            $("#container").show();
+            $("#connect").hide();
+
+            var socket = new SockJS('/shadow-websocket');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, function (frame) {
+                setConnected(true);
+                console.log('Connected: ' + frame);
+                stompClient.subscribe('/topic/greetings', function (message) {  //서버 소켓 응답
+                    showGreeting(JSON.parse(message.body).content);
+                });
+            });
+        }
+
+        function disconnect() {
+
+            $("#container").hide();
+            $("#connect").show();
+
+            if (stompClient !== null) {
+                stompClient.disconnect();
+            }
+            setConnected(false);
+            console.log("Disconnected");
+        }
+
+        function sendName() {
+
+            var input = $("#content").val();
+
+            $("#greetings").append("<div class=\"incoming\">" + input + "</div>");  //html 추가
+            $('#greetings').scrollTop($('#greetings').prop('scrollHeight'));    //스크롤 포커스
+
+            $("#content").val("");
+
+            stompClient.send("/app/hello", {}, JSON.stringify({'content': input})); //서버 소켓 전송
+        }
+
+        function showGreeting(message) {
+            $("#greetings").append("<div class=\"outgoing\">" + message + "</div>");    //html 추가
+            $('#greetings').scrollTop($('#greetings').prop('scrollHeight'));    //스크롤 포커스
+        }
+
+        $(function () {
+            $("form").on('submit', function (e) {
+                e.preventDefault();
+            });
+
+            $( "#connect" ).click(function() { connect(); });
+            $( "#disconnect" ).click(function() { disconnect(); });
+            $( "#send" ).click(function() { sendName(); });
+        });
+    </script>
+
+</head>
+<body>
+
+<!--챗봇 off상태 말풍선-->
+<button type="button" class="ch-button" id="connect">
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-chat-dots" viewBox="0 0 16 16">
+    <path d="M5 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+    <path d="m2.165 15.803.02-.004c1.83-.363 2.948-.842 3.468-1.105A9.06 9.06 0 0 0 8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6a10.437 10.437 0 0 1-.524 2.318l-.003.011a10.722 10.722 0 0 1-.244.637c-.079.186.074.394.273.362a21.673 21.673 0 0 0 .693-.125zm.8-3.108a1 1 0 0 0-.287-.801C1.618 10.83 1 9.468 1 8c0-3.192 3.004-6 7-6s7 2.808 7 6c0 3.193-3.004 6-7 6a8.06 8.06 0 0 1-2.088-.272 1 1 0 0 0-.711.074c-.387.196-1.24.57-2.634.893a10.97 10.97 0 0 0 .398-2z"/>
+</svg></button>
+
+<!--채팅창-->
+<div class="chat_container" id="container">
+    <div class="chatbox">
+
+<!--챗봇 상단-->
+        <div class="top-bar">
+            <!--아이콘-->
+            <div class="avatar"><div>S</div></div>
+            <!--채팅방 제목-->
+            <div class="name">SHADOW</div>
+            <div class="gap"></div>
+            <!-- 채팅창 닫기 -->
+            <button type="button" class="btn-close" aria-label="Close" id="disconnect"></button>
+        </div>
+
+
+<!--챗봇 중단-->
+        <div class="middle" id="greetings">
+                <div class="incoming">
+                    hello
+                </div>
+                <div class="outgoing">
+                    hi
+                </div>
+        </div>
+
+<!--챗봇 하단-->
+        <div class="bottom-bar">
+            <form class="send-form">
+                    <input type="text" id="content" name="content"  placeholder="Type a message..." />
+                    <button type="submit" id="send">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="black" class="bi bi-send" viewBox="0 0 16 16">
+                        <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"/>
+                    </svg></button>
+            </form>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>
