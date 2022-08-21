@@ -1,7 +1,7 @@
-package com.example.shadow.security.config;
+package com.example.shadow.global.security.config;
 
-import com.example.shadow.security.handler.CustomSuccessHandler;
-import com.example.shadow.security.service.MemberSecurityService;
+import com.example.shadow.global.security.handler.CustomSuccessHandler;
+import com.example.shadow.global.security.service.MemberSecurityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

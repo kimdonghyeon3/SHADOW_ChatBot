@@ -1,10 +1,9 @@
 package com.example.shadow.domain.member.service;
 
-import com.example.shadow.domain.member.dto.MemberUpdateDto;
 import com.example.shadow.domain.member.entity.Member;
 import com.example.shadow.domain.member.repository.MemberRepository;
-import com.example.shadow.exception.SignupEmailDuplicatedException;
-import com.example.shadow.exception.SignupUsernameDuplicatedException;
+import com.example.shadow.global.exception.SignupEmailDuplicatedException;
+import com.example.shadow.global.exception.SignupUsernameDuplicatedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

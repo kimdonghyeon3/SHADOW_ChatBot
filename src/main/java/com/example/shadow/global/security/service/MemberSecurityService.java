@@ -1,4 +1,4 @@
-package com.example.shadow.security.service;
+package com.example.shadow.global.security.service;
 
 import com.example.shadow.domain.member.entity.Member;
 import com.example.shadow.domain.member.entity.MemberRole;

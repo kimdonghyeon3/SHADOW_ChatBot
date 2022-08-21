@@ -4,11 +4,10 @@ import com.example.shadow.domain.member.dto.MemberDto;
 import com.example.shadow.domain.member.dto.MemberUpdateDto;
 import com.example.shadow.domain.member.entity.Member;
 import com.example.shadow.domain.member.service.MemberService;
-import com.example.shadow.exception.SignupEmailDuplicatedException;
-import com.example.shadow.exception.SignupUsernameDuplicatedException;
+import com.example.shadow.global.exception.SignupEmailDuplicatedException;
+import com.example.shadow.global.exception.SignupUsernameDuplicatedException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,6 +28,7 @@ public class MemberController {
     private PasswordEncoder passwordEncoder;
     private static boolean usernameChecked;
     private static boolean emailChecked;
+
     @GetMapping("/signup")
     public String signup(MemberDto memberDto) {
         return "signup_form";

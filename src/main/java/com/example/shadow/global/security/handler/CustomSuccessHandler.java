@@ -1,4 +1,4 @@
-package com.example.shadow.security.handler;
+package com.example.shadow.global.security.handler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
