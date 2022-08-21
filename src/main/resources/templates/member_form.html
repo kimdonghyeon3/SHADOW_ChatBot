@@ -13,176 +13,71 @@
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-<section>
+    <section>
 
-    <form th:action="@{|/members/${member.id}|}" th:object="${memberUpdateDto}" method="post" onsubmit="SubmitForm(this); return false;">
-        <div th:replace="form_errors :: formErrorsFragment"></div>
-        <div id="resultDiv" th:replace="login_errors :: loginAlertFragment(${alert}, ${msg})"></div>
-        <input type="hidden" name="_method" value="put"/>
+        <form th:action="@{|/members/${member.id}|}" th:object="${memberUpdateDto}" method="post"
+              onsubmit="SubmitForm(this); return false;">
+            <div th:replace="form_errors :: formErrorsFragment"></div>
+            <div id="resultDiv" th:replace="login_errors :: loginAlertFragment(${alert}, ${msg})"></div>
+            <input type="hidden" name="_method" value="put"/>
 
-        <div class="mb-3">
-            <label for="name" class="form-label">이름</label>
-            <input type="text" th:name="name" th:value="${member.name}" class="form-control">
-        </div>
-        <div class="mb-3">
-            <label for="username" class="form-label">ID</label>
-            <p type="text" th:text="${member.username}" class="form-control"></p>
-        </div>
-        <input type="hidden" id="password1"  name="password1" th:value="${member.password}" class="form-control"/>
-        <input type="hidden" id="password2"  name="password2" th:value="${member.password}" class="form-control"/>
+            <div class="mb-3">
+                <label for="name" class="form-label">이름</label>
+                <input type="text" th:name="name" th:value="${member.name}" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label for="username" class="form-label">ID</label>
+                <p type="text" th:text="${member.username}" class="form-control"></p>
+            </div>
+            <input type="hidden" id="password1" name="password1" th:value="${member.password}" class="form-control"/>
+            <input type="hidden" id="password2" name="password2" th:value="${member.password}" class="form-control"/>
 
-        <button type="button" class="btn btn-primary btn-lg" id="openModalBtn">비밀번호 변경</button>
+            <button type="button" class="btn btn-primary btn-lg" id="openModalBtn">비밀번호 변경</button>
 
-        <div class="mb-3">
-            <label for="email" class="form-label">이메일</label>
-            <input type="email" id="email" th:name="email" th:value="${member.email}" class="form-control">
-            <p class="d-none alert alert-success" id="success-email-msg" th:text="${msg}"></p>
-            <p class="d-none alert alert-danger" id="fail-email-msg" th:text="${msg}"></p>
-            <button type="button" class="btn btn-primary" id="checkEmailBtn">이메일 중복 확인</button>
-        </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">이메일</label>
+                <input type="email" id="email" th:name="email" th:value="${member.email}" class="form-control">
+                <p class="d-none alert alert-success" id="success-email-msg" th:text="${msg}"></p>
+                <p class="d-none alert alert-danger" id="fail-email-msg" th:text="${msg}"></p>
+                <button type="button" class="btn btn-primary" id="checkEmailBtn">이메일 중복 확인</button>
+            </div>
 
-        <button type="submit" class="btn btn-primary">수정</button>
-    </form>
+            <button type="submit" class="btn btn-primary">수정</button>
+        </form>
 
-    <!-- 모달 영역 -->
-    <div id="modalBox" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel">비밀 번호 변경</h4></div>
-                <div class="modal-body">
-                    <form onsubmit="savePassword(this); return false;" th:object="${memberUpdateDto}" >
-                        <div class="mb-3">
-                            <label for="password" class="form-label">비밀번호</label>
-                            <input type="password" id="mpassword1" th:name="password1" th:value="${member.password}" class="form-control">
-                        </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label">비밀번호 확인</label>
-                            <input type="password" id="mpassword2" th:name="password2" th:value="${member.password}" class="form-control">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">변경</button>
-                            <button type="button" class="btn btn-default" id="closeModalBtn">취소</button>
-                        </div>
-                    </form>
+        <!-- 모달 영역 -->
+        <div id="modalBox" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">비밀 번호 변경</h4></div>
+                    <div class="modal-body">
+                        <form onsubmit="savePassword(this); return false;" th:object="${memberUpdateDto}">
+                            <div class="mb-3">
+                                <label for="password" class="form-label">비밀번호</label>
+                                <input type="password" id="mpassword1" th:name="password1" th:value="${member.password}"
+                                       class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">비밀번호 확인</label>
+                                <input type="password" id="mpassword2" th:name="password2" th:value="${member.password}"
+                                       class="form-control">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">변경</button>
+                                <button type="button" class="btn btn-default" id="closeModalBtn">취소</button>
+                            </div>
+                        </form>
+                    </div>
+
                 </div>
-
             </div>
         </div>
-    </div>
 
 
-</section>
+    </section>
 
-
-    <script>
-
-
-
-      // 모달 버튼에 이벤트를 건다.
-      $('#openModalBtn').on('click', function(){
-      $('#modalBox').modal('show');
-      console.log("click open");
-      });
-      // 모달 안의 취소 버튼에 이벤트를 건다.
-      $('#closeModalBtn').on('click', function(){
-      $('#modalBox').modal('hide');
-      console.log("click close");
-      });
-      $('#modalBox').on('show.bs.modal', function (e) {
-      console.log("show.bs.modal");
-      });
-      $('#modalBox').on('shown.bs.modal', function (e) {
-      console.log("shown.bs.modal");
-      });
-      $('#modalBox').on('hide.bs.modal', function (e) {
-      console.log("hide.bs.modal");
-      });
-      $('#modalBox').on('hidden.bs.modal', function (e) {
-      console.log("hidden.bs.modal");
-      });
-
-      function savePassword(form) {
-        $('#password1').val($('#mpassword1').val());
-        $('#password2').val($('#mpassword2').val());
-        $('#modalBox').modal('hide');
-      }
-
-    </script>
-    <script th:inline="javascript">
-
-    /*<![CDATA[*/
-    var urlPath = $(location).attr('pathname');
-
-    var email;
-    var isCheckedEmail="false";
-    console.log(isCheckedEmail);
-
-    function SubmitForm(form) {
-        var submit=0;
-
-        $.ajax({
-        url: '/signup/isCheckedEmail',
-        type: 'POST',
-        data: {
-            isCheckedEmail : isCheckedEmail,
-            isChangedEmail : (form.email.value != email)
-        },
-        success: function(result){
-
-            console.log(result);
-            if(result.data){
-               form.submit();
-            }else{
-                $('#fail-email-msg').removeClass('d-none');
-                $('#fail-email-msg').text(result.message);
-               // $('#isCheckedEmail').val("false");
-                isCheckedEmail="false";
-                $('#email').focus();
-                return;
-            }
-        },
-        error: function (){
-        }
-      });
-
-    }
-
-    $('#checkEmailBtn').on('click', function(){
-      console.log('click check email');
-      email=$("#email").val();
-
-      if($('#success-email-msg').hasClass('d-none')!="true" || $('#fail-email-msg').hasClass('d-none')!="true"){
-        $('#success-email-msg').addClass('d-none');
-        $('#fail-email-msg').addClass('d-none');
-      }
-      $.ajax({
-        url: urlPath+'/checkEmail',
-        type: 'POST',
-        data: { email : email
-        },
-        success: function(result){
-            console.log(result);
-            if(result.data){
-            $('#success-email-msg').removeClass('d-none');
-            $('#success-email-msg').text(result.message);
-            //console.log($('#success-email-msg').text());
-            isCheckedEmail="true";
-            }else{
-            $('#fail-email-msg').removeClass('d-none');
-            $('#fail-email-msg').text(result.message);
-            $('#email').focus();
-            isCheckedEmail="false";
-            }
-        },
-        error: function (){
-        }
-      });
-    });
-    /*]]>*/
-    </script>
-
-
+    <script th:inline="javascript" th:src="@{/js/update.js}"></script>
 
 </div>
 </html>

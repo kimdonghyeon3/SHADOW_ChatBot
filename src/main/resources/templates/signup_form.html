@@ -14,7 +14,7 @@
     </div>
     <form th:action="@{/signup}" th:object="${memberDto}" method="post" onsubmit="SubmitForm(this); return false;">
         <div th:replace="form_errors :: formErrorsFragment"></div>
-<!--        <div id="resultDiv" th:replace="login_errors :: loginAlertFragment(${alert}, ${msg})"></div>-->
+        <!--        <div id="resultDiv" th:replace="login_errors :: loginAlertFragment(${alert}, ${msg})"></div>-->
         <div class="mb-3">
             <label for="name" class="form-label">이름</label>
             <input type="text" th:field="*{name}" class="form-control">
@@ -44,147 +44,7 @@
         <button type="submit" class="btn btn-primary">회원가입</button>
     </form>
 
-    <script th:inline="javascript">
-
-    /*<![CDATA[*/
-    var urlPath = $(location).attr('pathname');
-    //var msg = /*[[${msg}]]*/;
-   // console.log(/*[[${msg}]]*/);
-   // console.log(msg);
-
-    var username;
-    var email;
-    var isCheckedUsername="false";
-    var isCheckedEmail="false";
-    console.log(isCheckedUsername);
-    console.log(isCheckedEmail);
-
-    function SubmitForm(form) {
-        var submit=0;
-        $.ajax({
-        url: urlPath+'/isCheckedUsername',
-        type: 'POST',
-        data: {
-            isCheckedUsername : isCheckedUsername,
-            isChangedUsername : (form.username.value != username)
-        },
-        success: function(result){
-            console.log(result);
-            if(result.data){
-                submit=1;
-            }else{
-                $('#fail-username-msg').removeClass('d-none');
-                $('#fail-username-msg').text(result.message);
-               // $('#isCheckedUsername').val("false");
-                isCheckedUsername="false";
-                $('#username').focus();
-                return;
-            }
-        },
-        error: function (){
-        }
-      });
-        $.ajax({
-        url: urlPath+'/isCheckedEmail',
-        type: 'POST',
-        data: {
-            isCheckedEmail : isCheckedEmail,
-            isChangedEmail : (form.email.value != email)
-        },
-        success: function(result){
-
-            console.log(result);
-            if(result.data){
-                if(submit==1){
-                    console.log(submit);
-                    form.submit();
-                }else {
-                    return;
-                }
-            }else{
-                $('#fail-email-msg').removeClass('d-none');
-                $('#fail-email-msg').text(result.message);
-               // $('#isCheckedEmail').val("false");
-                isCheckedEmail="false";
-                $('#email').focus();
-                return;
-            }
-        },
-        error: function (){
-        }
-      });
-
-    }
-
-
-    $('#checkUsernameBtn').on('click', function(){
-
-      console.log('click check username');
-      username=$("#username").val();
-      console.log(username);
-      if($('#success-username-msg').hasClass('d-none')!="true" || $('#fail-username-msg').hasClass('d-none')!="true"){
-        $('#success-username-msg').addClass('d-none');
-        $('#fail-username-msg').addClass('d-none');
-      }
-      $.ajax({
-        url: urlPath+'/checkUsername',
-        type: 'POST',
-        data: { username : username
-        },
-        success: function(result){
-
-            //console.log(result);
-            if(result.data){
-            $('#success-username-msg').removeClass('d-none');
-            $('#success-username-msg').text(result.message);
-            //console.log($('#success-username-msg').text());
-            isCheckedUsername="true";
-            console.log(isCheckedUsername);
-            }else{
-            $('#fail-username-msg').removeClass('d-none');
-            $('#fail-username-msg').text(result.message);
-            isCheckedUsername="false";
-            $('#username').focus();
-            }
-
-        },
-        error: function (){
-        }
-      });
-    });
-
-    $('#checkEmailBtn').on('click', function(){
-      console.log('click check email');
-      email=$("#email").val();
-      console.log(username);
-      if($('#success-email-msg').hasClass('d-none')!="true" || $('#fail-email-msg').hasClass('d-none')!="true"){
-        $('#success-email-msg').addClass('d-none');
-        $('#fail-email-msg').addClass('d-none');
-      }
-      $.ajax({
-        url: urlPath+'/checkEmail',
-        type: 'POST',
-        data: { email : email
-        },
-        success: function(result){
-            if(result.data){
-            $('#success-email-msg').removeClass('d-none');
-            $('#success-email-msg').text(result.message);
-            //console.log($('#success-email-msg').text());
-            isCheckedEmail="true";
-            }else{
-            $('#fail-email-msg').removeClass('d-none');
-            $('#fail-email-msg').text(result.message);
-            $('#email').focus();
-            isCheckedEmail="false";
-            }
-        },
-        error: function (){
-        }
-      });
-    });
-    /*]]>*/
-    </script>
+    <script th:inline="javascript" th:src="@{/js/signup.js}"></script>
 
 </div>
 </html>
