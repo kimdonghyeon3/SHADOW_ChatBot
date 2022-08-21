@@ -66,9 +66,13 @@ public class MemberService {
         member.updateEmail(email);
         save(member);
     }
-
+    public boolean checkUsername(String username) {
+        return memberRepository.existsByUsername(username);
+    }
+    public boolean checkEmail(String email) {
+        return memberRepository.existsByEmail(email);
+    }
     public void usernameCheck(String username) throws SignupUsernameDuplicatedException {
-
         if (memberRepository.existsByUsername(username)){
             throw new SignupUsernameDuplicatedException("중복된 ID 입니다.");
         }
@@ -79,4 +83,7 @@ public class MemberService {
             throw new SignupEmailDuplicatedException("중복된 Email 입니다.");
         }
     }
+
+
+
 }

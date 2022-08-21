@@ -6,8 +6,10 @@ import com.example.shadow.domain.member.entity.Member;
 import com.example.shadow.domain.member.service.MemberService;
 import com.example.shadow.global.exception.SignupEmailDuplicatedException;
 import com.example.shadow.global.exception.SignupUsernameDuplicatedException;
+import com.example.shadow.global.result.ResultResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,8 +28,6 @@ public class MemberController {
 
     private final MemberService memberService;
     private PasswordEncoder passwordEncoder;
-    private static boolean usernameChecked;
-    private static boolean emailChecked;
 
     @GetMapping("/signup")
     public String signup(MemberDto memberDto) {
@@ -39,19 +39,10 @@ public class MemberController {
         if (bindingResult.hasErrors()) {
             return "signup_form";
         }
-        if(!usernameChecked){
-            bindingResult.rejectValue("username","usernameNotCheck","아이디 중복 확인이 필요합니다.");
-            return "signup_form";
-        }
-        if(!emailChecked){
-            bindingResult.rejectValue("email","emailNotCheck","이메일 중복 확인이 필요합니다.");
-            return "signup_form";
-        }
         if (!memberDto.getPassword1().equals(memberDto.getPassword2())) {
             bindingResult.rejectValue("memberPwd2", "passwordInCorrect", "2개의 패스워드가 일치하지 않습니다.");
             return "signup_form";
         }
-
         try {
             memberService.create(
                     memberDto.getUsername(),
@@ -71,13 +62,51 @@ public class MemberController {
         return "redirect:/";
     }
 
+    @PostMapping("/signup/checkUsername")
+    public ResponseEntity<ResultResponse> checkUsername(@RequestParam String username) {
+        final boolean check = memberService.checkUsername(username);
+        if (!check) {
+            return ResponseEntity.ok(ResultResponse.of("CHECK_USERNAME_GOOD","사용할 수 있는 아이디입니다.", true));
+        } else {
+            return ResponseEntity.ok(ResultResponse.of("CHECK_USERNAME_BAD","중복된 아이디 입니다." ,false));
+        }
+    }
+    @PostMapping("/signup/checkEmail")
+    public ResponseEntity<ResultResponse> checkEmail(@RequestParam String email) {
+        final boolean check = memberService.checkEmail(email);
+        if (!check) {
+            return ResponseEntity.ok(ResultResponse.of("CHECK_EMAIL_GOOD","사용할 수 있는 이메일입니다..", true));
+        } else {
+            return ResponseEntity.ok(ResultResponse.of("CHECK_EMAIL_BAD","중복된 이메일 입니다." ,false));
+        }
+    }
+
+    @PostMapping("/signup/isCheckedUsername")
+    public ResponseEntity<ResultResponse> checkUsername(@RequestParam boolean isCheckedUsername, @RequestParam boolean isChangedUsername) {
+        log.debug("isChecked : "+ isCheckedUsername);
+        log.debug("isChanged : "+ isChangedUsername);
+        if (isCheckedUsername&&!isChangedUsername) {
+            return ResponseEntity.ok(ResultResponse.of("CHECK_USERNAME_FIN","", true));
+        } else {
+            return ResponseEntity.ok(ResultResponse.of("CHECK_USERNAME_NO","아이디 중복 체크가 필요합니다." ,false));
+        }
+    }
+
+    @PostMapping("/signup/isCheckedEmail")
+    public ResponseEntity<ResultResponse> checkEmail( @RequestParam boolean isCheckedEmail, @RequestParam boolean isChangedEmail) {
+        if (isCheckedEmail&&!isChangedEmail) {
+            return ResponseEntity.ok(ResultResponse.of("CHECK_EMAIL_FIN","", true));
+        } else {
+            return ResponseEntity.ok(ResultResponse.of("CHECK_EMAIL_NO","이메일 중복 체크가 필요합니다." ,false));
+        }
+    }
+
     @PostMapping("/signup/usernameCheck")
     public String usernameCheck(@RequestParam String username, Model model) {
         try{
             memberService.usernameCheck(username);
             model.addAttribute("alert", "success");
             model.addAttribute("msg", "사용할 수 있는 아이디 입니다.");
-            usernameChecked=true;
             return "signup_form :: #resultDiv";
         } catch (SignupUsernameDuplicatedException e) {
             log.debug("username already exists : "+ username);
@@ -93,7 +122,6 @@ public class MemberController {
             memberService.emailCheck(email);
             model.addAttribute("alert", "success");
             model.addAttribute("msg", "사용할 수 있는 이메일 입니다.");
-            emailChecked=true;
             return "signup_form :: #resultDiv";
         } catch (SignupEmailDuplicatedException e) {
             log.debug("email already exists : "+ email);
@@ -166,7 +194,7 @@ public class MemberController {
             memberService.emailCheck(email);
             model.addAttribute("alert", "success");
             model.addAttribute("msg", "사용할 수 있는 이메일 입니다.");
-            emailChecked=true;
+
             return "member_form :: #resultDiv";
         } catch (SignupEmailDuplicatedException e) {
             log.debug("email already exists : "+ email);

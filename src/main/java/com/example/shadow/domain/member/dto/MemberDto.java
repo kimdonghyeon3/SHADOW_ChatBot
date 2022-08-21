@@ -3,6 +3,7 @@ package com.example.shadow.domain.member.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
@@ -27,5 +28,11 @@ public class MemberDto {
     @NotEmpty(message = "이메일은 필수항목입니다.")
     @Email
     private String email;
+
+    @AssertTrue(message = "아이디 중복 확인을 해주세요.")
+    private boolean isCheckedUsername=false;
+
+    @AssertTrue(message = "이메일 중복 확인을 해주세요.")
+    private boolean isCheckedEmail=false;
 
 }
