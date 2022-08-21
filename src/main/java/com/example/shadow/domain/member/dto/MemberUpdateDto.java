@@ -23,7 +23,4 @@ public class MemberUpdateDto {
     @NotEmpty(message = "이메일은 필수항목입니다.")
     @Email
     private String email;
-
-    @AssertTrue(message = "이메일 중복 확인을 해주세요.")
-    private boolean isCheckedEmail;
 }

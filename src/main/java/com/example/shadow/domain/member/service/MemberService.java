@@ -18,34 +18,10 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public Member create(String username,String password, String name,  String email) throws SignupUsernameDuplicatedException, SignupEmailDuplicatedException {
-
-        Member member = new Member(
-                username,
-                passwordEncoder.encode(password),
-                name,
-                email
-        );
-
-        save(member);
-
-        return member;
+    public void create(String username,String password, String name,  String email) {
+        Member member = new Member(username, passwordEncoder.encode(password), name, email);
+        memberRepository.save(member);
     }
-
-    public void save(Member member) throws SignupUsernameDuplicatedException, SignupEmailDuplicatedException {
-        try {
-            memberRepository.save(member);
-        } catch (DataIntegrityViolationException e) {
-
-            if (memberRepository.existsByUsername(member.getUsername())) {
-                throw new SignupUsernameDuplicatedException("중복된 ID 입니다.");
-            } else {
-                throw new SignupEmailDuplicatedException("중복된 이메일 입니다.");
-            }
-        }
-
-    }
-
     public Member findByUsername(String username) {
         return memberRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
@@ -64,7 +40,7 @@ public class MemberService {
         member.setEncryptedPassword(passwordEncoder.encode(password));
         member.updateName(name);
         member.updateEmail(email);
-        save(member);
+        memberRepository.save(member);
     }
     public boolean checkUsername(String username) {
         return memberRepository.existsByUsername(username);
@@ -72,18 +48,5 @@ public class MemberService {
     public boolean checkEmail(String email) {
         return memberRepository.existsByEmail(email);
     }
-    public void usernameCheck(String username) throws SignupUsernameDuplicatedException {
-        if (memberRepository.existsByUsername(username)){
-            throw new SignupUsernameDuplicatedException("중복된 ID 입니다.");
-        }
-    }
-
-    public void emailCheck(String email) throws SignupEmailDuplicatedException {
-        if (memberRepository.existsByEmail(email)){
-            throw new SignupEmailDuplicatedException("중복된 Email 입니다.");
-        }
-    }
-
-
 
 }

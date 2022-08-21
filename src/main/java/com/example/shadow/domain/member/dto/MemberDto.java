@@ -29,10 +29,4 @@ public class MemberDto {
     @Email
     private String email;
 
-    @AssertTrue(message = "아이디 중복 확인을 해주세요.")
-    private boolean isCheckedUsername=false;
-
-    @AssertTrue(message = "이메일 중복 확인을 해주세요.")
-    private boolean isCheckedEmail=false;
-
 }

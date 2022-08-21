@@ -43,22 +43,7 @@ public class MemberController {
             bindingResult.rejectValue("memberPwd2", "passwordInCorrect", "2개의 패스워드가 일치하지 않습니다.");
             return "signup_form";
         }
-        try {
-            memberService.create(
-                    memberDto.getUsername(),
-                    memberDto.getPassword1(),
-                    memberDto.getName(),
-                    memberDto.getEmail()
-            );
-        } catch (SignupUsernameDuplicatedException e) {
-            e.printStackTrace();
-            bindingResult.reject("signupUsernameDuplicated", e.getMessage());
-            return "signup_form";
-        } catch (SignupEmailDuplicatedException e) {
-            e.printStackTrace();
-            bindingResult.reject("signupEmailDuplicated", e.getMessage());
-            return "signup_form";
-        }
+        memberService.create(memberDto.getUsername(), memberDto.getPassword1(), memberDto.getName(), memberDto.getEmail());
         return "redirect:/";
     }
 
@@ -98,37 +83,6 @@ public class MemberController {
             return ResponseEntity.ok(ResultResponse.of("CHECK_EMAIL_FIN","", true));
         } else {
             return ResponseEntity.ok(ResultResponse.of("CHECK_EMAIL_NO","이메일 중복 체크가 필요합니다." ,false));
-        }
-    }
-
-    @PostMapping("/signup/usernameCheck")
-    public String usernameCheck(@RequestParam String username, Model model) {
-        try{
-            memberService.usernameCheck(username);
-            model.addAttribute("alert", "success");
-            model.addAttribute("msg", "사용할 수 있는 아이디 입니다.");
-            return "signup_form :: #resultDiv";
-        } catch (SignupUsernameDuplicatedException e) {
-            log.debug("username already exists : "+ username);
-            e.printStackTrace();
-            model.addAttribute("alert", "danger");
-            model.addAttribute("msg", e.getMessage());
-            return "signup_form :: #resultDiv";
-        }
-    }
-    @PostMapping("/signup/emailCheck")
-    public String emailCheck(@RequestParam String email, Model model) {
-        try{
-            memberService.emailCheck(email);
-            model.addAttribute("alert", "success");
-            model.addAttribute("msg", "사용할 수 있는 이메일 입니다.");
-            return "signup_form :: #resultDiv";
-        } catch (SignupEmailDuplicatedException e) {
-            log.debug("email already exists : "+ email);
-            e.printStackTrace();
-            model.addAttribute("alert", "danger");
-            model.addAttribute("msg", e.getMessage());
-            return "signup_form :: #resultDiv";
         }
     }
 
@@ -185,25 +139,18 @@ public class MemberController {
         }
         return "redirect:/";
     }
-    @PostMapping("/members/{id}/emailCheck")
-    public String updateEmailCheck(@PathVariable long id, @RequestParam String email, Model model) {
+    @PostMapping("/members/{id}/checkEmail")
+    public ResponseEntity<ResultResponse> updateEmailCheck(@PathVariable long id, @RequestParam String email) {
         if(memberService.findById(id).getEmail().equals(email)){
-            return "member_form :: #resultDiv";
-        }
-        try{
-            memberService.emailCheck(email);
-            model.addAttribute("alert", "success");
-            model.addAttribute("msg", "사용할 수 있는 이메일 입니다.");
-
-            return "member_form :: #resultDiv";
-        } catch (SignupEmailDuplicatedException e) {
-            log.debug("email already exists : "+ email);
-            e.printStackTrace();
-            model.addAttribute("alert", "danger");
-            model.addAttribute("msg", e.getMessage());
-            return "member_form :: #resultDiv";
+            return ResponseEntity.ok(ResultResponse.of("UPDATE_EMAIL_NONE","", "same"));
+        } else{
+            final boolean check = memberService.checkEmail(email);
+            if (!check) {
+                return ResponseEntity.ok(ResultResponse.of("CHECK_EMAIL_GOOD","사용할 수 있는 이메일입니다..", true));
+            } else {
+                return ResponseEntity.ok(ResultResponse.of("CHECK_EMAIL_BAD","중복된 이메일 입니다." ,false));
+            }
         }
     }
-
 
 }

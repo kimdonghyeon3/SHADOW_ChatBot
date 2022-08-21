@@ -15,7 +15,7 @@
 
 <section>
 
-    <form th:action="@{|/members/${member.id}|}" th:object="${memberUpdateDto}" method="post">
+    <form th:action="@{|/members/${member.id}|}" th:object="${memberUpdateDto}" method="post" onsubmit="SubmitForm(this); return false;">
         <div th:replace="form_errors :: formErrorsFragment"></div>
         <div id="resultDiv" th:replace="login_errors :: loginAlertFragment(${alert}, ${msg})"></div>
         <input type="hidden" name="_method" value="put"/>
@@ -36,9 +36,10 @@
         <div class="mb-3">
             <label for="email" class="form-label">이메일</label>
             <input type="email" id="email" th:name="email" th:value="${member.email}" class="form-control">
+            <p class="d-none alert alert-success" id="success-email-msg" th:text="${msg}"></p>
+            <p class="d-none alert alert-danger" id="fail-email-msg" th:text="${msg}"></p>
             <button type="button" class="btn btn-primary" id="checkEmailBtn">이메일 중복 확인</button>
         </div>
-        <input type="hidden" th:name="isCheckedEmail" id="isCheckedEmail" th:value="false">
 
         <button type="submit" class="btn btn-primary">수정</button>
     </form>
@@ -107,29 +108,79 @@
         $('#modalBox').modal('hide');
       }
 
+    </script>
+    <script th:inline="javascript">
+
+    /*<![CDATA[*/
     var urlPath = $(location).attr('pathname');
+
+    var email;
+    var isCheckedEmail="false";
+    console.log(isCheckedEmail);
+
+    function SubmitForm(form) {
+        var submit=0;
+
+        $.ajax({
+        url: '/signup/isCheckedEmail',
+        type: 'POST',
+        data: {
+            isCheckedEmail : isCheckedEmail,
+            isChangedEmail : (form.email.value != email)
+        },
+        success: function(result){
+
+            console.log(result);
+            if(result.data){
+               form.submit();
+            }else{
+                $('#fail-email-msg').removeClass('d-none');
+                $('#fail-email-msg').text(result.message);
+               // $('#isCheckedEmail').val("false");
+                isCheckedEmail="false";
+                $('#email').focus();
+                return;
+            }
+        },
+        error: function (){
+        }
+      });
+
+    }
 
     $('#checkEmailBtn').on('click', function(){
       console.log('click check email');
-      console.log($(location).attr('pathname'));
-      console.log(urlPath);
+      email=$("#email").val();
 
+      if($('#success-email-msg').hasClass('d-none')!="true" || $('#fail-email-msg').hasClass('d-none')!="true"){
+        $('#success-email-msg').addClass('d-none');
+        $('#fail-email-msg').addClass('d-none');
+      }
       $.ajax({
-        url: urlPath+'/emailCheck',
+        url: urlPath+'/checkEmail',
         type: 'POST',
-        data: { email : $("#email").val()
+        data: { email : email
         },
         success: function(result){
-            $("#resultDiv").replaceWith(result);
+            console.log(result);
+            if(result.data){
+            $('#success-email-msg').removeClass('d-none');
+            $('#success-email-msg').text(result.message);
+            //console.log($('#success-email-msg').text());
+            isCheckedEmail="true";
+            }else{
+            $('#fail-email-msg').removeClass('d-none');
+            $('#fail-email-msg').text(result.message);
             $('#email').focus();
+            isCheckedEmail="false";
+            }
         },
         error: function (){
         }
       });
     });
-
+    /*]]>*/
     </script>
-
 
 
 
