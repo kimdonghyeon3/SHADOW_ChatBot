@@ -1,15 +1,8 @@
-package com.example.shadow.controller;
+package com.example.shadow.chatbot.controller;
 
-import com.example.shadow.test.Test_Keyword;
+import com.example.shadow.chatbot.test.Test_Keyword;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.codec.binary.Base64;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-import java.util.Date;
 
 @RequiredArgsConstructor
 @Service

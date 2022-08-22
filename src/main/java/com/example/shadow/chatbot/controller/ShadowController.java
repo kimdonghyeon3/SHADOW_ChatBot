@@ -1,15 +1,19 @@
-package com.example.shadow.controller;
+package com.example.shadow.chatbot.controller;
 
-import com.example.shadow.test.Test_Keyword;
+import com.example.shadow.chatbot.message.RequestMessage;
+import com.example.shadow.chatbot.message.ResponseMessage;
+import com.example.shadow.chatbot.test.Test_Keyword;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -23,22 +27,38 @@ import java.util.Date;
 
 @RequiredArgsConstructor
 @Controller
+@Slf4j
 public class ShadowController {
     private final ShadowService shadowService;
     private static String secretKey = "SHVTeG5SemVXRk9KcU1oSU1VVWpWeW1MQmxCY0xzSk4=";
     private static String apiUrl = "https://z16j1lin9x.apigw.ntruss.com/custom/v1/7654/bb5bef27a0dd572b921c6b22c71e79115c1d4cca1dcbd766d269fa6c2d5bd9ad";
 
-    @MessageMapping("/sendMessage")
+
+    @RequestMapping("/chat")
+    public String chatGET(){
+
+        log.info("제대로 실행되니?");
+
+        return "chatbot/chat";
+    }
+
+
+    //@MessageMapping("/sendMessage")
+    @RequestMapping("/chat/write")
 // 우리가 구독하고 있는 /topic에서 메시지를 보낼 곳으로 이동시킨다. 우리의 prefix는 /shadow이다.(/shadow -> /topic -> CLOVA로 보내기)
     @SendTo("/topic/shadow")
-    public String sendMessage(@Payload String chatMessage) throws IOException { // @Payload는 websocket에서 요청할 메시지의 meta 데이터
+    @ResponseBody
+    public ResponseMessage sendMessage(String chatMessage) throws IOException { // @Payload는 websocket에서 요청할 메시지의 meta 데이터
         String reqMessage = chatMessage;
         reqMessage = reqMessage.replace("\"", "");
 
+        ResponseMessage responseMessage = new ResponseMessage();
+
         if (shadowService.existByQuestion(reqMessage)) {
             Test_Keyword keywords = shadowService.findByQuestion(reqMessage);
-            String keyword = keywords.getKeyword();
-            return keyword;
+            responseMessage.setMessage(keywords.getKeyword());
+            //String keyword = keywords.getKeyword();
+            return responseMessage;
         } else {
             URL url = new URL(apiUrl);
 
@@ -93,7 +113,10 @@ public class ShadowController {
             } else {  // 에러 발생
                 chatMessage = con.getResponseMessage();
             }
-            return chatMessage;
+
+            responseMessage.setMessage(chatMessage);
+
+            return responseMessage;
         }
     }
 

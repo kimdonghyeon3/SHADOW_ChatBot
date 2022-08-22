@@ -265,7 +265,7 @@
             $.post(
                 '/chat/write', // 주소, action
                 {
-                    message: form.message.value // 폼 내용, input name, value
+                    chatMessage: form.message.value // 폼 내용, input name, value
                 },
                 function(data) { // 콜백 메서드, 통신이 완료된 후, 실행
 

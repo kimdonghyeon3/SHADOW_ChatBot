@@ -1,13 +1,13 @@
-package com.example.shadow.chatbot.ajax;
+package com.example.shadow.chatbot.message;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class RequestMessage {
+public class ResponseMessage {
 
     private String message;
 
-    public RequestMessage(){}
+    public ResponseMessage(){}
 }

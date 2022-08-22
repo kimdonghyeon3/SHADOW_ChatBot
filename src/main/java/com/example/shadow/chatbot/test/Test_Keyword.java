@@ -1,4 +1,4 @@
-package com.example.shadow.test;
+package com.example.shadow.chatbot.test;
 
 import lombok.Data;
 

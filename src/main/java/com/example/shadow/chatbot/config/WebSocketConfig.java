@@ -1,4 +1,4 @@
-package com.example.shadow.config;
+package com.example.shadow.chatbot.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
