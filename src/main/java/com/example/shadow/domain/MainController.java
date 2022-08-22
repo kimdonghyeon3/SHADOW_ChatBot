@@ -1,4 +1,4 @@
-package com.example.shadow.domain.member;
+package com.example.shadow.domain;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,14 +8,15 @@ public class MainController {
 
     @RequestMapping("/")
     public String root() {
-        return "index";
+        return "redirect:/main";
     }
     @RequestMapping("/admin")
     public String admin() {
-        return "index";
+        return "admin";
     }
     @RequestMapping("/main")
     public String main() {
         return "index";
     }
+
 }

@@ -1,0 +1,24 @@
+<html
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
+        layout:decorate="~{layout_sidebar}">
+<div layout:fragment="content" class="container my-3">
+    <!-- 헤더-->
+    <nav th:replace="header :: headerFragment"></nav>
+    <div id="page-top"> shadow 목록</div>
+    <!-- Page Content-->
+    <p>내 쇼핑몰</p>
+    <div class="boarder">
+        <p>쿠팡</p>
+        <p >www.coupang.com</p>
+    </div>
+    <div class="boarder">
+        <p>11번가</p>
+        <p >www.11st.co.kr</p>
+    </div>
+    <p>내 쇼핑몰 순서도 등록하기</p>
+    <button>주문</button>
+    <p>장바구니</p>
+    <p>주문하기</p>
+</div>
+</html>
