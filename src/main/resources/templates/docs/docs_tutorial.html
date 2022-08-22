@@ -3,14 +3,14 @@
         xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
         layout:decorate="~{layout_sidebar}">
 <div layout:fragment="content" class="container my-3">
+    <!-- 사이드 바 -->
+    <nav th:replace="sidebar :: sidebarFragment"></nav>
     <!-- 헤더-->
     <nav th:replace="header :: headerFragment"></nav>
-    <div id="page-top">shadow docs</div>
+    <div id="page-top"><h2>shadow 튜토리얼</h2></div>
     <!-- Page Content-->
 
-    <a href="#">Developer's docs</a>
-    <p>여기는 사이드바를 빼도 괜찮을 것 같아요</p>
-    <p>아니면 docs 용 사이드 바를  따로 둬도 괜찮을 거 같습니다.</p>
+    <p>여기는 docs 안에 installation 쪽을 보여줘도 괜찮을 것 같아요</p>
 
 </div>
 </html>

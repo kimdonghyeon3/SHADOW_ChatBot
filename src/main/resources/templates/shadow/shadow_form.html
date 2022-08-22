@@ -3,17 +3,30 @@
         xmlns:th="http://www.thymeleaf.org"
         layout:decorate="~{layout_sidebar}">
 <div layout:fragment="content" class="container my-3">
+    <!-- 사이드 바 -->
+    <nav th:replace="sidebar :: sidebarFragment"></nav>
     <!-- 헤더-->
     <nav th:replace="header :: headerFragment"></nav>
-    <div id="page-top"> shadow 생성 폼</div>
+    <div id="page-top"> <h2>shadow 생성 폼</h2></div>
     <!-- Page Content-->
     <p>내 쇼핑몰 정보 입력하기</p>
     <form>
-        <input type="text" placeholder="쇼핑몰 명을 입력해주세요"><>
-        <input type="email" placeholder="ex) www.coupang.com"><>
+        <input type="text" placeholder="쇼핑몰 명을 입력해주세요">
+        <input type="email" placeholder="ex) www.coupang.com">
     </form>
     <p>내 쇼핑몰 순서도 등록하기</p>
-    
+    <form>
+        <input type="checkbox" placeholder="자주찾는 목록">
+        <input>주문조회</input>
+    </form>
+    <button>주문</button>
+    <a>마이홈</a>
+    <a>장바구니</a>
+    <form>
+        <input type="tex" placeholder="주문하기">
+        <button type="button">확인</button>
+        <button type="button">추가</button>
+    </form>
     <a href="#">생성</a>
 </div>
 </html>
