@@ -1,5 +1,4 @@
-package com.example.shadow.chatbot.websocket;
-
+package com.example.shadow.chatbot.ajax;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,7 +7,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class RequestMessage {
 
-    private String content;
+    private String message;
 
     public RequestMessage(){}
 }

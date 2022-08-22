@@ -14,20 +14,20 @@ import java.util.Optional;
 @Slf4j
 public class AjaxChatController {
 
-    @RequestMapping("/chat2")
+    @RequestMapping("/chat")
     public String chatGET(){
 
         log.info("제대로 실행되니?");
 
-        return "chat/ajax/chat2";
+        return "chat/ajax/chat";
     }
 
-    @PostMapping("/chat2/write")
+    @PostMapping("/chat/write")
     @ResponseBody
-    public ResponseMessage1 writeMessage(RequestMessage1 requestMessage){
+    public ResponseMessage writeMessage(RequestMessage requestMessage){
         log.info("message = {}", requestMessage.getMessage());
 
-        ResponseMessage1 responseMessage = new ResponseMessage1();
+        ResponseMessage responseMessage = new ResponseMessage();
 
         //예시 코드 (이부분은 clova랑 합시다)
         if(requestMessage.getMessage().equals("반품 어떻게 해요?") || requestMessage.getMessage().equals("반품")){
@@ -46,25 +46,4 @@ public class AjaxChatController {
 
         return responseMessage;
     }
-
-    @RequestMapping("/layout/test1")
-    public String test1(){
-        return "chat/layoutTest/layouttest1";
-    }
-
-    @RequestMapping("/layout/test2")
-    public String test2(){
-        return "chat/layoutTest/layouttest2";
-    }
-
-    @RequestMapping("/basic/test1")
-    public String test3(){
-        return "chat/originalTest/test1";
-    }
-
-    @RequestMapping("/basic/test2")
-    public String test4(){
-        return "chat/originalTest/test2";
-    }
-
 }

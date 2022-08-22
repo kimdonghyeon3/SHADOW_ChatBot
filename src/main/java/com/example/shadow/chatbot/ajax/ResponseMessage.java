@@ -5,9 +5,9 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class RequestMessage1 {
+public class ResponseMessage {
 
     private String message;
 
-    public RequestMessage1(){}
+    public ResponseMessage(){}
 }

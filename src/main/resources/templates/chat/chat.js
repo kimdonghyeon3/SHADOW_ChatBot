@@ -17,7 +17,7 @@
 //             var t=document.createElement("script");
 //             t.src=n+e,document.body.insertBefore(t,null)}),
 //             dyc.chatbotUid&&(
-//                 (o=new XMLHttpRequest).open("get",n+"api/chatbots/"+dyc.chatbotUid+"/popup"),
+//                 (o=new XMLHtt pRequest).open("get",n+"api/chatbots/"+dyc.chatbotUid+"/popup"),
 //                 o.setRequestHeader("Content-Type","application/json"),
 //                     o.onreadystatechange=function(){
 //                         4===o.readyState&&200===o.status&&JSON.parse(o.responseText).popup
