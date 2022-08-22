@@ -11,7 +11,7 @@
 
         /* 아이디 중복 체크 했는지 확인 */
         $.ajax({
-        url: urlPath+'/isCheckedUsername',
+        url: '/isCheckedUsername',
         type: 'POST',
         data: {
             isCheckedUsername : isCheckedUsername,
@@ -36,7 +36,7 @@
 
       /* 이메일 중복 체크 했는지 확인 */
         $.ajax({
-        url: urlPath+'/isCheckedEmail',
+        url: '/isCheckedEmail',
         type: 'POST',
         data: {
             isCheckedEmail : isCheckedEmail,
@@ -46,8 +46,8 @@
 
             console.log(result);
             if(result.data){
+                console.log(submit);
                 if(submit==1){
-                    console.log(submit);
                     form.submit();
                 }else {
                     return;

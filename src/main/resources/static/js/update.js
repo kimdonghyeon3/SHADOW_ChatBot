@@ -38,7 +38,7 @@
         var submit=0;
 
         $.ajax({
-        url: '/signup/isCheckedEmail',
+        url: '/isCheckedEmail',
         type: 'POST',
         data: {
             isCheckedEmail : isCheckedEmail,

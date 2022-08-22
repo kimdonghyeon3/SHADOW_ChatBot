@@ -66,7 +66,7 @@ public class MemberController {
         }
     }
 
-    @PostMapping("/signup/isCheckedUsername")
+    @PostMapping("/isCheckedUsername")
     public ResponseEntity<ResultResponse> checkUsername(@RequestParam boolean isCheckedUsername, @RequestParam boolean isChangedUsername) {
         log.debug("isChecked : "+ isCheckedUsername);
         log.debug("isChanged : "+ isChangedUsername);
@@ -77,7 +77,7 @@ public class MemberController {
         }
     }
 
-    @PostMapping("/signup/isCheckedEmail")
+    @PostMapping("/isCheckedEmail")
     public ResponseEntity<ResultResponse> checkEmail( @RequestParam boolean isCheckedEmail, @RequestParam boolean isChangedEmail) {
         if (isCheckedEmail&&!isChangedEmail) {
             return ResponseEntity.ok(ResultResponse.of("CHECK_EMAIL_FIN","", true));
@@ -119,24 +119,7 @@ public class MemberController {
                     "2개의 패스워드가 일치하지 않습니다.");
             return "member_form";
         }
-        Member member = memberService.findById(id);
-
-        try {
-            memberService.update(
-                    member,
-                    memberUpdateDto.getPassword1(),
-                    memberUpdateDto.getName(),
-                    memberUpdateDto.getEmail()
-                    );
-        } catch (SignupUsernameDuplicatedException e) {
-            e.printStackTrace();
-            bindingResult.reject("signupUsernameDuplicated", e.getMessage());
-            return "member_form";
-        } catch (SignupEmailDuplicatedException e) {
-            e.printStackTrace();
-            bindingResult.reject("signupEmailDuplicated", e.getMessage());
-            return "member_form";
-        }
+        memberService.update(memberService.findById(id), memberUpdateDto.getPassword1(), memberUpdateDto.getName(), memberUpdateDto.getEmail());
         return "redirect:/";
     }
     @PostMapping("/members/{id}/checkEmail")

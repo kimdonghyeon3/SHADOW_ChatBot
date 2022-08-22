@@ -5,6 +5,7 @@ import com.example.shadow.domain.member.repository.MemberRepository;
 import com.example.shadow.global.exception.SignupEmailDuplicatedException;
 import com.example.shadow.global.exception.SignupUsernameDuplicatedException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class MemberService {
 
     private final MemberRepository memberRepository;
@@ -36,10 +38,19 @@ public class MemberService {
         memberRepository.delete(findById(id));
     }
 
-    public void update(Member member, String password, String name, String email ) throws SignupUsernameDuplicatedException, SignupEmailDuplicatedException {
-        member.setEncryptedPassword(passwordEncoder.encode(password));
-        member.updateName(name);
-        member.updateEmail(email);
+    public void update(Member member, String password, String name, String email ) {
+        if(!member.getPassword().equals(password)){
+            log.debug("패스워드 다름 : 변경 : "+ password + " 기존 : "+ member.getPassword());
+            member.setEncryptedPassword(passwordEncoder.encode(password));
+        }
+        if(!member.getName().equals(name)){
+            log.debug("기존 : "+ member.getName() +"변경 : "+ name);
+            member.updateName(name);
+        }
+        if(!member.getEmail().equals(email)){
+            log.debug("기존 : "+ member.getEmail() +"변경 : "+ email);
+            member.updateEmail(email);
+        }
         memberRepository.save(member);
     }
     public boolean checkUsername(String username) {
