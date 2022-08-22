@@ -12,7 +12,6 @@ function setConnected(connected) {
     }
     $("#msg").html("");
 }
-
 function connect() {
     var socket = new SockJS('/ws'); // websocket 실행 : url이 /ws인 곳에 연결
     stompClient = Stomp.over(socket); // 서버 연결, 메시지 전송, 상대방 구독 관력 값을 추가 할당 가능
@@ -25,7 +24,6 @@ function connect() {
         });
     });
 }
-
 function disconnect() {
     if (stompClient !== null) {
         stompClient.disconnect();
@@ -33,18 +31,14 @@ function disconnect() {
     setConnected(false);
     console.log("Disconnected");
 }
-
 function sendMessage() {
     let message = $("#msg").val()
     showMessage("보낸 메시지: " + message);
-
     stompClient.send("/app/sendMessage", {}, JSON.stringify(message)); // 서버에 보낼 메시지
 }
-
 function showMessage(message) {
     $("#communicate").append("<tr><td>" + message + "</td></tr>");
 }
-
 (function($) {
     $(function() {
         $("form").on('submit', function (e) {
