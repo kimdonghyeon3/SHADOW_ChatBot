@@ -217,8 +217,9 @@
     }
 
     function deleteKeyword(){
+        var flows = document.getElementsByClassName("tbody")[0];
 
-        console.log("추가 함수 실해오디니?");
+        flows.deleteRow(-1);
     }
 
 </script>
