@@ -123,23 +123,26 @@
     }
 
     function deleteFlow(){
+        var flows = document.getElementsByClassName("flows")[0];
 
+        if(flows.childElementCount > 5){
+            flows.removeChild(flows.childNodes[flows.childElementCount - 3]);
+            flows.removeChild(flows.childNodes[flows.childElementCount - 3]);
+            flows.removeChild(flows.childNodes[flows.childElementCount - 3]);
+        }
+        console.log(flows.childElementCount);
     }
 
     function addKeyword(){
 
         console.log("추가 함수 실해오디니?");
 
-        document.getElementsByClassName("datas")[0].appendChild("<td th:text=\"키워드\">\n" +
-            "\n키워드" +
-            "            </td>\n" +
-            "            <td class=\"text-start\">\n" +
-            "                <input type=\"text\" />\n" +
-            "                <button type=\"button\" class=\"btn btn-primary mb-3\">순서도 추가 추가</button>\n" +
-            "            </td>\n" +
-            "            <td>\n" +
-            "                <input class=\"form-check-input\" type=\"checkbox\" value=\"\" id=\"flexCheckDefault\">\n" +
-            "            </td>");
+    }
+
+    function deleteKeyword(){
+
+        console.log("추가 함수 실해오디니?");
+
     }
 
 </script>
