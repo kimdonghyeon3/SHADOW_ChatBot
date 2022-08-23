@@ -20,13 +20,19 @@ repositories {
 
 dependencies {
 
-	//----------------------------------------Spring Dependency
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'mysql:mysql-connector-java'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'mysql:mysql-connector-java'
+	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-	//----------------------------------------websocket Dependency
+	//웹소켓
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	implementation 'org.webjars:webjars-locator-core'
 	implementation 'org.webjars:sockjs-client:1.0.2'
@@ -34,34 +40,33 @@ dependencies {
 	implementation 'org.webjars:bootstrap:3.3.7'
 	implementation 'org.webjars:jquery:3.1.1-1'
 
-	//----------------------------------------clova Dependency
+	//thymeleafe layout 오류
+	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+	runtimeOnly 'mysql:mysql-connector-java'
+
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
 	// https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple
 	// shadowController.org.json.google.JSONArray등 사용
 	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+
 	// https://mvnrepository.com/artifact/org.springframework/spring-messaging
 	// message.handler 사용
 	implementation 'org.springframework:spring-messaging:5.3.22'
+
 	// https://mvnrepository.com/artifact/org.json/json
 	implementation 'org.json:json:20220320'
 
-	//----------------------------------------DB Dependency
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	runtimeOnly 'mysql:mysql-connector-java'
-
-	//etc Dependency
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-
-	//----------------------------------------front Dependency
-	//thymeleaf - layout:fragment 오류
-	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 	//css
 	implementation group: 'org.webjars', name: 'jquery', version: '3.3.1'
 	implementation group: 'org.webjars', name: 'bootstrap', version: '4.3.1'
+
 	//code
 	// https://mvnrepository.com/artifact/commons-codec/commons-codec
 	implementation 'commons-codec:commons-codec:1.15'
-
 }
+
 
 tasks.named('test') {
 	useJUnitPlatform()
