@@ -43,6 +43,7 @@ public class MemberController {
             bindingResult.rejectValue("memberPwd2", "passwordInCorrect", "2개의 패스워드가 일치하지 않습니다.");
             return "signup_form";
         }
+        log.info("memberDto Name = {}", memberDto.getUsername());
         memberService.create(memberDto.getUsername(), memberDto.getPassword1(), memberDto.getName(), memberDto.getEmail());
         return "redirect:/";
     }
