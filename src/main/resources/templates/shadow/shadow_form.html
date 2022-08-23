@@ -39,7 +39,7 @@
             <th>자주찾는 목록</th>
         </tr>
         </thead>
-        <tbody>
+        <tbody class="tbody">
         <tr class="text-center datas">
 
             <td>
@@ -58,8 +58,8 @@
                     <input type="text" class="form-control" placeholder="ex) www.coupang.com/mycoupang">
                 </div>
 
-                <button type="button" class="btn btn-primary ml-3 flowbtn" onclick="addFlow()"> + </button>
-                <button type="button" class="btn btn-primary ml-3 flowbtn" onclick="deleteFlow()"> - </button>
+                <button type="button" class="btn btn-primary ml-3 addflowbtn" onclick="addFlow(this)"> + </button>
+                <button type="button" class="btn btn-primary ml-3 deleteflowbtn" onclick="deleteFlow(this)"> - </button>
             </td>
 
             <td>
@@ -82,9 +82,14 @@
 
 <script layout:fragment="script" type='text/javascript'>
 
-    function addFlow(){
-        var flows = document.getElementsByClassName("flows")[0];
-        var flag = document.getElementsByClassName("flowbtn")[0];
+    var indexaa = 1;
+
+    function addFlow(e){
+        console.log(e.parentNode);
+        var flows = e.parentNode;
+        //document.getElementsByClassName("flows")[0];
+        var flag = e;
+            //document.getElementsByClassName("addflowbtn")[0];
 
         var flow = document.createElement("input");
 
@@ -122,8 +127,9 @@
         flows.insertBefore(flow_url, flag);
     }
 
-    function deleteFlow(){
-        var flows = document.getElementsByClassName("flows")[0];
+    function deleteFlow(e){
+        var flows = e.parentNode;
+            //document.getElementsByClassName("flows")[0];
 
         if(flows.childElementCount > 5){
             flows.removeChild(flows.childNodes[flows.childElementCount - 3]);
@@ -135,14 +141,84 @@
 
     function addKeyword(){
 
-        console.log("추가 함수 실해오디니?");
+        var flows = document.getElementsByClassName("tbody")[0];
 
+        //<tr class="text-center datas">
+        var newRow = flows.insertRow(flows.rows.length);
+        newRow.setAttribute("class","text-center datas");
+
+        var cell1 = newRow.insertCell(0);
+        //<td class="text-start flows">
+        var cell2 = newRow.insertCell(1);
+        cell2.setAttribute("class",'text-start flows');
+        var cell3 = newRow.insertCell(2);
+
+        //col1 채우기<input type="text" class="mb-3" />
+        var keyword = document.createElement("input");
+        keyword.setAttribute("type","text");
+        keyword.setAttribute("class", "mb-3");
+
+        //col2 채우기
+        var flow = document.createElement("input");
+
+        var flow_description = document.createElement("div");
+        var flow_description_span = document.createElement("span");
+        var flow_description_input = document.createElement("input");
+
+        var flow_url = document.createElement("div")
+        var flow_url_span = document.createElement("span");
+        var flow_url_input = document.createElement("input");
+
+        flow.setAttribute("type","text");
+        flow.setAttribute("class","mb-3");
+
+        flow_description.setAttribute("class","input-group mb-3");
+        flow_description_span.setAttribute("class","input-group-text");
+        flow_description_input.setAttribute("type","text");
+        flow_description_input.setAttribute("class","form-control");
+        flow_description_input.setAttribute("placeholder","해당 페이지에서 안내할 멘트를 입력해주세요");
+        flow_description_span.innerHTML = "안내메시지";
+
+        flow_url.setAttribute("class", "input-group mb-3");
+        flow_url_span.setAttribute("class","input-group-text");
+        flow_url_input.setAttribute("type","text");
+        flow_url_input.setAttribute("class","form-control");
+        flow_url_input.setAttribute("placeholder","ex) www.coupang.com/mycoupang");
+        flow_url_span.innerHTML = "url";
+
+        //버튼
+        // <button type="button" className="btn btn-primary ml-3 addflowbtn" onClick="addFlow()"> + </button>
+        // <button type="button" className="btn btn-primary ml-3 deleteflowbtn" onClick="deleteFlow()"> - </button>
+        var addbtn = document.createElement("button");
+        var deletebtn = document.createElement("button");
+
+        addbtn.setAttribute("type","button");
+        addbtn.setAttribute("class","btn btn-primary ml-3 addflowbtn");
+        addbtn.setAttribute("onClick","addFlow(this)");
+        addbtn.innerHTML = "+";
+
+        deletebtn.setAttribute("type","button");
+        deletebtn.setAttribute("class","btn btn-primary ml-3 delteflowbtn");
+        deletebtn.setAttribute("onClick","deleteFlow(this)");
+        deletebtn.innerHTML = "-";
+
+        flow_description.append(flow_description_span, flow_description_input);
+        flow_url.append(flow_url_span, flow_url_input);
+
+        //col3 채우기 <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+        var check = document.createElement("input");
+        check.setAttribute("class","form-check-input");
+        check.setAttribute("type","checkbox");
+        check.setAttribute("id","flexCheckDefault");
+
+        cell1.append(keyword);
+        cell2.append(flow, flow_description, flow_url, addbtn, deletebtn);
+        cell3.append(check);
     }
 
     function deleteKeyword(){
 
         console.log("추가 함수 실해오디니?");
-
     }
 
 </script>
