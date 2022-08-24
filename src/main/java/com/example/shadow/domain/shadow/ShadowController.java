@@ -15,12 +15,25 @@ import java.util.Set;
 @Slf4j
 public class ShadowController {
 
-    @GetMapping("/newshadow")
+    /*
+    List (나의 SHADOW 목록)
+    /shadow/list
+    C (SHADOW 새로 만들기)
+    /shadow/create
+    R (챗봇 디테일)
+    /shadow/detail/{id}
+    U (챗봇 수정)
+    /shadow/update/{id}
+    D (챗봇 삭제)
+    /shadow/delete/{id}
+    */
+
+    @GetMapping("/shadow/create")
     public String createView(){
         return "shadow/shadow_form";
     }
 
-    @PostMapping("/newshadow")
+    @PostMapping("/shadow/create")
     public String createShadow(String[] keyword, String[] flow, String[] description, String[] url, Boolean[] favorite){
 
 
@@ -42,16 +55,17 @@ public class ShadowController {
         return "shadow/shadow_form";
     }
 
-    @RequestMapping("/my/shadows")
+    @RequestMapping("/shadow/list")
     public String list(){
         return "shadow/shadow_list";
     }
 
-    @RequestMapping("/my/shadows/{id}")
+    @RequestMapping("/shadow/detail/{id}")
     public String detail(Long id){
         return "shadow/flow_list";
     }
 
+    //여기는 /shadow/detail/{id} 해당 뷰 하단에 작성 예정
     @RequestMapping("/my/plugins")
     public String showPlugins(){
         return "shadow/plugins";

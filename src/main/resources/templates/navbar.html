@@ -10,7 +10,7 @@
         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" sec:authorize="isAnonymous()" th:href="@{/newshadow}">shadow 만들기</a></li>
         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" sec:authorize="isAnonymous()" th:href="@{/signup}">회원가입</a></li>
         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" sec:authorize="isAnonymous()" th:href="@{/login}">로그인</a></li>
-        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" sec:authorize="isAuthenticated()" th:href="@{/my/shadows}">Shadow</a></li>
+        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" sec:authorize="isAuthenticated()" th:href="@{/shadow/list}">Shadow</a></li>
         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" sec:authorize="isAuthenticated()" th:href="@{/logout}">로그아웃</a></li>
         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" sec:authorize="isAuthenticated()" th:href="@{/members}">회원정보</a></li>
         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" sec:authorize="isAuthenticated()" href="/docs">문서</a></li>

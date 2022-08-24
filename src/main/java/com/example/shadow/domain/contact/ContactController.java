@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class ContactController {
-    @RequestMapping("/contact")
+    @RequestMapping("/shadow/contact")
     public String createInquiry(){
         return "contact/contact_form";
     }

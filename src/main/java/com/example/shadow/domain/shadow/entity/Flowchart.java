@@ -1,7 +1,5 @@
 package com.example.shadow.domain.shadow.entity;
 
-
-import com.example.shadow.domain.member.entity.Member;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,20 +9,21 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-public class Shadow {
+@Table(name="flowchart")
+public class Flowchart {
 
     @Id // primary key
     @GeneratedValue(strategy = GenerationType.IDENTITY) // auto_increment
     private Long id;
 
     @Column
-    private String name;
-
-    @OneToMany(mappedBy = "shadow", cascade = {CascadeType.ALL})
-    private List<Keyword> keywords;
+    private int order;
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private Member member;
+    private Keyword keyword;
 
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private Flow flow;
 }

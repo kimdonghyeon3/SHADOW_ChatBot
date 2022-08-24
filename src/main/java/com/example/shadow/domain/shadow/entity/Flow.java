@@ -1,7 +1,6 @@
 package com.example.shadow.domain.shadow.entity;
 
 
-import com.example.shadow.domain.member.entity.Member;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +10,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-public class Shadow {
+public class Flow {
 
     @Id // primary key
     @GeneratedValue(strategy = GenerationType.IDENTITY) // auto_increment
@@ -20,11 +19,13 @@ public class Shadow {
     @Column
     private String name;
 
-    @OneToMany(mappedBy = "shadow", cascade = {CascadeType.ALL})
-    private List<Keyword> keywords;
+    @Column
+    private String description;
 
-    @ManyToOne
-    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private Member member;
+    @Column
+    private String url;
+
+    @OneToMany(mappedBy = "flow", cascade = {CascadeType.ALL})
+    private List<Flowchart> flowcharts;
 
 }
