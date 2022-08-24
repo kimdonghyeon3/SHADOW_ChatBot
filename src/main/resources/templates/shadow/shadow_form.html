@@ -128,14 +128,18 @@
     }
 
     function deleteFlow(e){
+
+
+
         var flows = e.parentNode;
             //document.getElementsByClassName("flows")[0];
 
-        if(flows.childElementCount > 5){
-            flows.removeChild(flows.childNodes[flows.childElementCount - 3]);
-            flows.removeChild(flows.childNodes[flows.childElementCount - 3]);
+        console.log(flows.childElementCount);
+
+        for(let i = 3 ; flows.childElementCount > 5 ; i++){
             flows.removeChild(flows.childNodes[flows.childElementCount - 3]);
         }
+
         console.log(flows.childElementCount);
     }
 
@@ -219,8 +223,10 @@
     function deleteKeyword(){
         var flows = document.getElementsByClassName("tbody")[0];
 
-        flows.deleteRow(-1);
-        console.log("추가 함수 실해오디니?");
+        if(flows.rows.length > 0){
+            flows.deleteRow(-1);
+        }
+
     }
 
 </script>
