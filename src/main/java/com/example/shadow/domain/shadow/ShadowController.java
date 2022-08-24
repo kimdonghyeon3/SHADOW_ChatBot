@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Set;
 
@@ -20,11 +21,15 @@ public class ShadowController {
     }
 
     @PostMapping("/newshadow")
-    public String createShadow(HttpServletRequest request){
+    public String createShadow(HttpServletRequest request, String[] keyword){
 
         Set<String> keySet = request.getParameterMap().keySet();
         for(String key: keySet) {
             System.out.println(key + ": " + request.getParameter(key));
+        }
+
+        for(String s : keyword){
+            System.out.println("s = " + s);
         }
 
         return "shadow/shadow_form";

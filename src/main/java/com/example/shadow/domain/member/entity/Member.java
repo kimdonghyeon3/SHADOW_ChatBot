@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Entity
@@ -44,6 +45,9 @@ public class Member {
         this.name = name;
         this.email = email;
     }
+
+//    @OneToMany
+//    private List<Shadow> shadows;
 
     public void updateUsername(String username){
         this.username = username;

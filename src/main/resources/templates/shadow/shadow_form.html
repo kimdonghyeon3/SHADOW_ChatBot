@@ -45,8 +45,9 @@
             <td>
                 <input type="text"/>
             </td>
+
             <td class="text-start flows">
-                <input name="keyword[]" type="text" class="mb-3" />
+                <input name="keyword" type="text" class="mb-3" />
 
                 <div class="input-group mb-3">
                     <span class="input-group-text">안내메시지</span>
@@ -82,11 +83,11 @@
 
 <script layout:fragment="script" type='text/javascript'>
 
-    var indexaa = 1;
-
     function addFlow(e){
-        console.log(e.parentNode);
+        //console.log(e.parentNode);
         var flows = e.parentNode;
+        let children = flows.children;
+        console.log(children);
         //document.getElementsByClassName("flows")[0];
         var flag = e;
             //document.getElementsByClassName("addflowbtn")[0];
@@ -103,7 +104,7 @@
 
         flow.setAttribute("type","text");
         flow.setAttribute("class","mb-3");
-        flow.setAttribute("name","keyword[]");
+        flow.setAttribute("name","keyword");
 
         flow_description.setAttribute("class","input-group mb-3");
         flow_description_span.setAttribute("class","input-group-text");
@@ -129,17 +130,14 @@
     }
 
     function deleteFlow(e){
-
         var flows = e.parentNode;
-            //document.getElementsByClassName("flows")[0];
+        let children = flows.children;
 
-        console.log(flows.childElementCount);
-
-        for(let i = 3 ; flows.childElementCount > 5 ; i++){
-            flows.removeChild(flows.childNodes[flows.childElementCount - 3]);
+        if(children.length > 5){
+            for(let i = 0 ; i < 3 ; i++){
+                flows.removeChild(children[children.length-3]);
+            }
         }
-
-        console.log(flows.childElementCount);
     }
 
     function addKeyword(){
@@ -222,7 +220,7 @@
     function deleteKeyword(){
         var flows = document.getElementsByClassName("tbody")[0];
 
-        if(flows.rows.length > 0){
+        if(flows.rows.length > 1){
             flows.deleteRow(-1);
         }
     }
