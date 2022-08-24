@@ -1,13 +1,32 @@
 package com.example.shadow.domain.shadow;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
+import java.util.Set;
+
 @Controller
+@Slf4j
 public class ShadowController {
 
-    @RequestMapping("/newshadow")
-    public String create(){
+    @GetMapping("/newshadow")
+    public String createView(){
+        return "shadow/shadow_form";
+    }
+
+    @PostMapping("/newshadow")
+    public String createShadow(HttpServletRequest request){
+
+        Set<String> keySet = request.getParameterMap().keySet();
+        for(String key: keySet) {
+            System.out.println(key + ": " + request.getParameter(key));
+        }
+
         return "shadow/shadow_form";
     }
 

@@ -9,14 +9,41 @@
     <nav th:replace="header :: headerFragment"></nav>
     <div id="page-top"><h2>shadow 목록</h2></div>
     <!-- Page Content-->
-    <p>내 쇼핑몰</p>
-    <div class="boarder-primary">
-        <a th:href="@{/my/shadows/1}">쿠팡</a>
-        <p >www.coupang.com</p>
-    </div>
-    <div class="boarder-primary">
-        <a href="#">11번가</a>
-        <p >www.11st.co.kr</p>
-    </div>
+
+    <h2>내 쇼핑몰</h2>
+    <hr/>
+
+    <table class="table">
+        <!--        <thead class="table-dark">-->
+        <thead>
+        <tr class="text-center">
+            <th>쇼핑몰 명</th>
+            <th> 주소 </th>
+            <th> 수정 </th>
+            <th> 삭제 </th>
+        </tr>
+        </thead>
+        <tbody class="tbody">
+        <tr class="text-center datas"> <!-- th:object로 만들면 된다... db값을 가져와서 반복-->
+
+            <td>
+                <a th:href="@{/shadow/pathbariable}"> 쿠팡</a>
+            </td>
+            <td>
+                www.coupang.com
+            </td>
+            <td>
+                <a th:href="@{/shadow/modify/pathbariable}"> 수정</a>
+            </td>
+            <td>
+                <a th:href="@{/shadow/delete/pathbariable}"> 삭제</a>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+
+    <a th:href="@{/newshadow}"> Shadow 만들러가기</a>
+
 </div>
 </html>

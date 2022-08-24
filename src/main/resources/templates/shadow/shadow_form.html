@@ -15,7 +15,7 @@
 
     <h4>내 쇼핑몰 정보 입력하기</h4>
     <hr/>
-    <form>
+    <form th:action="@{/newshadow}" method="post">
 
         <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1">쇼핑몰 명</span>
@@ -46,7 +46,7 @@
                 <input type="text"/>
             </td>
             <td class="text-start flows">
-                <input type="text" class="mb-3" />
+                <input name="keyword[]" type="text" class="mb-3" />
 
                 <div class="input-group mb-3">
                     <span class="input-group-text">안내메시지</span>
@@ -74,7 +74,7 @@
         <button type="button" class="btn btn-primary mb-3" onclick="deleteKeyword()">키워드 제거</button>
 
         <p>
-            <button type="button" class="btn btn-primary btn-sm">챗봇 생성</button>
+            <button type="submit" class="btn btn-primary btn-sm">챗봇 생성</button>
         </p>
 
     </form>
@@ -103,6 +103,7 @@
 
         flow.setAttribute("type","text");
         flow.setAttribute("class","mb-3");
+        flow.setAttribute("name","keyword[]");
 
         flow_description.setAttribute("class","input-group mb-3");
         flow_description_span.setAttribute("class","input-group-text");
@@ -128,8 +129,6 @@
     }
 
     function deleteFlow(e){
-
-
 
         var flows = e.parentNode;
             //document.getElementsByClassName("flows")[0];
@@ -226,7 +225,6 @@
         if(flows.rows.length > 0){
             flows.deleteRow(-1);
         }
-
     }
 
 </script>
