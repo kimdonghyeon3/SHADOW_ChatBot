@@ -21,15 +21,22 @@ public class ShadowController {
     }
 
     @PostMapping("/newshadow")
-    public String createShadow(HttpServletRequest request, String[] keyword){
+    public String createShadow(String[] keyword, String[] flow, String[] description, String[] url, Boolean[] favorite){
 
-        Set<String> keySet = request.getParameterMap().keySet();
-        for(String key: keySet) {
-            System.out.println(key + ": " + request.getParameter(key));
-        }
 
         for(String s : keyword){
-            System.out.println("s = " + s);
+            System.out.println("keyword = " + s);
+        }
+
+        for(String s : flow){
+            System.out.println("flow = " + s);
+        }
+
+        for(int i = 0 ; i < flow.length - 1; i++){
+            System.out.println("flow" + i + " = " + flow[i]);
+            System.out.println("description" + i + " = " + description[i]);
+            System.out.println("url" + i + " = " + url[i]);
+            System.out.println("favorite" + i + " = " + favorite[i]);
         }
 
         return "shadow/shadow_form";
