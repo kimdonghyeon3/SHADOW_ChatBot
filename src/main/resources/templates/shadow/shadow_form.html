@@ -231,7 +231,6 @@
     // 최상위 name과 url을 넣어준다.
     // keyword 배열에 자식의 자식을 돌면서 넣어준다.
     //json 데이터를 보낸다.
-
     $(".create_shadow").click(function (e){
 
         e.preventDefault();
@@ -273,9 +272,7 @@
                 if(j == 1){
 
                     var tdTagLength = tdTag.getElementsByClassName("flow").length;
-
                     //console.log("tdTagLength : " + tdTagLength);
-
                     for(let k = 0 ; k < tdTagLength ; k++){
                         let flowTag = tdTag.getElementsByClassName("flow")[k];
                         let descriptionTag = tdTag.getElementsByClassName("description")[k];
@@ -289,7 +286,6 @@
                         keywordData.description.push(descriptionTag.value)
                         keywordData.url.push(urlTag.value)
                     }
-
                 }
                 //세번째 td = favorite
                 if(j == 2){
