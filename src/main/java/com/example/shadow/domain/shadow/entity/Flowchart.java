@@ -9,7 +9,6 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@Table(name="flowchart")
 public class Flowchart {
 
     @Id // primary key
@@ -26,4 +25,9 @@ public class Flowchart {
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Flow flow;
+
+    //반품 홈버튼 1
+    //반품 마이페이지 2
+    //배송조회 홈버튼 1
+    //배송조회 조회페이지 2
 }

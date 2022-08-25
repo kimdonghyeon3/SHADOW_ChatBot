@@ -28,4 +28,5 @@ public class Flow {
     @OneToMany(mappedBy = "flow", cascade = {CascadeType.ALL})
     private List<Flowchart> flowcharts;
 
+    // 홈버튼, 마이페이, 조회페이지
 }

@@ -15,23 +15,23 @@
 
     <h4>내 쇼핑몰 정보 입력하기</h4>
     <hr/>
-    <form th:action="@{/newshadow}" method="post">
+<!--    <form th:action="@{/shadow/create}" method="post">-->
+        <form>
 
         <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1">쇼핑몰 명</span>
-            <input type="text" class="form-control" placeholder="쇼핑몰 명을 입력해주세요">
+            <input type="text" name="name" class="form-control name" placeholder="쇼핑몰 명을 입력해주세요">
         </div>
 
         <div class="input-group mb-5">
             <span class="input-group-text" id="basic-addon2">쇼핑몰 주소</span>
-            <input type="text" class="form-control" placeholder="ex) www.coupang.com">
+            <input type="text" name="mainurl" class="form-control mainurl" placeholder="ex) www.coupang.com">
         </div>
 
     <h4>내 쇼핑몰 순서도 등록하기</h4>
     <hr/>
 
     <table class="table">
-<!--        <thead class="table-dark">-->
         <thead>
         <tr class="text-center">
             <th>키워드</th>
@@ -42,31 +42,24 @@
         <tbody class="tbody">
         <tr class="text-center datas">
 
-            <td>
-                <input name="keyword" type="text"/>
-            </td>
+            <td><input name="keyword" type="text"/></td>
 
             <td class="text-start flows">
-                <input name="flow" type="text" class="mb-3" />
-
+                <input name="flow" type="text" class="mb-3 flow" />
                 <div class="input-group mb-3">
                     <span class="input-group-text">안내메시지</span>
-                    <input type="text" name="description" class="form-control" placeholder="해당 페이지에서 안내할 멘트를 입력해주세요">
+                    <input type="text" name="description" class="form-control description" placeholder="해당 페이지에서 안내할 멘트를 입력해주세요">
                 </div>
-
                 <div class="input-group mb-3">
                     <span class="input-group-text">url</span>
-                    <input type="text" name="url" class="form-control" placeholder="ex) www.coupang.com/mycoupang">
+                    <input type="text" name="url" class="form-control url" placeholder="ex) www.coupang.com/mycoupang">
                 </div>
-
                 <button type="button" class="btn btn-primary ml-3 addflowbtn" onclick="addFlow(this)"> + </button>
                 <button type="button" class="btn btn-primary ml-3 deleteflowbtn" onclick="deleteFlow(this)"> - </button>
             </td>
 
-            <td>
-                <input class="form-check-input" name="favorite" type="checkbox" value="" id="flexCheckDefault">
+            <td><input class="form-check-input favorite" name="favorite" type="checkbox" value="" id="flexCheckDefault">
             </td>
-
         </tr>
         </tbody>
     </table>
@@ -75,7 +68,7 @@
         <button type="button" class="btn btn-primary mb-3" onclick="deleteKeyword()">키워드 제거</button>
 
         <p>
-            <button type="submit" class="btn btn-primary btn-sm">챗봇 생성</button>
+            <button type="button" class="btn btn-primary btn-sm create_shadow">챗봇 생성</button>
         </p>
 
     </form>
@@ -87,7 +80,7 @@
         //console.log(e.parentNode);
         var flows = e.parentNode;
         let children = flows.children;
-        console.log(children);
+        //console.log(children);
         //document.getElementsByClassName("flows")[0];
         var flag = e;
             //document.getElementsByClassName("addflowbtn")[0];
@@ -103,13 +96,13 @@
         var flow_url_input = document.createElement("input");
 
         flow.setAttribute("type","text");
-        flow.setAttribute("class","mb-3");
+        flow.setAttribute("class","mb-3 flow");
         flow.setAttribute("name","flow");
 
         flow_description.setAttribute("class","input-group mb-3");
         flow_description_span.setAttribute("class","input-group-text");
         flow_description_input.setAttribute("type","text");
-        flow_description_input.setAttribute("class","form-control");
+        flow_description_input.setAttribute("class","form-control description");
         flow_description_input.setAttribute("placeholder","해당 페이지에서 안내할 멘트를 입력해주세요");
         flow_description_input.setAttribute("name","description");
         flow_description_span.innerHTML = "안내메시지";
@@ -117,7 +110,7 @@
         flow_url.setAttribute("class", "input-group mb-3");
         flow_url_span.setAttribute("class","input-group-text");
         flow_url_input.setAttribute("type","text");
-        flow_url_input.setAttribute("class","form-control");
+        flow_url_input.setAttribute("class","form-control url");
         flow_url_input.setAttribute("placeholder","ex) www.coupang.com/mycoupang");
         flow_url_input.setAttribute("name","url");
         flow_url_span.innerHTML = "url";
@@ -159,8 +152,8 @@
         //col1 채우기<input type="text" class="mb-3" />
         var keyword = document.createElement("input");
         keyword.setAttribute("type","text");
-        keyword.setAttribute("class", "mb-3");
-        keyword.setAttribute("name", "keyword");
+        keyword.setAttribute("class","mb-3");
+        keyword.setAttribute("name","keyword");
 
         //col2 채우기
         var flow = document.createElement("input");
@@ -174,12 +167,13 @@
         var flow_url_input = document.createElement("input");
 
         flow.setAttribute("type","text");
-        flow.setAttribute("class","mb-3");
+        flow.setAttribute("class","mb-3 flow");
+        flow.setAttribute("name","flow");
 
         flow_description.setAttribute("class","input-group mb-3");
         flow_description_span.setAttribute("class","input-group-text");
         flow_description_input.setAttribute("type","text");
-        flow_description_input.setAttribute("class","form-control");
+        flow_description_input.setAttribute("class","form-control description");
         flow_description_input.setAttribute("placeholder","해당 페이지에서 안내할 멘트를 입력해주세요");
         flow_description_input.setAttribute("name","description")
         flow_description_span.innerHTML = "안내메시지";
@@ -187,7 +181,7 @@
         flow_url.setAttribute("class", "input-group mb-3");
         flow_url_span.setAttribute("class","input-group-text");
         flow_url_input.setAttribute("type","text");
-        flow_url_input.setAttribute("class","form-control");
+        flow_url_input.setAttribute("class","form-control url");
         flow_url_input.setAttribute("placeholder","ex) www.coupang.com/mycoupang");
         flow_url_input.setAttribute("name","url");
         flow_url_span.innerHTML = "url";
@@ -213,7 +207,7 @@
 
         //col3 채우기 <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
         var check = document.createElement("input");
-        check.setAttribute("class","form-check-input");
+        check.setAttribute("class","form-check-input favorite");
         check.setAttribute("type","checkbox");
         check.setAttribute("id","flexCheckDefault");
         check.setAttribute("th:field","favorite");
@@ -230,6 +224,99 @@
             flows.deleteRow(-1);
         }
     }
+
+    //전송을 하면 json 데이터를 만들어보자
+    // 기본 생각은 요거 tbody의 자식의 수를 센다 = keywor의 개수
+    // tbody의 자식의 순서대로 keywor 배열은 만든다.
+    // 최상위 name과 url을 넣어준다.
+    // keyword 배열에 자식의 자식을 돌면서 넣어준다.
+    //json 데이터를 보낸다.
+
+    $(".create_shadow").click(function (e){
+
+        e.preventDefault();
+        var children = $(".tbody").children();
+        let length = $(".tbody").children().length;
+        //console.log(" tbody child length : " + length);
+
+        var data = {
+            name : $(".name").val(),
+            mainurl : $(".mainurl").val(),
+            keyword : [],
+        }
+
+        for(let i = 0 ; i < length ; i ++){ //keyword 순서 체크 tr태그
+            let trTag = children[i];
+            //console.log("trTag" + children[i]);
+
+            var keywordData = {
+                name : "",
+                flow : [],
+                description : [],
+                url : [],
+                favorite : "true"
+            }
+
+            let trTagChildren =trTag.getElementsByTagName("td");
+
+            for(let j = 0 ; j < trTagChildren.length ; j ++){       //td태그
+                //console.log(trTagChildren[j]);
+                let tdTag = trTagChildren[j];
+
+                //첫번째 td = keyword
+                if(j == 0){
+                    let keywordTag = tdTag.getElementsByTagName("input")[0];
+                    //console.log("keyword : " + keywordTag.value);
+                    keywordData.name = keywordTag.value;
+                }
+                //두번쨰 td = flow description url
+                if(j == 1){
+
+                    var tdTagLength = tdTag.getElementsByClassName("flow").length;
+
+                    //console.log("tdTagLength : " + tdTagLength);
+
+                    for(let k = 0 ; k < tdTagLength ; k++){
+                        let flowTag = tdTag.getElementsByClassName("flow")[k];
+                        let descriptionTag = tdTag.getElementsByClassName("description")[k];
+                        let urlTag = tdTag.getElementsByClassName("url")[k];
+                        // console.log("flow : " + flowTag.value);
+                        // console.log("description : " + descriptionTag.value);
+                        // console.log("url : " + urlTag.value);
+
+                        //배열에 값 넣기
+                        keywordData.flow.push(flowTag.value)
+                        keywordData.description.push(descriptionTag.value)
+                        keywordData.url.push(urlTag.value)
+                    }
+
+                }
+                //세번째 td = favorite
+                if(j == 2){
+                    let favoriteTag = tdTag.getElementsByTagName("input")[0];
+                    //console.log("favorit : " + favoriteTag.value);
+                    keywordData.favorite = "true";
+                }
+            }
+            data.keyword.push(keywordData);
+        }
+
+        console.log(data);
+        //console.log(keywordData);
+
+        $.ajax({
+            url : "/shadow/create",
+            dataType : "json",
+            type : "POST",
+            data : data,
+            success : function(){
+                alert("데이터 전송 성공");
+            },
+            error : function(){
+                alert("데이터 전송 실패");
+            }
+        });
+    })
 
 </script>
 </html>

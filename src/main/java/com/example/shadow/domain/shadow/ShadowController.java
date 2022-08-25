@@ -1,12 +1,18 @@
 package com.example.shadow.domain.shadow;
 
+import com.example.shadow.domain.shadow.dto.KeywordDto;
+import com.example.shadow.domain.shadow.dto.ShadowDto;
+import com.example.shadow.domain.shadow.entity.Keyword;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Set;
@@ -29,30 +35,25 @@ public class ShadowController {
     */
 
     @GetMapping("/shadow/create")
-    public String createView(){
+    public String createView(Model model){
+        model.addAttribute("shadow",new ShadowDto());
         return "shadow/shadow_form";
     }
 
     @PostMapping("/shadow/create")
-    public String createShadow(String[] keyword, String[] flow, String[] description, String[] url, Boolean[] favorite){
+    public String createShadow(HttpServletRequest request, ShadowDto shadow){
 
+        Enumeration<String> parameterNames = request.getParameterNames();
 
-        for(String s : keyword){
-            System.out.println("keyword = " + s);
+        while(parameterNames.hasMoreElements()) {
+            String key = parameterNames.nextElement();
+            System.out.println(key + ": " + request.getParameter(key));
         }
 
-        for(String s : flow){
-            System.out.println("flow = " + s);
-        }
+        System.out.println("shadow.getName() = " + shadow.getName());
 
-        for(int i = 0 ; i < flow.length - 1; i++){
-            System.out.println("flow" + i + " = " + flow[i]);
-            System.out.println("description" + i + " = " + description[i]);
-            System.out.println("url" + i + " = " + url[i]);
-            System.out.println("favorite" + i + " = " + favorite[i]);
-        }
-
-        return "shadow/shadow_form";
+        return "redirect:/shadow/list";
+        //return "shadow/shadow_form";
     }
 
     @RequestMapping("/shadow/list")

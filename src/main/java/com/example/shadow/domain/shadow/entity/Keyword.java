@@ -25,8 +25,14 @@ public class Keyword {
     @OneToMany(mappedBy = "keyword", cascade = {CascadeType.ALL})
     private List<Flowchart> flowcharts;
 
+//    @ManyToOne
+//    private Flowchart flowchart;
+
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Shadow shadow;
+
+    //반품
+    //배송조회
 
 }
