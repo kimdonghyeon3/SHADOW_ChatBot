@@ -15,5 +15,4 @@ public class KeywordDto {
     List<String> description;
     List<String> url;
     String favorite;
-
 }

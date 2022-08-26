@@ -298,18 +298,31 @@
         }
 
         console.log(data);
-        //console.log(keywordData);
+
+        var shadow = JSON.stringify(data);
+
+        // shadow.name = data.name;
+        // shadow.mainurl = data.mainurl;
+        // shadow.keyword = JSON.stringify(data.keyword);
+
+        console.log(shadow);
 
         $.ajax({
             url : "/shadow/create",
             dataType : "json",
             type : "POST",
-            data : data,
-            success : function(){
-                alert("데이터 전송 성공");
+            data : {
+                shadow : shadow
             },
-            error : function(){
-                alert("데이터 전송 실패");
+            success: function(data) {
+                console.log(data.redirect);
+                window.location.href = data.redirect;
+            },
+            failure:function(request){
+                alert("Action failure");
+            },
+            error: function(request) {
+                alert("Connection error");
             }
         });
     })

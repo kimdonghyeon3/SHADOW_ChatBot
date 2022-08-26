@@ -2,20 +2,14 @@ package com.example.shadow.domain.shadow;
 
 import com.example.shadow.domain.shadow.dto.KeywordDto;
 import com.example.shadow.domain.shadow.dto.ShadowDto;
-import com.example.shadow.domain.shadow.entity.Keyword;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Set;
+import java.util.HashMap;
 
 @Controller
 @Slf4j
@@ -41,18 +35,32 @@ public class ShadowController {
     }
 
     @PostMapping("/shadow/create")
-    public String createShadow(HttpServletRequest request, ShadowDto shadow){
+    @ResponseBody
+    public HashMap<String, String> createShadow(String shadow) throws JsonProcessingException {
 
-        Enumeration<String> parameterNames = request.getParameterNames();
+        System.out.println("shadow = " + shadow);
 
-        while(parameterNames.hasMoreElements()) {
-            String key = parameterNames.nextElement();
-            System.out.println(key + ": " + request.getParameter(key));
+        ObjectMapper objectMapper = new ObjectMapper();
+        ShadowDto shadowDto = objectMapper.readValue(shadow, ShadowDto.class);
+
+//        debug
+        log.info("name = {}",shadowDto.getName());
+        log.info("mainurl = {}", shadowDto.getMainurl());
+        for(KeywordDto k : shadowDto.getKeyword()){
+            log.info("keyword = {}", k.getName());
+            for(String s : k.getFlow())
+                log.info("flow = {}", s);
+            for(String s : k.getDescription())
+                log.info("description = {}", s);
+            for(String s : k.getUrl())
+                log.info("url = {}" + s);
+            log.info("favorite = {}",k.getFavorite());
         }
 
-        System.out.println("shadow.getName() = " + shadow.getName());
+        HashMap<String, String> redirectMsg = new HashMap<>();
+        redirectMsg.put("redirect", "/shadow/list");
 
-        return "redirect:/shadow/list";
+        return redirectMsg;
         //return "shadow/shadow_form";
     }
 
