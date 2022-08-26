@@ -12,4 +12,5 @@ public class ShadowDto {
     String name;
     String mainurl;
     List<KeywordDto> keyword;
+
 }
