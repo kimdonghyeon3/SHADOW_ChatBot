@@ -20,6 +20,9 @@ public class Shadow {
     @Column
     private String name;
 
+    @Column
+    private String mainurl;
+
     @OneToMany(mappedBy = "shadow", cascade = {CascadeType.ALL})
     private List<Keyword> keywords;
 
