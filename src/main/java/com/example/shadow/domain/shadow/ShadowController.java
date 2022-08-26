@@ -43,7 +43,7 @@ public class ShadowController {
         ObjectMapper objectMapper = new ObjectMapper();
         ShadowDto shadowDto = objectMapper.readValue(shadow, ShadowDto.class);
 
-//        debug
+//      debug
         log.info("name = {}",shadowDto.getName());
         log.info("mainurl = {}", shadowDto.getMainurl());
         for(KeywordDto k : shadowDto.getKeyword()){
@@ -53,7 +53,7 @@ public class ShadowController {
             for(String s : k.getDescription())
                 log.info("description = {}", s);
             for(String s : k.getUrl())
-                log.info("url = {}" + s);
+                log.info("url = {}", s);
             log.info("favorite = {}",k.getFavorite());
         }
 
