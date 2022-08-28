@@ -4,7 +4,6 @@ import com.example.shadow.domain.member.entity.Member;
 import com.example.shadow.domain.member.service.MemberService;
 import com.example.shadow.domain.shadow.dto.KeywordDto;
 import com.example.shadow.domain.shadow.dto.ShadowDto;
-import com.example.shadow.domain.shadow.entity.Flowchart;
 import com.example.shadow.domain.shadow.entity.Shadow;
 import com.example.shadow.domain.shadow.service.FlowChartService;
 import com.example.shadow.domain.shadow.service.FlowService;
@@ -18,9 +17,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @Controller
 @Slf4j
@@ -48,7 +48,13 @@ public class ShadowController {
 
     @GetMapping("/shadow/create")
     public String createView(Model model){
-        model.addAttribute("keyword",new KeywordDto());
+
+        List<String> keywordCodes = new ArrayList<>();
+        keywordCodes.add("반품");
+        keywordCodes.add("배송조회");
+        keywordCodes.add("구매목록조회");
+
+        model.addAttribute("keywordCodes",keywordCodes);
         return "shadow/shadow_form";
     }
 

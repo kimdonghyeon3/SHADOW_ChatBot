@@ -42,7 +42,14 @@
         <tbody class="tbody">
         <tr class="text-center datas">
 
-            <td><input name="keyword" type="text"/></td>
+<!--            <td><input name="keyword" type="text"/></td>-->
+            <td>
+                <select class="form-select keyword" name="keyword">
+                <option value="">==키워드 선택==</option>
+                <option th:each="keywordCode : ${keywordCodes}" th:value="${keywordCode}"
+                        th:text="${keywordCode}">FAST</option>
+                </select>
+            </td>
 
             <td class="text-start flows">
                 <input name="flow" type="text" class="mb-3 flow" />
@@ -150,10 +157,20 @@
         var cell3 = newRow.insertCell(2);
 
         //col1 채우기<input type="text" class="mb-3" />
-        var keyword = document.createElement("input");
-        keyword.setAttribute("type","text");
-        keyword.setAttribute("class","mb-3");
-        keyword.setAttribute("name","keyword");
+        var keywordClone = document.getElementsByClassName("keyword")[0];
+        console.log(keywordClone);
+        var keyword = keywordClone.cloneNode(true);
+        console.log(keyword);
+        //var keyword = document.createElement("select");
+        // keyword.setAttribute("class","form-select keyword");
+        // keyword.setAttribute("name","keyword");
+        // var option1 = document.createElement("option")
+        // option1.innerHTML = "==키워드 선택";
+        // var option2 = document.createElement("option")
+        // option2.setAttribute("th:each","keywordCode : ${keywordCodes}");
+        // option2.setAttribute("th:value","${keywordCode}");
+        // option2.setAttribute("th:text","${keywordCode}");
+        // keyword.append(option1, option2);
 
         //col2 채우기
         var flow = document.createElement("input");
@@ -260,10 +277,11 @@
 
                 //첫번째 td = keyword
                 if(j == 0){
-                    let keywordTag = tdTag.getElementsByTagName("input")[0];
-                    //console.log("keyword : " + keywordTag.value);
+                    let keywordTag = tdTag.getElementsByClassName("keyword")[0];
+                    console.log("keyword : " + keywordTag.value);
                     keywordData.name = keywordTag.value;
                 }
+
                 //두번쨰 td = flow description url
                 if(j == 1){
 
@@ -297,7 +315,7 @@
                 //세번째 td = favorite
                 if(j == 2){
                     let favoriteTag = tdTag.getElementsByClassName("favorite")[0];
-                    console.log("favorite : " + favoriteTag.checked);
+                    //console.log("favorite : " + favoriteTag.checked);
                     keywordData.favorite = favoriteTag.checked;
                 }
             }
