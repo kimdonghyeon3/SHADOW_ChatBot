@@ -21,4 +21,12 @@ public class ShadowService {
 
         shadowRepository.save(shadow);
     }
+
+    public Shadow findByName(String name) {
+        return shadowRepository.findByName(name);
+    }
+
+    public Shadow findByNameAndMember(String name, Member member) {
+        return shadowRepository.findByNameAndMember(name, member);
+    }
 }

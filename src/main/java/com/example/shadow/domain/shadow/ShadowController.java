@@ -80,6 +80,11 @@ public class ShadowController {
         //shadow에 넣을 것 id, name, mainurl
         shadowService.create(shadowDto.getName(), shadowDto.getMainurl(), member);
 
+        //shadow name을 통해서 shadow 객체를 가져오자
+        Shadow findShadow = shadowService.findByNameAndMember(shadowDto.getName(), member);
+        log.info("findShadow name = {}", findShadow.getName());
+        keywordService.create(shadowDto.getKeyword(), findShadow);
+
         HashMap<String, String> redirectMsg = new HashMap<>();
         redirectMsg.put("redirect", "/shadow/list");
 
