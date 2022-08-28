@@ -65,25 +65,30 @@ public class ShadowController {
         log.info("mainurl = {}", shadowDto.getMainurl());
         for(KeywordDto k : shadowDto.getKeyword()){
             log.info("keyword = {}", k.getName());
-            for(String s : k.getFlow())
+/*            for(String s : k.getFlow())
                 log.info("flow = {}", s);
             for(String s : k.getDescription())
                 log.info("description = {}", s);
             for(String s : k.getUrl())
-                log.info("url = {}", s);
+                log.info("url = {}", s);*/
             log.info("favorite = {}",k.getFavorite());
         }
 
         Member member = memberService.findByUsername(principal.getName());
 
         //create 완성하쟈
-        //shadow에 넣을 것 id, name, mainurl
+        //shadow
         shadowService.create(shadowDto.getName(), shadowDto.getMainurl(), member);
 
-        //shadow name을 통해서 shadow 객체를 가져오자
+        //keyword
         Shadow findShadow = shadowService.findByNameAndMember(shadowDto.getName(), member);
-        log.info("findShadow name = {}", findShadow.getName());
         keywordService.create(shadowDto.getKeyword(), findShadow);
+
+        //flow
+        flowService.create(shadowDto.getKeyword());
+
+
+
 
         HashMap<String, String> redirectMsg = new HashMap<>();
         redirectMsg.put("redirect", "/shadow/list");

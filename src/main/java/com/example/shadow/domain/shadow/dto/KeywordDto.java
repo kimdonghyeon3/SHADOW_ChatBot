@@ -11,8 +11,9 @@ import java.util.List;
 public class KeywordDto {
 
     String name;  //반품, 배송조회
-    List<String> flow; // 홈버튼, 마이쿠팡, ㅇ
-    List<String> description; //
-    List<String> url; //
+    List<FlowDto> flow;
+//    List<String> flow; // 홈버튼, 마이쿠팡, ㅇ
+//    List<String> description; //
+//    List<String> url; //
     String favorite;
 }

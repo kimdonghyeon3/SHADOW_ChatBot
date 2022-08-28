@@ -225,12 +225,6 @@
         }
     }
 
-    //전송을 하면 json 데이터를 만들어보자
-    // 기본 생각은 요거 tbody의 자식의 수를 센다 = keywor의 개수
-    // tbody의 자식의 순서대로 keywor 배열은 만든다.
-    // 최상위 name과 url을 넣어준다.
-    // keyword 배열에 자식의 자식을 돌면서 넣어준다.
-    //json 데이터를 보낸다.
     $(".create_shadow").click(function (e){
 
         e.preventDefault();
@@ -250,9 +244,10 @@
 
             var keywordData = {
                 name : "",
+                // flow : [],
+                // description : [],
+                // url : [],
                 flow : [],
-                description : [],
-                url : [],
                 favorite : "true"
             }
 
@@ -274,6 +269,13 @@
                     var tdTagLength = tdTag.getElementsByClassName("flow").length;
                     //console.log("tdTagLength : " + tdTagLength);
                     for(let k = 0 ; k < tdTagLength ; k++){
+
+                        var flowData = {
+                            name : "",
+                            description : "",
+                            url : "",
+                        }
+                        
                         let flowTag = tdTag.getElementsByClassName("flow")[k];
                         let descriptionTag = tdTag.getElementsByClassName("description")[k];
                         let urlTag = tdTag.getElementsByClassName("url")[k];
@@ -281,10 +283,14 @@
                         // console.log("description : " + descriptionTag.value);
                         // console.log("url : " + urlTag.value);
 
+                        flowData.name = flowTag.value;
+                        flowData.description = descriptionTag.value;
+                        flowData.url = urlTag.value;
                         //배열에 값 넣기
-                        keywordData.flow.push(flowTag.value)
-                        keywordData.description.push(descriptionTag.value)
-                        keywordData.url.push(urlTag.value)
+                        // keywordData.flow.push(flowTag.value)
+                        // keywordData.description.push(descriptionTag.value)
+                        // keywordData.url.push(urlTag.value)
+                        keywordData.flow.push(flowData);
                     }
                 }
                 //세번째 td = favorite
