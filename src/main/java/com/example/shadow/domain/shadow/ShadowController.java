@@ -1,18 +1,29 @@
 package com.example.shadow.domain.shadow;
 
+import com.example.shadow.domain.member.entity.Member;
+import com.example.shadow.domain.member.service.MemberService;
 import com.example.shadow.domain.shadow.dto.KeywordDto;
 import com.example.shadow.domain.shadow.dto.ShadowDto;
+import com.example.shadow.domain.shadow.entity.Flowchart;
+import com.example.shadow.domain.shadow.entity.Shadow;
+import com.example.shadow.domain.shadow.service.FlowChartService;
+import com.example.shadow.domain.shadow.service.FlowService;
+import com.example.shadow.domain.shadow.service.KeywordService;
+import com.example.shadow.domain.shadow.service.ShadowService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.HashMap;
 
 @Controller
 @Slf4j
+@RequiredArgsConstructor
 public class ShadowController {
 
     /*
@@ -28,6 +39,12 @@ public class ShadowController {
     /shadow/delete/{id}
     */
 
+    private final ShadowService shadowService;
+    private final KeywordService keywordService;
+    private final FlowChartService flowchartService;
+    private final FlowService flowService;
+    private final MemberService memberService;
+
     @GetMapping("/shadow/create")
     public String createView(Model model){
         model.addAttribute("shadow",new ShadowDto());
@@ -36,7 +53,7 @@ public class ShadowController {
 
     @PostMapping("/shadow/create")
     @ResponseBody
-    public HashMap<String, String> createShadow(String shadow) throws JsonProcessingException {
+    public HashMap<String, String> createShadow(String shadow, Principal principal) throws JsonProcessingException {
 
         System.out.println("shadow = " + shadow);
 
@@ -56,6 +73,12 @@ public class ShadowController {
                 log.info("url = {}", s);
             log.info("favorite = {}",k.getFavorite());
         }
+
+        Member member = memberService.findByUsername(principal.getName());
+
+        //create 완성하쟈
+        //shadow에 넣을 것 id, name, mainurl
+        shadowService.create(shadowDto.getName(), shadowDto.getMainurl(), member);
 
         HashMap<String, String> redirectMsg = new HashMap<>();
         redirectMsg.put("redirect", "/shadow/list");

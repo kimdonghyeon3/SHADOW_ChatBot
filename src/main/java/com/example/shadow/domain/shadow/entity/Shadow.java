@@ -2,7 +2,9 @@ package com.example.shadow.domain.shadow.entity;
 
 
 import com.example.shadow.domain.member.entity.Member;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
