@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FlowRepository extends JpaRepository<Flow, Long> {
+
+    Flow findByNameAndDescription(String name, String description);
 }

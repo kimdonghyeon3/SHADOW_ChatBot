@@ -87,6 +87,8 @@ public class ShadowController {
         //flow
         flowService.create(shadowDto.getKeyword());
 
+        //flowchart
+        flowchartService.create(shadowDto.getKeyword());
 
 
 
