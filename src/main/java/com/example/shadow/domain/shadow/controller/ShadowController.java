@@ -1,16 +1,21 @@
-package com.example.shadow.domain.shadow;
+package com.example.shadow.domain.shadow.controller;
 
 import com.example.shadow.domain.shadow.dto.KeywordDto;
 import com.example.shadow.domain.shadow.dto.ShadowDto;
+import com.example.shadow.domain.shadow.entity.Shadow;
+import com.example.shadow.domain.shadow.repository.ShadowRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 
+@RequiredArgsConstructor
 @Controller
 @Slf4j
 public class ShadowController {
@@ -64,8 +69,11 @@ public class ShadowController {
         //return "shadow/shadow_form";
     }
 
+    private final ShadowRepository shadowRepository;
     @RequestMapping("/shadow/list")
-    public String list(){
+    public String list(Model model){
+        List<Shadow> shadowList = this.shadowRepository.findAll();
+        model.addAttribute("shadowList", shadowList);
         return "shadow/shadow_list";
     }
 
