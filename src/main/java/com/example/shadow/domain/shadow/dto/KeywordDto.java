@@ -15,5 +15,5 @@ public class KeywordDto {
 //    List<String> flow; // 홈버튼, 마이쿠팡, ㅇ
 //    List<String> description; //
 //    List<String> url; //
-    String favorite;
+    Boolean favorite;
 }

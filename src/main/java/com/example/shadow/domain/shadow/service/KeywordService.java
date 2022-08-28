@@ -21,7 +21,7 @@ public class KeywordService {
         for(KeywordDto key : kewords){
             Keyword keyword = new Keyword();
             keyword.setName(key.getName());
-            keyword.setFavorite(key.getFavorite().equals("true"));
+            keyword.setFavorite(key.getFavorite());
             keyword.setShadow(shadow);
             keywordRepository.save(keyword);
         }

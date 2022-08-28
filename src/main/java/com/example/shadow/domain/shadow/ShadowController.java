@@ -18,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.HashMap;
 
@@ -47,7 +48,7 @@ public class ShadowController {
 
     @GetMapping("/shadow/create")
     public String createView(Model model){
-        model.addAttribute("shadow",new ShadowDto());
+        model.addAttribute("keyword",new KeywordDto());
         return "shadow/shadow_form";
     }
 
@@ -76,7 +77,6 @@ public class ShadowController {
 
         Member member = memberService.findByUsername(principal.getName());
 
-        //create 완성하쟈
         //shadow
         shadowService.create(shadowDto.getName(), shadowDto.getMainurl(), member);
 
@@ -90,13 +90,17 @@ public class ShadowController {
         //flowchart
         flowchartService.create(shadowDto.getKeyword());
 
-
-
         HashMap<String, String> redirectMsg = new HashMap<>();
         redirectMsg.put("redirect", "/shadow/list");
 
         return redirectMsg;
-        //return "shadow/shadow_form";
+    }
+
+    @GetMapping("/shadow/update/{id}")
+    public String modify(Model model){
+
+
+        return "shadow/shadow_update";
     }
 
     @RequestMapping("/shadow/list")

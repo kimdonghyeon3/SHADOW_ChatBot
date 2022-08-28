@@ -58,7 +58,7 @@
                 <button type="button" class="btn btn-primary ml-3 deleteflowbtn" onclick="deleteFlow(this)"> - </button>
             </td>
 
-            <td><input class="form-check-input favorite" name="favorite" type="checkbox" value="" id="flexCheckDefault">
+            <td><input class="form-check-input favorite" name="favorite" type="checkbox" id="flexCheckDefault">
             </td>
         </tr>
         </tbody>
@@ -210,7 +210,8 @@
         check.setAttribute("class","form-check-input favorite");
         check.setAttribute("type","checkbox");
         check.setAttribute("id","flexCheckDefault");
-        check.setAttribute("th:field","favorite");
+        //check.setAttribute("th:field","*{favorite}");
+
 
         cell1.append(keyword);
         cell2.append(flow, flow_description, flow_url, addbtn, deletebtn);
@@ -248,7 +249,7 @@
                 // description : [],
                 // url : [],
                 flow : [],
-                favorite : "true"
+                favorite : false,
             }
 
             let trTagChildren =trTag.getElementsByTagName("td");
@@ -295,9 +296,9 @@
                 }
                 //세번째 td = favorite
                 if(j == 2){
-                    let favoriteTag = tdTag.getElementsByTagName("input")[0];
-                    //console.log("favorit : " + favoriteTag.value);
-                    keywordData.favorite = "true";
+                    let favoriteTag = tdTag.getElementsByClassName("favorite")[0];
+                    console.log("favorite : " + favoriteTag.checked);
+                    keywordData.favorite = favoriteTag.checked;
                 }
             }
             data.keyword.push(keywordData);
@@ -322,7 +323,7 @@
             },
             success: function(data) {
                 console.log(data.redirect);
-                window.location.href = data.redirect;
+                //window.location.href = data.redirect;
             },
             failure:function(request){
                 alert("Action failure");
