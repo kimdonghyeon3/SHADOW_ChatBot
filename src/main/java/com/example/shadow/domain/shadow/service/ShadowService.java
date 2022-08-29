@@ -29,4 +29,10 @@ public class ShadowService {
     public Shadow findByNameAndMember(String name, Member member) {
         return shadowRepository.findByNameAndMember(name, member);
     }
+
+    public Shadow findById(Long id) {
+        return shadowRepository.findById(id).orElseThrow(
+                () -> new RuntimeException("shadow not found exception") // 추후 data not found exception 추가 필요
+        );
+    }
 }
