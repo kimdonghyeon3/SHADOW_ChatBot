@@ -42,7 +42,14 @@
         <tbody class="tbody">
         <tr class="text-center datas">
 
-            <td><input name="keyword" type="text"/></td>
+<!--            <td><input name="keyword" type="text"/></td>-->
+            <td>
+                <select class="form-select keyword" name="keyword">
+                <option value="">==키워드 선택==</option>
+                <option th:each="keywordCode : ${keywordCodes}" th:value="${keywordCode}"
+                        th:text="${keywordCode}">FAST</option>
+                </select>
+            </td>
 
             <td class="text-start flows">
                 <input name="flow" type="text" class="mb-3 flow" />
@@ -58,7 +65,7 @@
                 <button type="button" class="btn btn-primary ml-3 deleteflowbtn" onclick="deleteFlow(this)"> - </button>
             </td>
 
-            <td><input class="form-check-input favorite" name="favorite" type="checkbox" value="" id="flexCheckDefault">
+            <td><input class="form-check-input favorite" name="favorite" type="checkbox" id="flexCheckDefault">
             </td>
         </tr>
         </tbody>
@@ -150,10 +157,20 @@
         var cell3 = newRow.insertCell(2);
 
         //col1 채우기<input type="text" class="mb-3" />
-        var keyword = document.createElement("input");
-        keyword.setAttribute("type","text");
-        keyword.setAttribute("class","mb-3");
-        keyword.setAttribute("name","keyword");
+        var keywordClone = document.getElementsByClassName("keyword")[0];
+        console.log(keywordClone);
+        var keyword = keywordClone.cloneNode(true);
+        console.log(keyword);
+        //var keyword = document.createElement("select");
+        // keyword.setAttribute("class","form-select keyword");
+        // keyword.setAttribute("name","keyword");
+        // var option1 = document.createElement("option")
+        // option1.innerHTML = "==키워드 선택";
+        // var option2 = document.createElement("option")
+        // option2.setAttribute("th:each","keywordCode : ${keywordCodes}");
+        // option2.setAttribute("th:value","${keywordCode}");
+        // option2.setAttribute("th:text","${keywordCode}");
+        // keyword.append(option1, option2);
 
         //col2 채우기
         var flow = document.createElement("input");
@@ -210,7 +227,8 @@
         check.setAttribute("class","form-check-input favorite");
         check.setAttribute("type","checkbox");
         check.setAttribute("id","flexCheckDefault");
-        check.setAttribute("th:field","favorite");
+        //check.setAttribute("th:field","*{favorite}");
+
 
         cell1.append(keyword);
         cell2.append(flow, flow_description, flow_url, addbtn, deletebtn);
@@ -225,12 +243,6 @@
         }
     }
 
-    //전송을 하면 json 데이터를 만들어보자
-    // 기본 생각은 요거 tbody의 자식의 수를 센다 = keywor의 개수
-    // tbody의 자식의 순서대로 keywor 배열은 만든다.
-    // 최상위 name과 url을 넣어준다.
-    // keyword 배열에 자식의 자식을 돌면서 넣어준다.
-    //json 데이터를 보낸다.
     $(".create_shadow").click(function (e){
 
         e.preventDefault();
@@ -250,10 +262,11 @@
 
             var keywordData = {
                 name : "",
+                // flow : [],
+                // description : [],
+                // url : [],
                 flow : [],
-                description : [],
-                url : [],
-                favorite : "true"
+                favorite : false,
             }
 
             let trTagChildren =trTag.getElementsByTagName("td");
@@ -264,16 +277,24 @@
 
                 //첫번째 td = keyword
                 if(j == 0){
-                    let keywordTag = tdTag.getElementsByTagName("input")[0];
-                    //console.log("keyword : " + keywordTag.value);
+                    let keywordTag = tdTag.getElementsByClassName("keyword")[0];
+                    console.log("keyword : " + keywordTag.value);
                     keywordData.name = keywordTag.value;
                 }
+
                 //두번쨰 td = flow description url
                 if(j == 1){
 
                     var tdTagLength = tdTag.getElementsByClassName("flow").length;
                     //console.log("tdTagLength : " + tdTagLength);
                     for(let k = 0 ; k < tdTagLength ; k++){
+
+                        var flowData = {
+                            name : "",
+                            description : "",
+                            url : "",
+                        }
+                        
                         let flowTag = tdTag.getElementsByClassName("flow")[k];
                         let descriptionTag = tdTag.getElementsByClassName("description")[k];
                         let urlTag = tdTag.getElementsByClassName("url")[k];
@@ -281,17 +302,21 @@
                         // console.log("description : " + descriptionTag.value);
                         // console.log("url : " + urlTag.value);
 
+                        flowData.name = flowTag.value;
+                        flowData.description = descriptionTag.value;
+                        flowData.url = urlTag.value;
                         //배열에 값 넣기
-                        keywordData.flow.push(flowTag.value)
-                        keywordData.description.push(descriptionTag.value)
-                        keywordData.url.push(urlTag.value)
+                        // keywordData.flow.push(flowTag.value)
+                        // keywordData.description.push(descriptionTag.value)
+                        // keywordData.url.push(urlTag.value)
+                        keywordData.flow.push(flowData);
                     }
                 }
                 //세번째 td = favorite
                 if(j == 2){
-                    let favoriteTag = tdTag.getElementsByTagName("input")[0];
-                    //console.log("favorit : " + favoriteTag.value);
-                    keywordData.favorite = "true";
+                    let favoriteTag = tdTag.getElementsByClassName("favorite")[0];
+                    //console.log("favorite : " + favoriteTag.checked);
+                    keywordData.favorite = favoriteTag.checked;
                 }
             }
             data.keyword.push(keywordData);
@@ -316,7 +341,7 @@
             },
             success: function(data) {
                 console.log(data.redirect);
-                window.location.href = data.redirect;
+                //window.location.href = data.redirect;
             },
             failure:function(request){
                 alert("Action failure");

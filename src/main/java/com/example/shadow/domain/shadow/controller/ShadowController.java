@@ -1,10 +1,17 @@
 package com.example.shadow.domain.shadow.controller;
 
+import com.example.shadow.domain.member.entity.Member;
+import com.example.shadow.domain.member.service.MemberService;
 import com.example.shadow.domain.shadow.dto.KeywordDto;
 import com.example.shadow.domain.shadow.dto.ShadowDto;
 import com.example.shadow.domain.shadow.entity.Keyword;
 import com.example.shadow.domain.shadow.entity.Shadow;
 import com.example.shadow.domain.shadow.repository.ShadowRepository;
+import com.example.shadow.domain.shadow.entity.Shadow;
+import com.example.shadow.domain.shadow.service.FlowChartService;
+import com.example.shadow.domain.shadow.service.FlowService;
+import com.example.shadow.domain.shadow.service.KeywordService;
+import com.example.shadow.domain.shadow.service.ShadowService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -13,12 +20,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-@RequiredArgsConstructor
 @Controller
 @Slf4j
+@RequiredArgsConstructor
 public class ShadowController {
 
     /*
@@ -34,15 +43,27 @@ public class ShadowController {
     /shadow/delete/{id}
     */
 
+    private final ShadowService shadowService;
+    private final KeywordService keywordService;
+    private final FlowChartService flowchartService;
+    private final FlowService flowService;
+    private final MemberService memberService;
+
     @GetMapping("/shadow/create")
     public String createView(Model model){
-        model.addAttribute("shadow",new ShadowDto());
+
+        List<String> keywordCodes = new ArrayList<>();
+        keywordCodes.add("반품");
+        keywordCodes.add("배송조회");
+        keywordCodes.add("구매목록조회");
+
+        model.addAttribute("keywordCodes",keywordCodes);
         return "shadow/shadow_form";
     }
 
     @PostMapping("/shadow/create")
     @ResponseBody
-    public HashMap<String, String> createShadow(String shadow) throws JsonProcessingException {
+    public HashMap<String, String> createShadow(String shadow, Principal principal) throws JsonProcessingException {
 
         System.out.println("shadow = " + shadow);
 
@@ -54,20 +75,41 @@ public class ShadowController {
         log.info("mainurl = {}", shadowDto.getMainurl());
         for(KeywordDto k : shadowDto.getKeyword()){
             log.info("keyword = {}", k.getName());
-            for(String s : k.getFlow())
+/*            for(String s : k.getFlow())
                 log.info("flow = {}", s);
             for(String s : k.getDescription())
                 log.info("description = {}", s);
             for(String s : k.getUrl())
-                log.info("url = {}", s);
+                log.info("url = {}", s);*/
             log.info("favorite = {}",k.getFavorite());
         }
+
+        Member member = memberService.findByUsername(principal.getName());
+
+        //shadow
+        shadowService.create(shadowDto.getName(), shadowDto.getMainurl(), member);
+
+        //keyword
+        Shadow findShadow = shadowService.findByNameAndMember(shadowDto.getName(), member);
+        keywordService.create(shadowDto.getKeyword(), findShadow);
+
+        //flow
+        flowService.create(shadowDto.getKeyword());
+
+        //flowchart
+        flowchartService.create(shadowDto.getKeyword());
 
         HashMap<String, String> redirectMsg = new HashMap<>();
         redirectMsg.put("redirect", "/shadow/list");
 
         return redirectMsg;
-        //return "shadow/shadow_form";
+    }
+
+    @GetMapping("/shadow/update/{id}")
+    public String modify(Model model){
+
+
+        return "shadow/shadow_update";
     }
 
     private final ShadowRepository shadowRepository;

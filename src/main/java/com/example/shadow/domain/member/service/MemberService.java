@@ -28,6 +28,7 @@ public class MemberService {
         return memberRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
     }
+
     public Member findById(long id) {
         return memberRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("유효하지 않은 사용자 입니다."));
