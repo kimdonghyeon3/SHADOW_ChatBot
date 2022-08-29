@@ -1,8 +1,12 @@
 package com.example.shadow.chatbot.shadow;
 
-import com.example.shadow.chatbot.entity.Question;
+import com.example.shadow.chatbot.service.QuestionService;
+import com.example.shadow.chatbot.service.ShadowService;
+import com.example.shadow.chatbot.shadow.entity.Flowchart;
+import com.example.shadow.chatbot.shadow.entity.Keyword;
+import com.example.shadow.chatbot.shadow.entity.Question;
 import com.example.shadow.chatbot.message.ResponseMessage;
-import com.example.shadow.chatbot.entity.Keyword;
+import com.example.shadow.chatbot.shadow.entity.Shadow;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -23,11 +27,13 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Controller
 @Slf4j
 public class ShadowController {
+    private final QuestionService questionService;
     private final ShadowService shadowService;
     private static String secretKey = "SHVTeG5SemVXRk9KcU1oSU1VVWpWeW1MQmxCY0xzSk4=";
     private static String apiUrl = "https://z16j1lin9x.apigw.ntruss.com/custom/v1/7654/bb5bef27a0dd572b921c6b22c71e79115c1d4cca1dcbd766d269fa6c2d5bd9ad";
@@ -51,9 +57,11 @@ public class ShadowController {
 
         ResponseMessage responseMessage = new ResponseMessage();
 
-        if (shadowService.existByQuestion(reqMessage)) {
-            Question question = shadowService.findByQuestion(reqMessage);
-            responseMessage.setMessage(question.getKeyword());
+        if (questionService.existByQuestion(reqMessage)) {
+            String flow_str = message(reqMessage);
+            responseMessage.setMessage(flow_str);
+            //////
+//            responseMessage.setMessage(question.getKeyword());
 //            String keyword = keywords.getKeyword();
             return responseMessage;
         } else {
@@ -98,7 +106,7 @@ public class ShadowController {
                     chatMessage = description;
                     String respMessage = chatMessage;
 
-                    if(!shadowService.existByQuestion(reqMessage)) { // DB에 저장이 안되어 있을 경우
+                    if(!questionService.existByQuestion(reqMessage)) { // DB에 저장이 안되어 있을 경우
                         // DB저장
                         create(reqMessage, respMessage);
                     }
@@ -184,6 +192,26 @@ public class ShadowController {
     }
 
     public void create(String question, String keyword) {
-        shadowService.create(question, keyword);
+        questionService.create(question, keyword);
+    }
+
+    public String message(String reqMessage) {
+        StringBuilder sb = new StringBuilder();
+        Question question = questionService.findByQuestion(reqMessage);
+        /* 보낼 메시지 : responseMessage */
+        Shadow shadow = shadowService.findById(1L); // 쿠팡
+        List<Keyword> keywords = shadow.getKeywords(); // 쿠팡에 대한 키워드(주문, 주문조회, 반품)
+        for(Keyword keyword : keywords) { // 주문, 주문조회, 반품
+            if(keyword.getName().equals(question.getKeyword())) { // 키워드들 중 보낸 question에 대한 keyword와 같을 경우(반품)
+                System.out.println(keyword.getName());
+                List<Flowchart> flowcharts = keyword.getFlowcharts(); // (반품)에 대한 flowchart 출력
+                for(Flowchart flowchart : flowcharts) { // flowchart들에 대한 flow내용들을 출력
+                    sb.append("이름 : " + flowchart.getFlow().getName() + ", "
+                            + "설명 : " + flowchart.getFlow().getDescription() + ", "
+                            + "URL : " +  flowchart.getFlow().getUrl() + "\n");
+                }
+            }
+        }
+        return sb.toString();
     }
 }
