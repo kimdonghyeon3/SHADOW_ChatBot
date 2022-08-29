@@ -11,12 +11,14 @@
     <!-- Page Content-->
     <div class="mb-5 border-bottom border-dark">
         <h3>내 쇼핑몰</h3>
+        <button class="btn btn-outline-primary btn-sm">수정</button>
+        <button class="btn btn-outline-primary btn-sm">삭제</button>
         <p th:text="|쇼핑몰 명 : ${shadow.name}|"></p>
         <p th:text="|쇼핑몰 URL : ${shadow.mainurl}|"></p>
     </div>
     <div class="mb-5 border-bottom border-dark">
         <h3>내 쇼핑몰 순서도</h3>
-        <table class="table">
+        <table class="table table-bordered">
             <thead>
             <tr class="text-center">
                 <th>키워드</th>
@@ -27,9 +29,10 @@
             <tbody class="tbody">
             <th:block th:each="keyword : ${shadow.keywords}">
             <tr class="text-center datas">
-
                 <td>
                     <p th:text="${keyword.name}"></p>
+                    <button class="btn btn-outline-primary btn-sm">수정</button> <!-- 각각의 키워드 수정기능 추가하면 좋을 것 같은데, 불필요하면 빼기 -->
+                    <button class="btn btn-outline-primary btn-sm">삭제</button>
                 </td>
                 <td class="text-start flows">
                     <th:block th:each="flowchart : ${keyword.flowcharts}">
@@ -39,7 +42,7 @@
                         <div class="mb-3">
                             <p class="text-center" th:text="|설명 : ${flowchart.flow.description}|"></p>
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-3 border-bottom border-dark">
                             <p class="text-center" th:text="|url : ${flowchart.flow.url}|"></p>
                         </div>
                     </th:block>
