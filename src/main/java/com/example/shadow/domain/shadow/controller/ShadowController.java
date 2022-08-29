@@ -2,6 +2,7 @@ package com.example.shadow.domain.shadow.controller;
 
 import com.example.shadow.domain.shadow.dto.KeywordDto;
 import com.example.shadow.domain.shadow.dto.ShadowDto;
+import com.example.shadow.domain.shadow.entity.Keyword;
 import com.example.shadow.domain.shadow.entity.Shadow;
 import com.example.shadow.domain.shadow.repository.ShadowRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
