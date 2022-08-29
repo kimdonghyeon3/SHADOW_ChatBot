@@ -1,27 +1,27 @@
-package com.example.shadow.chatbot.shadow;
+package com.example.shadow.chatbot.service;
 
 import com.example.shadow.chatbot.Repository.QuestionRepository;
-import com.example.shadow.chatbot.entity.Question;
+import com.example.shadow.chatbot.shadow.entity.Question;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
-public class ShadowService {
-    private final QuestionRepository shadowRepository;
+public class QuestionService {
+    private final QuestionRepository questionRepository;
 
     public void create(String question, String respMessage) {
         Question t = new Question();
         t.setQuestion(question);
         t.setKeyword(respMessage);
-        shadowRepository.save(t);
+        questionRepository.save(t);
     }
 
     public boolean existByQuestion(String question) {
-        return shadowRepository.existsByQuestion(question);
+        return questionRepository.existsByQuestion(question);
     }
 
     public Question findByQuestion(String question) {
-        return shadowRepository.findByQuestion(question);
+        return questionRepository.findByQuestion(question);
     }
 }
