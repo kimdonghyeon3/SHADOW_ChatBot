@@ -1,15 +1,14 @@
-package com.example.shadow.chatbot.controller;
+package com.example.shadow.chatbot.shadow;
 
-import com.example.shadow.chatbot.message.RequestMessage;
+import com.example.shadow.chatbot.entity.Question;
 import com.example.shadow.chatbot.message.ResponseMessage;
-import com.example.shadow.chatbot.test.Test_Keyword;
+import com.example.shadow.chatbot.entity.Keyword;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,8 +36,6 @@ public class ShadowController {
     @RequestMapping("/chat")
     public String chatGET(){
 
-        log.info("제대로 실행되니?");
-
         return "chatbot/chat";
     }
 
@@ -55,9 +52,9 @@ public class ShadowController {
         ResponseMessage responseMessage = new ResponseMessage();
 
         if (shadowService.existByQuestion(reqMessage)) {
-            Test_Keyword keywords = shadowService.findByQuestion(reqMessage);
-            responseMessage.setMessage(keywords.getKeyword());
-            //String keyword = keywords.getKeyword();
+            Question question = shadowService.findByQuestion(reqMessage);
+            responseMessage.setMessage(question.getKeyword());
+//            String keyword = keywords.getKeyword();
             return responseMessage;
         } else {
             URL url = new URL(apiUrl);
