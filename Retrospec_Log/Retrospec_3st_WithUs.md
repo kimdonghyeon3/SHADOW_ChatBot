@@ -156,7 +156,7 @@ With Us 팀원들 각자가 느낀 한 주간 기술적으로 새로 알게된 �
 [예진님 회고](https://www.notion.so/5d12a2bba7ff4ea48c0fb9580886d81b) 
 </summary>
 
-![08-18](https://i.imgur.com/NT00hPV.png)
+![08-18](https://i.imgur.com/fpJ7MXP.png)
 </details>
 
 
