@@ -115,7 +115,7 @@ public class ShadowController {
 
     @RequestMapping("/shadow/list")
     public String list(Model model){
-        List<Shadow> shadowList = this.shadowRepository.findAll();
+        List<Shadow> shadowList = this.shadowService.findAll();
         model.addAttribute("shadowList", shadowList);
         return "shadow/shadow_list";
     }
