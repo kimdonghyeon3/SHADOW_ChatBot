@@ -23,6 +23,7 @@ public class Keyword {
     private Boolean favorite;
 
     @OneToMany(mappedBy = "keyword", cascade = {CascadeType.ALL})
+    //@OneToMany(mappedBy = "keyword")
     private List<Flowchart> flowcharts;
 
 //    @ManyToOne

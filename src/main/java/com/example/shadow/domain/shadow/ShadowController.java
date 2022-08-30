@@ -2,8 +2,12 @@ package com.example.shadow.domain.shadow;
 
 import com.example.shadow.domain.member.entity.Member;
 import com.example.shadow.domain.member.service.MemberService;
+import com.example.shadow.domain.shadow.dto.FlowDto;
 import com.example.shadow.domain.shadow.dto.KeywordDto;
 import com.example.shadow.domain.shadow.dto.ShadowDto;
+import com.example.shadow.domain.shadow.entity.Flow;
+import com.example.shadow.domain.shadow.entity.Flowchart;
+import com.example.shadow.domain.shadow.entity.Keyword;
 import com.example.shadow.domain.shadow.entity.Shadow;
 import com.example.shadow.domain.shadow.service.FlowChartService;
 import com.example.shadow.domain.shadow.service.FlowService;
@@ -67,34 +71,13 @@ public class ShadowController {
         ObjectMapper objectMapper = new ObjectMapper();
         ShadowDto shadowDto = objectMapper.readValue(shadow, ShadowDto.class);
 
-//      debug
-        log.info("name = {}",shadowDto.getName());
-        log.info("mainurl = {}", shadowDto.getMainurl());
-        for(KeywordDto k : shadowDto.getKeyword()){
-            log.info("keyword = {}", k.getName());
-/*            for(String s : k.getFlow())
-                log.info("flow = {}", s);
-            for(String s : k.getDescription())
-                log.info("description = {}", s);
-            for(String s : k.getUrl())
-                log.info("url = {}", s);*/
-            log.info("favorite = {}",k.getFavorite());
-        }
-
         Member member = memberService.findByUsername(principal.getName());
 
-        //shadow
         shadowService.create(shadowDto.getName(), shadowDto.getMainurl(), member);
-
-        //keyword
         Shadow findShadow = shadowService.findByNameAndMember(shadowDto.getName(), member);
         keywordService.create(shadowDto.getKeyword(), findShadow);
-
-        //flow
         flowService.create(shadowDto.getKeyword());
-
-        //flowchart
-        flowchartService.create(shadowDto.getKeyword());
+        flowchartService.create(shadowDto.getKeyword(), findShadow);
 
         HashMap<String, String> redirectMsg = new HashMap<>();
         redirectMsg.put("redirect", "/shadow/list");
@@ -103,12 +86,60 @@ public class ShadowController {
     }
 
     @GetMapping("/shadow/update/{id}")
-    public String modify(Model model){
+    public String update(Model model, @PathVariable Long id){
 
+        Shadow shadow = shadowService.findById(id);
+
+        model.addAttribute("shadow", shadow);
+
+        List<String> keywordCodes = new ArrayList<>();
+        keywordCodes.add("반품");
+        keywordCodes.add("배송조회");
+        keywordCodes.add("구매목록조회");
+
+        model.addAttribute("keywordCodes",keywordCodes);
 
         return "shadow/shadow_update";
     }
 
+    @PostMapping("/shadow/update/{id}")
+    @ResponseBody
+    public HashMap<String, String> update(String shadow, @PathVariable Long id, Principal principal) throws JsonProcessingException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        ShadowDto shadowDto = objectMapper.readValue(shadow, ShadowDto.class);
+
+        log.info("pathvariable id = {}", id);
+        log.info("SHADOW name = {}, SHADOW mainurl = {}", shadowDto.getName(), shadowDto.getMainurl());
+        for(KeywordDto k : shadowDto.getKeyword()){
+            log.info("keyword = {}", k.getName());
+            List<FlowDto> flow = k.getFlow();
+            for (FlowDto flowDto : flow) {
+                log.info("flow name = {}, flow Description = {}, flow URL = {}", flowDto.getName(), flowDto.getDescription(), flowDto.getUrl());
+            }
+            log.info("favorite = {}",k.getFavorite());
+        }
+
+        Member member = memberService.findByUsername(principal.getName());
+        Shadow originShadow = shadowService.findById(id);   //기존 shadow 찾아오기
+
+        //Shadow 수정
+        shadowService.update(originShadow, shadowDto);
+
+        //Keeyword 수정
+        keywordService.update(originShadow, shadowDto);
+
+        //Flow 수정
+        flowService.update(originShadow, shadowDto);
+
+        //FlowChart수정
+        flowchartService.update(originShadow, shadowDto);
+
+        HashMap<String, String> redirectMsg = new HashMap<>();
+        redirectMsg.put("redirect", "/shadow/detail/"+id);
+
+        return redirectMsg;
+    }
     @RequestMapping("/shadow/list")
     public String list(){
         return "shadow/shadow_list";
