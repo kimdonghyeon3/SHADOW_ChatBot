@@ -32,10 +32,10 @@
                 <a th:text="${shadow.mainurl}"></a>
             </td>
             <td>
-                <a th:href="@{/shadow/modify/detail/1}"> 수정</a>
+                <a th:href="@{|/shadow/update/${shadow.id}|}"> 수정</a>
             </td>
             <td>
-                <a th:href="@{/shadow/delete/detail/1}"> 삭제</a>
+                <a th:href="@{|/shadow/delete/detail/${shadow.id}|}"> 삭제</a>
             </td>
 
         </tr>
