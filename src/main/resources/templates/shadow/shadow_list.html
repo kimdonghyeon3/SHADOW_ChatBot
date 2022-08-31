@@ -24,19 +24,18 @@
         </tr>
         </thead>
         <tbody class="tbody">
-        <tr class="text-center datas"> <!-- th:object로 만들면 된다... db값을 가져와서 반복-->
-
+        <tr th:each="shadow : ${shadowList}" class="text-center datas"> <!-- th:object로 만들면 된다... db값을 가져와서 반복-->
             <td>
-                <a th:href="@{/shadow/pathbariable}"> 쿠팡</a>
+                <a th:href="@{|/shadow/detail/${shadow.id}|}" th:text="${shadow.name}"></a>
             </td>
             <td>
-                www.coupang.com
+                <a th:text="${shadow.mainurl}"></a>
             </td>
             <td>
-                <a th:href="@{/shadow/modify/pathbariable}"> 수정</a>
+                <a th:href="@{/shadow/modify/detail/1}"> 수정</a>
             </td>
             <td>
-                <a th:href="@{/shadow/delete/pathbariable}"> 삭제</a>
+                <a th:href="@{/shadow/delete/detail/1}"> 삭제</a>
             </td>
 
         </tr>

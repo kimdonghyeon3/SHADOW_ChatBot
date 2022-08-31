@@ -9,55 +9,42 @@
     function SubmitForm(form) {
         var submit=0;
 
-        /* 아이디 중복 체크 했는지 확인 */
+        /* 아이디 이메일 중복 체크 했는지 확인 */
+        console.log('아이디 이메일 중복 체크 여부 확인');
         $.ajax({
-        url: '/isCheckedUsername',
+        url: '/isChecked',
         type: 'POST',
         data: {
             isCheckedUsername : isCheckedUsername,
-            isChangedUsername : (form.username.value != username)
-        },
-        success: function(result){
-            console.log(result);
-            if(result.data){
-                submit=1;
-            }else{
-                $('#fail-username-msg').removeClass('d-none');
-                $('#fail-username-msg').text(result.message);
-               // $('#isCheckedUsername').val("false");
-                isCheckedUsername="false";
-                $('#username').focus();
-                return;
-            }
-        },
-        error: function (){
-        }
-      });
-
-      /* 이메일 중복 체크 했는지 확인 */
-        $.ajax({
-        url: '/isCheckedEmail',
-        type: 'POST',
-        data: {
+            isChangedUsername : (form.username.value != username),
             isCheckedEmail : isCheckedEmail,
             isChangedEmail : (form.email.value != email)
         },
         success: function(result){
-
             console.log(result);
-            if(result.data){
-                console.log(submit);
-                if(submit==1){
-                    form.submit();
-                }else {
-                    return;
+            isCheckedUsername=result.data.username;
+            isCheckedEmail=result.data.email;
+            console.log('isChecked username? '+ isCheckedUsername);
+            console.log('isChecked Email? '+ isCheckedEmail);
+            if(isCheckedUsername && isCheckedEmail){
+                console.log('username checked ');
+                console.log('email checked ');
+                form.submit();
+            }else {
+                if($('#success-username-msg').hasClass('d-none')!="true" || $('#success-email-msg').hasClass('d-none')!="true"){
+                    $('#success-username-msg').addClass('d-none');
+                    $('#success-email-msg').addClass('d-none');
+                  }
+                if(!isCheckedUsername){
+                    $('#fail-username-msg').removeClass('d-none');
+                    $('#fail-username-msg').text(result.message);
+                    $('#username').focus();
                 }
-            }else{
-                $('#fail-email-msg').removeClass('d-none');
-                $('#fail-email-msg').text(result.message);
-               // $('#isCheckedEmail').val("false");
-                isCheckedEmail="false";
-                $('#email').focus();
+                if(!isCheckedEmail){
+                    $('#fail-email-msg').removeClass('d-none');
+                    $('#fail-email-msg').text(result.message);
+                    $('#email').focus();
+                }
                 return;
             }
         },
@@ -102,6 +89,7 @@
         error: function (){
         }
       });
+
     });
 
     /* 이메일 중복 체크*/

@@ -1,10 +1,12 @@
-package com.example.shadow.domain.shadow;
+package com.example.shadow.domain.shadow.controller;
 
 import com.example.shadow.domain.member.entity.Member;
 import com.example.shadow.domain.member.service.MemberService;
 import com.example.shadow.domain.shadow.dto.FlowDto;
 import com.example.shadow.domain.shadow.dto.KeywordDto;
 import com.example.shadow.domain.shadow.dto.ShadowDto;
+import com.example.shadow.domain.shadow.entity.*;
+import com.example.shadow.domain.shadow.repository.ShadowRepository;
 import com.example.shadow.domain.shadow.entity.Flow;
 import com.example.shadow.domain.shadow.entity.Flowchart;
 import com.example.shadow.domain.shadow.entity.Keyword;
@@ -140,13 +142,34 @@ public class ShadowController {
 
         return redirectMsg;
     }
+
     @RequestMapping("/shadow/list")
-    public String list(){
+    public String list(Model model){
+        List<Shadow> shadowList = this.shadowService.findAll();
+        model.addAttribute("shadowList", shadowList);
         return "shadow/shadow_list";
     }
 
     @RequestMapping("/shadow/detail/{id}")
-    public String detail(Long id){
+    public String detail(@PathVariable Long id, Model model){
+        Shadow shadow = shadowService.findById(id);
+        log.debug("shadow : "+shadow.getName()+" / " + shadow.getMainurl());
+        model.addAttribute("shadow", shadow);
+        List<Keyword> keywords = shadow.getKeywords();
+        keywords.forEach(keyword ->
+                {
+                    log.debug("keyword : "+ keyword.getName());
+                    List<Flowchart> flowcharts = keyword.getFlowcharts();
+                    flowcharts.forEach(
+                            flowchart -> {
+                                log.debug("flowchart : "+flowchart.getId());
+                                Flow flow = flowchart.getFlow();
+                                log.debug("flow : "+flow.getName()+" / "+flow.getDescription()+" / "+ flow.getUrl());
+                            }
+                    );
+                }
+        );
+
         return "shadow/flow_list";
     }
 

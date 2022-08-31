@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ShadowRepository extends JpaRepository<Shadow, Long> {
 
+
     Shadow findByName(String name);
     Shadow findByNameAndMember(String name, Member member);
 }

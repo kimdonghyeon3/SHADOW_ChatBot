@@ -8,6 +8,8 @@ import com.example.shadow.domain.shadow.repository.ShadowRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ShadowService {
@@ -29,9 +31,14 @@ public class ShadowService {
     public Shadow findByNameAndMember(String name, Member member) {
         return shadowRepository.findByNameAndMember(name, member);
     }
+    public List<Shadow> findAll(){
+        return this.shadowRepository.findAll();
+    }
 
     public Shadow findById(Long id) {
-        return shadowRepository.findById(id).get();
+        return shadowRepository.findById(id).orElseThrow(
+                () -> new RuntimeException("shadow not found exception") // 추후 data not found exception 추가 필요
+        );
     }
 
     public void update(Shadow originShadow, ShadowDto shadowDto) {
