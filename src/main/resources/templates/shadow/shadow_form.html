@@ -84,6 +84,8 @@
 <script layout:fragment="script" type='text/javascript'>
 
     function addFlow(e){
+
+        //console.log("flow 추가 버튼");
         //console.log(e.parentNode);
         var flows = e.parentNode;
         let children = flows.children;
@@ -135,8 +137,13 @@
         var flows = e.parentNode;
         let children = flows.children;
 
+        console.log("여기 실행되니?");
+        console.log(children.length);
+
+
         if(children.length > 5){
             for(let i = 0 ; i < 3 ; i++){
+                console.log("삭제코드 실행");
                 flows.removeChild(children[children.length-3]);
             }
         }
@@ -262,9 +269,6 @@
 
             var keywordData = {
                 name : "",
-                // flow : [],
-                // description : [],
-                // url : [],
                 flow : [],
                 favorite : false,
             }
@@ -306,9 +310,6 @@
                         flowData.description = descriptionTag.value;
                         flowData.url = urlTag.value;
                         //배열에 값 넣기
-                        // keywordData.flow.push(flowTag.value)
-                        // keywordData.description.push(descriptionTag.value)
-                        // keywordData.url.push(urlTag.value)
                         keywordData.flow.push(flowData);
                     }
                 }
@@ -324,11 +325,44 @@
 
         console.log(data);
 
-        var shadow = JSON.stringify(data);
+        //keyword 중복 체크 중복이 있다면 alert으로 알려주고 return
 
-        // shadow.name = data.name;
-        // shadow.mainurl = data.mainurl;
-        // shadow.keyword = JSON.stringify(data.keyword);
+        if(data.name === ""){
+            alert("쇼핑몰 명을 입력해 주세요");
+            return;
+        }
+
+        if(data.mainurl === ""){
+            alert("쇼핑몰 주소를 입력해 주세요");
+            return;
+        }
+
+        for(var i = 0 ; i < data.keyword.length ; i++){
+
+            var keyword = data.keyword[i].name;
+
+            if(keyword === ""){
+                alert("키워드를 선택해 주세요");
+                return;
+            }
+            for(var j = i+1 ; j < data.keyword.length ; j++){
+                console.log("keyword : " + keyword);
+                console.log("data.keyword[j] : " + data.keyword[j]);
+                if(keyword === data.keyword[j].name){
+                    alert("중복된 키워드를 사용하실 수 없습니다. (중복된 키워드 : " + keyword + ")");
+                    return;
+                }
+            }
+            var flows = data.keyword[i].flow;
+            for(var j = 0 ; j < flows.length ; j++){
+                if(flows[j].name === "" || flows[j].description === "" || flows[j].url === ""){
+                    alert("공란이 순서도가 있습니다. 순서도를 채워주세요");
+                    return;
+                }
+            }
+        }
+
+        var shadow = JSON.stringify(data);
 
         console.log(shadow);
 

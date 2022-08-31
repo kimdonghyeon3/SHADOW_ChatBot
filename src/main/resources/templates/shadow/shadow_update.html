@@ -52,7 +52,7 @@
                 </td>
 
                 <td class="text-start flows">
-                    <div th:each="flowchart : ${keyword.flowcharts}">
+                    <div th:each="flowchart : ${keyword.flowcharts}" class="get-flows">
                     <input name="flow" type="text" class="mb-3 flow" th:value="${flowchart.flow.name}" />
                     <div class="input-group mb-3">
                         <span class="input-group-text">안내메시지</span>
@@ -90,14 +90,15 @@
 <script layout:fragment="script" type='text/javascript'>
 
     function addFlow(e){
-        //console.log(e.parentNode);
-        var flows = e.parentNode;
-        let children = flows.children;
-        //console.log(children);
-        //document.getElementsByClassName("flows")[0];
-        var flag = e;
-        //document.getElementsByClassName("addflowbtn")[0];
+        var flows = e.parentNode;   //td
 
+        var getFlows =  flows.getElementsByClassName("flow");
+
+        for( var i = 0 ; i < getFlows.length ; i ++){
+            console.log(getFlows[i]);
+        }
+
+        var flag = e;
         var flow = document.createElement("input");
 
         var flow_description = document.createElement("div");
@@ -135,14 +136,21 @@
         flows.insertBefore(flow, flag);
         flows.insertBefore(flow_description, flag);
         flows.insertBefore(flow_url, flag);
+
+
     }
 
     function deleteFlow(e){
         var flows = e.parentNode;
         let children = flows.children;
 
+        console.log("여기 실행되니?");
+        console.log(children.length);
+
+
         if(children.length > 5){
             for(let i = 0 ; i < 3 ; i++){
+                console.log("삭제코드 실행");
                 flows.removeChild(children[children.length-3]);
             }
         }
@@ -332,6 +340,41 @@
 
         console.log(data);
 
+        if(data.name === ""){
+            alert("쇼핑몰 명을 입력해 주세요");
+            return;
+        }
+
+        if(data.mainurl === ""){
+            alert("쇼핑몰 주소를 입력해 주세요");
+            return;
+        }
+
+        for(var i = 0 ; i < data.keyword.length ; i++){
+
+            var keyword = data.keyword[i].name;
+
+            if(keyword === ""){
+                alert("키워드를 선택해 주세요");
+                return;
+            }
+            for(var j = i+1 ; j < data.keyword.length ; j++){
+                console.log("keyword : " + keyword);
+                console.log("data.keyword[j] : " + data.keyword[j]);
+                if(keyword === data.keyword[j].name){
+                    alert("중복된 키워드를 사용하실 수 없습니다. (중복된 키워드 : " + keyword + ")");
+                    return;
+                }
+            }
+            var flows = data.keyword[i].flow;
+            for(var j = 0 ; j < flows.length ; j++){
+                if(flows[j].name === "" || flows[j].description === "" || flows[j].url === ""){
+                    alert("공란이 순서도가 있습니다. 순서도를 채워주세요");
+                    return;
+                }
+            }
+        }
+
         var shadow = JSON.stringify(data);
 
         // shadow.name = data.name;
@@ -353,7 +396,7 @@
             },
             success: function(data) {
                 console.log(data.redirect);
-                //window.location.href = data.redirect;
+                window.location.href = data.redirect;
             },
             failure:function(request){
                 alert("Action failure");
