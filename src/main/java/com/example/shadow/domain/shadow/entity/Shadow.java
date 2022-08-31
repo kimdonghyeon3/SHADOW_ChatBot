@@ -25,7 +25,8 @@ public class Shadow {
     @Column
     private String mainurl;
 
-    @OneToMany(mappedBy = "shadow", cascade = {CascadeType.ALL})
+    //@OneToMany(mappedBy = "shadow", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "shadow")
     private List<Keyword> keywords;
 
     @ManyToOne

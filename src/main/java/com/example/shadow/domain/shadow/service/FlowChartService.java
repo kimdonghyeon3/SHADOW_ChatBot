@@ -1,11 +1,14 @@
 package com.example.shadow.domain.shadow.service;
 
 
+import com.example.shadow.domain.member.entity.Member;
 import com.example.shadow.domain.shadow.dto.FlowDto;
 import com.example.shadow.domain.shadow.dto.KeywordDto;
+import com.example.shadow.domain.shadow.dto.ShadowDto;
 import com.example.shadow.domain.shadow.entity.Flow;
 import com.example.shadow.domain.shadow.entity.Flowchart;
 import com.example.shadow.domain.shadow.entity.Keyword;
+import com.example.shadow.domain.shadow.entity.Shadow;
 import com.example.shadow.domain.shadow.repository.FlowChartRepository;
 import com.example.shadow.domain.shadow.repository.FlowRepository;
 import com.example.shadow.domain.shadow.repository.KeywordRepository;
@@ -22,11 +25,10 @@ public class FlowChartService {
     private final KeywordRepository keywordRepository;
     private final FlowRepository flowRepository;
 
-
-    public void create(List<KeywordDto> keywords) {
+    public void create(List<KeywordDto> keywords, Shadow shadow) {
 
         for (KeywordDto k : keywords) {
-            Keyword keyword = keywordRepository.findByName(k.getName());
+            Keyword keyword = keywordRepository.findByNameAndShadow(k.getName(), shadow);
 
             for(int i = 1 ; i <= k.getFlow().size(); i ++){
 
@@ -40,8 +42,10 @@ public class FlowChartService {
 
                 flowChartRepository.save(flowchart);
             }
-
         }
+    }
+
+    public void update(Shadow originShadow, ShadowDto shadowDto) {
 
     }
 }
