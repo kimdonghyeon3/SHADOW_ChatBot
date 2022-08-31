@@ -7,6 +7,8 @@ import com.example.shadow.domain.shadow.repository.ShadowRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ShadowService {
@@ -28,6 +30,9 @@ public class ShadowService {
 
     public Shadow findByNameAndMember(String name, Member member) {
         return shadowRepository.findByNameAndMember(name, member);
+    }
+    public List<Shadow> findAll(){
+        return this.shadowRepository.findAll();
     }
 
     public Shadow findById(Long id) {
