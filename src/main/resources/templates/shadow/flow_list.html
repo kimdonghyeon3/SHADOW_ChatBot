@@ -46,10 +46,10 @@
                     </th:block>
                 </td>
                 <td>
-                    <p th:text="${keyword.favorite}">자주찾는 목록</p>
+                    <!-- <p th:text="${keyword.favorite}"></p>-->
                     <!--목록에서도 자주찾는 목록을 추가할 수 있도록 update 기능 추가하면 좋을 것 같음-->
-                    <input class="form-check-input favorite" name="favorite" type="checkbox" id="flexCheckDefault" th:if="${keyword.favorite}" checked>
-                    <input class="form-check-input favorite" name="favorite" type="checkbox" id="flexCheckDefault" th:if="!${keyword.favorite}">
+                    <input class="form-check-input favorite" name="favorite" type="checkbox" id="flexCheckDefault" th:if="${keyword.favorite}" checked disabled>
+                    <input class="form-check-input favorite" name="favorite" type="checkbox" id="flexCheckDefault" th:if="!${keyword.favorite}" disabled>
                 </td>
             </tr>
             </th:block>
