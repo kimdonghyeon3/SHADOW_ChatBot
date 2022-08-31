@@ -11,8 +11,8 @@
     <!-- Page Content-->
     <div class="mb-5 border-bottom border-dark">
         <h3>내 쇼핑몰</h3>
-        <button class="btn btn-outline-primary btn-sm">수정</button>
-        <button class="btn btn-outline-primary btn-sm">삭제</button>
+        <a class="btn btn-outline-primary btn-sm" th:href="@{|/shadow/update/${shadow.id}|}">수정</a>
+        <a class="btn btn-outline-primary btn-sm" onclick="if ( !confirm('정말로 삭제하시겠습니까?') ) return false;" th:href="@{|/shadow/delete/${shadow.id}|}" >삭제</a>
         <p th:text="|쇼핑몰 명 : ${shadow.name}|"></p>
         <p th:text="|쇼핑몰 URL : ${shadow.mainurl}|"></p>
     </div>
@@ -31,8 +31,6 @@
             <tr class="text-center datas">
                 <td>
                     <p th:text="${keyword.name}"></p>
-                    <button class="btn btn-outline-primary btn-sm">수정</button> <!-- 각각의 키워드 수정기능 추가하면 좋을 것 같은데, 불필요하면 빼기 -->
-                    <button class="btn btn-outline-primary btn-sm">삭제</button>
                 </td>
                 <td class="text-start flows">
                     <th:block th:each="flowchart : ${keyword.flowcharts}">
@@ -48,10 +46,10 @@
                     </th:block>
                 </td>
                 <td>
-                    <p th:text="${keyword.favorite}">자주찾는 목록</p>
+                    <!-- <p th:text="${keyword.favorite}"></p>-->
                     <!--목록에서도 자주찾는 목록을 추가할 수 있도록 update 기능 추가하면 좋을 것 같음-->
-                    <input class="form-check-input favorite" name="favorite" type="checkbox" id="flexCheckDefault" th:if="${keyword.favorite}" checked>
-                    <input class="form-check-input favorite" name="favorite" type="checkbox" id="flexCheckDefault" th:if="!${keyword.favorite}">
+                    <input class="form-check-input favorite" name="favorite" type="checkbox" id="flexCheckDefault" th:if="${keyword.favorite}" checked disabled>
+                    <input class="form-check-input favorite" name="favorite" type="checkbox" id="flexCheckDefault" th:if="!${keyword.favorite}" disabled>
                 </td>
             </tr>
             </th:block>

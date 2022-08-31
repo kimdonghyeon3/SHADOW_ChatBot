@@ -173,6 +173,12 @@ public class ShadowController {
         return "shadow/flow_list";
     }
 
+    @GetMapping("/shadow/delete/{id}")
+    public String delete(@PathVariable Long id){
+        shadowService.delete(id);
+        return "redirect:/shadow/list";
+    }
+
     //여기는 /shadow/detail/{id} 해당 뷰 하단에 작성 예정
     @RequestMapping("/my/plugins")
     public String showPlugins(){
