@@ -35,14 +35,14 @@
                 <a th:href="@{|/shadow/update/${shadow.id}|}"> 수정</a>
             </td>
             <td>
-                <a th:href="@{|/shadow/delete/detail/${shadow.id}|}"> 삭제</a>
+                <a onclick="if ( !confirm('정말로 삭제하시겠습니까?') ) return false;" th:href="@{|/shadow/delete/detail/${shadow.id}|}"> 삭제</a>
             </td>
 
         </tr>
         </tbody>
     </table>
 
-    <a th:href="@{/newshadow}"> Shadow 만들러가기</a>
+    <a th:href="@{/shadow/create}"> Shadow 만들러가기</a>
 
 </div>
 </html>
