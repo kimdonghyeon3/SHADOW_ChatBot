@@ -15,9 +15,7 @@
 
     <h4>내 쇼핑몰 정보 수정하기</h4>
     <hr/>
-    <!--    <form th:action="@{/shadow/create}" method="post">-->
     <form>
-
         <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1">쇼핑몰 명</span>
             <input type="text" name="name" th:value="${shadow.name}" class="form-control name" placeholder="쇼핑몰 명을 입력해주세요">
@@ -42,7 +40,6 @@
             <tbody class="tbody">
             <tr class="text-center datas" th:each="keyword : ${shadow.keywords}">
 
-                <!--            <td><input name="keyword" type="text"/></td>-->
                 <td>
                     <select class="form-select keyword" name="keyword">
                         <option th:value="${keyword.name}" th:text="${keyword.name}">==키워드 선택==</option>
@@ -54,12 +51,12 @@
                 <td class="text-start flows">
                     <div th:each="flowchart : ${keyword.flowcharts}" class="get-flows">
                     <input name="flow" type="text" class="mb-3 flow" th:value="${flowchart.flow.name}" />
-                    <div class="input-group mb-3">
+                    <div class="input-group mb-3 description-box">
                         <span class="input-group-text">안내메시지</span>
                         <input type="text" name="description" class="form-control description" placeholder="해당 페이지에서 안내할 멘트를 입력해주세요"
                                th:value="${flowchart.flow.description}">
                     </div>
-                    <div class="input-group mb-3">
+                    <div class="input-group mb-3 url-box">
                         <span class="input-group-text">url</span>
                         <input type="text" name="url" class="form-control url" placeholder="ex) www.coupang.com/mycoupang"
                                th:value="${flowchart.flow.url}">
@@ -90,69 +87,31 @@
 <script layout:fragment="script" type='text/javascript'>
 
     function addFlow(e){
-        var flows = e.parentNode;   //td
 
-        var getFlows =  flows.getElementsByClassName("flow");
+        var flows = e.parentNode;
+        var flag = e;
 
-        for( var i = 0 ; i < getFlows.length ; i ++){
-            console.log(getFlows[i]);
+        //get flow를 하나 복사하자
+        var getFlow = flows.children[0];
+        var cloneNode = getFlow.cloneNode(true);
+
+        let name = cloneNode.getElementsByTagName("input");
+
+        for(var i = 0 ; i < name.length ; i++){
+            name[i].value = "";
         }
 
-        var flag = e;
-        var flow = document.createElement("input");
-
-        var flow_description = document.createElement("div");
-        var flow_description_span = document.createElement("span");
-        var flow_description_input = document.createElement("input");
-
-        var flow_url = document.createElement("div")
-        var flow_url_span = document.createElement("span");
-        var flow_url_input = document.createElement("input");
-
-        flow.setAttribute("type","text");
-        flow.setAttribute("class","mb-3 flow");
-        flow.setAttribute("name","flow");
-
-        flow_description.setAttribute("class","input-group mb-3");
-        flow_description_span.setAttribute("class","input-group-text");
-        flow_description_input.setAttribute("type","text");
-        flow_description_input.setAttribute("class","form-control description");
-        flow_description_input.setAttribute("placeholder","해당 페이지에서 안내할 멘트를 입력해주세요");
-        flow_description_input.setAttribute("name","description");
-        flow_description_span.innerHTML = "안내메시지";
-
-        flow_url.setAttribute("class", "input-group mb-3");
-        flow_url_span.setAttribute("class","input-group-text");
-        flow_url_input.setAttribute("type","text");
-        flow_url_input.setAttribute("class","form-control url");
-        flow_url_input.setAttribute("placeholder","ex) www.coupang.com/mycoupang");
-        flow_url_input.setAttribute("name","url");
-        flow_url_span.innerHTML = "url";
-
-        flow_description.append(flow_description_span, flow_description_input);
-        flow_url.append(flow_url_span, flow_url_input);
-
-        //flows.appendChild(flow);
-        flows.insertBefore(flow, flag);
-        flows.insertBefore(flow_description, flag);
-        flows.insertBefore(flow_url, flag);
-
-
+        flows.insertBefore(cloneNode, flag);
     }
 
     function deleteFlow(e){
         var flows = e.parentNode;
         let children = flows.children;
 
-        console.log("여기 실행되니?");
-        console.log(children.length);
+        console.log(children[children.length-3]);
 
-
-        if(children.length > 5){
-            for(let i = 0 ; i < 3 ; i++){
-                console.log("삭제코드 실행");
+        if(children.length > 3){
                 flows.removeChild(children[children.length-3]);
-            }
         }
     }
 
@@ -172,19 +131,7 @@
 
         //col1 채우기<input type="text" class="mb-3" />
         var keywordClone = document.getElementsByClassName("keyword")[0];
-        console.log(keywordClone);
         var keyword = keywordClone.cloneNode(true);
-        console.log(keyword);
-        //var keyword = document.createElement("select");
-        // keyword.setAttribute("class","form-select keyword");
-        // keyword.setAttribute("name","keyword");
-        // var option1 = document.createElement("option")
-        // option1.innerHTML = "==키워드 선택";
-        // var option2 = document.createElement("option")
-        // option2.setAttribute("th:each","keywordCode : ${keywordCodes}");
-        // option2.setAttribute("th:value","${keywordCode}");
-        // option2.setAttribute("th:text","${keywordCode}");
-        // keyword.append(option1, option2);
 
         //col2 채우기
         var flow = document.createElement("input");
@@ -218,8 +165,6 @@
         flow_url_span.innerHTML = "url";
 
         //버튼
-        // <button type="button" className="btn btn-primary ml-3 addflowbtn" onClick="addFlow(this)"> + </button>
-        // <button type="button" className="btn btn-primary ml-3 deleteflowbtn" onClick="deleteFlow(this)"> - </button>
         var addbtn = document.createElement("button");
         var deletebtn = document.createElement("button");
 
@@ -241,8 +186,6 @@
         check.setAttribute("class","form-check-input favorite");
         check.setAttribute("type","checkbox");
         check.setAttribute("id","flexCheckDefault");
-        //check.setAttribute("th:field","*{favorite}");
-
 
         cell1.append(keyword);
         cell2.append(flow, flow_description, flow_url, addbtn, deletebtn);
@@ -256,8 +199,6 @@
             flows.deleteRow(-1);
         }
     }
-
-
 
     $(".create_shadow").click(function (e){
 
@@ -278,9 +219,6 @@
 
             var keywordData = {
                 name : "",
-                // flow : [],
-                // description : [],
-                // url : [],
                 flow : [],
                 favorite : false,
             }
@@ -376,10 +314,6 @@
         }
 
         var shadow = JSON.stringify(data);
-
-        // shadow.name = data.name;
-        // shadow.mainurl = data.mainurl;
-        // shadow.keyword = JSON.stringify(data.keyword);
 
         console.log(shadow);
 
