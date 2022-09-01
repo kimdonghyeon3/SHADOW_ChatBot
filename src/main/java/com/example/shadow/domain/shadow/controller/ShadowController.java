@@ -179,9 +179,4 @@ public class ShadowController {
         return "redirect:/shadow/list";
     }
 
-    //여기는 /shadow/detail/{id} 해당 뷰 하단에 작성 예정
-    @RequestMapping("/my/plugins")
-    public String showPlugins(){
-        return "shadow/plugins";
-    }
 }

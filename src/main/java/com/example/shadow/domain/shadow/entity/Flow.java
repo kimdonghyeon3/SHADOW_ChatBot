@@ -16,7 +16,7 @@ public class Flow {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // auto_increment
     private Long id;
 
-    @Column
+    @Column(nullable = false, length = 20, unique = true)
     private String name;
 
     @Column
