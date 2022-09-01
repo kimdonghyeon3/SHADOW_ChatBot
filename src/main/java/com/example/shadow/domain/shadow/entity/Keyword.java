@@ -22,7 +22,8 @@ public class Keyword {
     @Column
     private Boolean favorite;
 
-    @OneToMany(mappedBy = "keyword", cascade = {CascadeType.ALL})
+
+    @OneToMany(mappedBy = "keyword", cascade = {CascadeType.ALL},fetch = FetchType.EAGER)
     //@OneToMany(mappedBy = "keyword")
     private List<Flowchart> flowcharts;
 

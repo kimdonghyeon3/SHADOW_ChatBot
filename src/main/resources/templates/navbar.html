@@ -13,10 +13,10 @@
         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" sec:authorize="isAuthenticated()" th:href="@{/shadow/list}">Shadow</a></li>
         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" sec:authorize="isAuthenticated()" th:href="@{/logout}">로그아웃</a></li>
         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" sec:authorize="isAuthenticated()" th:href="@{/members}">회원정보</a></li>
-        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" sec:authorize="isAuthenticated()" href="/docs">문서</a></li>
-        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" sec:authorize="isAuthenticated()" href="/contact">문의사항</a></li>
-        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" sec:authorize="hasRole('ADMIN')" href="/admin">admin</a></li>
+        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" sec:authorize="isAuthenticated()" th:href="@{/shadow/docs}">문서</a></li>
+        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" sec:authorize="isAuthenticated()" th:href="@{/shadow/contact}">문의사항</a></li>
       </ul>
     </div>
   </div>
+</nav>
 </nav>
