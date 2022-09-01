@@ -175,7 +175,10 @@ public class ShadowController {
 
     @GetMapping("/shadow/delete/{id}")
     public String delete(@PathVariable Long id){
-        shadowService.delete(id);
+        Shadow shadow = shadowService.findById(id);
+        keywordService.delete(shadow);
+        shadowService.delete(shadow);
+
         return "redirect:/shadow/list";
     }
 

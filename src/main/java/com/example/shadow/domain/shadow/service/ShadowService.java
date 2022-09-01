@@ -49,8 +49,7 @@ public class ShadowService {
         shadowRepository.save(originShadow);
     }
 
-    public void delete(Long id) {
-        Shadow shadow = findById(id);
+    public void delete(Shadow shadow) {
         shadowRepository.delete(shadow);
     }
 }
