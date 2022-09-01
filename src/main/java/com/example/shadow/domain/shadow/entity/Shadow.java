@@ -2,7 +2,9 @@ package com.example.shadow.domain.shadow.entity;
 
 
 import com.example.shadow.domain.member.entity.Member;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -23,7 +25,8 @@ public class Shadow {
     @Column
     private String mainurl;
 
-    @OneToMany(mappedBy = "shadow", cascade = {CascadeType.ALL})
+    //@OneToMany(mappedBy = "shadow", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "shadow")
     private List<Keyword> keywords;
 
     @ManyToOne

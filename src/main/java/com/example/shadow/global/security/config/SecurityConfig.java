@@ -42,7 +42,7 @@ public class SecurityConfig {
             "/members/**",
             "/chat/**",
             "/my/**",
-            "/newshadow/**",
+            "/shadow/**",
             "/contact/**"
     }; // 인가 필요
 

@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @RequiredArgsConstructor
@@ -66,27 +68,33 @@ public class MemberController {
             return ResponseEntity.ok(ResultResponse.of("CHECK_EMAIL_BAD","중복된 이메일 입니다." ,false));
         }
     }
-
-    @PostMapping("/isCheckedUsername")
-    public ResponseEntity<ResultResponse> checkUsername(@RequestParam boolean isCheckedUsername, @RequestParam boolean isChangedUsername) {
-        log.debug("isChecked : "+ isCheckedUsername);
-        log.debug("isChanged : "+ isChangedUsername);
-        if (isCheckedUsername&&!isChangedUsername) {
-            return ResponseEntity.ok(ResultResponse.of("CHECK_USERNAME_FIN","", true));
-        } else {
-            return ResponseEntity.ok(ResultResponse.of("CHECK_USERNAME_NO","아이디 중복 체크가 필요합니다." ,false));
+    @PostMapping("/isChecked")
+    public ResponseEntity<ResultResponse> checkUsernameAndEmail(@RequestParam boolean isCheckedUsername, @RequestParam boolean isChangedUsername, @RequestParam boolean isCheckedEmail, @RequestParam boolean isChangedEmail) {
+        log.debug("isChecked username : "+ isCheckedUsername);
+        log.debug("isChanged username: "+ isChangedUsername);
+        log.debug("isChecked email : "+ isCheckedEmail);
+        log.debug("isChanged email: "+ isChangedEmail);
+        Map<String,Boolean> data = new HashMap<>();
+        data.put("username",true);
+        data.put("email",true);
+        if (isCheckedUsername && !isChangedUsername && isCheckedEmail && !isChangedEmail) {
+            return ResponseEntity.ok(ResultResponse.of("CHECK_FIN","",data ));
+        } else if(isCheckedEmail && !isChangedEmail){
+            data.replace("username", false);
+            log.debug("isChecked username : "+ isCheckedUsername);
+            log.debug("isChanged username: "+ isChangedUsername);
+            return ResponseEntity.ok(ResultResponse.of("CHECK_USERNAME_NO","아이디 중복 체크가 필요합니다." ,data));
+        } else if(isCheckedUsername && !isChangedUsername){
+            data.replace("email", false);
+            log.debug("isChecked email : "+ isCheckedEmail);
+            log.debug("isChanged email: "+ isChangedEmail);
+            return ResponseEntity.ok(ResultResponse.of("CHECK_EMAIL_NO","이메일 중복 체크가 필요합니다." ,data));
+        } else{
+            data.replace("username", false);
+            data.replace("email", false);
+            return ResponseEntity.ok(ResultResponse.of("CHECK_ALL_NO","아이디, 이메일 중복 체크가 필요합니다." ,data));
         }
     }
-
-    @PostMapping("/isCheckedEmail")
-    public ResponseEntity<ResultResponse> checkEmail( @RequestParam boolean isCheckedEmail, @RequestParam boolean isChangedEmail) {
-        if (isCheckedEmail&&!isChangedEmail) {
-            return ResponseEntity.ok(ResultResponse.of("CHECK_EMAIL_FIN","", true));
-        } else {
-            return ResponseEntity.ok(ResultResponse.of("CHECK_EMAIL_NO","이메일 중복 체크가 필요합니다." ,false));
-        }
-    }
-
     @GetMapping("/login")
     public String login(MemberDto memberDto) {
         return "login_form";
