@@ -15,4 +15,6 @@ public interface KeywordRepository  extends JpaRepository<Keyword, Long> {
     Keyword findByName(String name);
 
     Keyword findByNameAndShadow(String name, Shadow shadow);
+
+    List<Keyword> findByShadow(Shadow shadow);
 }

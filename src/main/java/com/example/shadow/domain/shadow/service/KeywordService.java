@@ -91,4 +91,20 @@ public class KeywordService {
             }
         }
     }
+
+    public void delete(Shadow shadow) {
+        keywordRepository.findByShadow(shadow)
+                .forEach(
+                        keyword -> {
+                            keywordRepository.delete(keyword);
+                            flowChartRepository.findByKeyword(keyword)
+                                    .forEach(
+                                            flowchart -> {
+                                                flowChartRepository.delete(flowchart);
+                                                flowChartRepository.findByFlow(flowchart)
+                                                        .forEach(flow -> flowRepository.delete(flow));
+                                            }
+                                    );
+                        });
+    }
 }

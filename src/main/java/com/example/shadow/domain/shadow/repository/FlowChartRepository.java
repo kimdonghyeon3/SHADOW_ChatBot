@@ -10,7 +10,9 @@ import java.util.List;
 
 @Repository
 public interface FlowChartRepository  extends JpaRepository<Flowchart, Long> {
-    Flowchart findByFlow(Flow flow);
+    //Flowchart findByFlow(Flow flow);
 
     List<Flowchart> findByKeyword(Keyword originKeyword);
+
+    List<Flow> findByFlow(Flowchart flowchart);
 }
