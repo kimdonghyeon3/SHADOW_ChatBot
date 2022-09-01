@@ -110,6 +110,8 @@ public class ShadowController {
                         // DB저장
                         create(reqMessage, respMessage);
                     }
+                    String flow_str = message(reqMessage);
+                    responseMessage.setMessage(flow_str);
                 } catch (Exception e) {
                     System.out.println("error");
                     e.printStackTrace();
@@ -119,7 +121,7 @@ public class ShadowController {
                 chatMessage = con.getResponseMessage();
             }
 
-            responseMessage.setMessage(chatMessage);
+//            responseMessage.setMessage(chatMessage);
 
             return responseMessage;
         }
