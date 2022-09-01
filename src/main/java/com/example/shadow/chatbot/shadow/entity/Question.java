@@ -1,4 +1,4 @@
-package com.example.shadow.chatbot.test;
+package com.example.shadow.chatbot.shadow.entity;
 
 import lombok.Data;
 
@@ -6,10 +6,10 @@ import javax.persistence.*;
 
 @Data
 @Entity
-public class Test_Keyword {
+public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(length = 200)
     private String question;
