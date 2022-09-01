@@ -12,6 +12,7 @@ import com.example.shadow.domain.shadow.repository.FlowRepository;
 import com.example.shadow.domain.shadow.repository.KeywordRepository;
 import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,7 +33,13 @@ public class  FlowService{
                     flow.setName(flows.get(i).getName());
                     flow.setDescription(flows.get(i).getDescription());
                     flow.setUrl(flows.get(i).getUrl());
-                    flowRepository.save(flow);
+                    try{
+                        flowRepository.save(flow);
+                    }catch (DataIntegrityViolationException e){
+                        log.debug("동일한 flow 입니다. flow를 저장하지 않습니다.");
+                    }catch (Exception e){
+                        log.debug("flow 생성 실패");
+                    }
                 }
             }
         }
