@@ -52,6 +52,11 @@ public class ShadowController {
     private final FlowService flowService;
     private final MemberService memberService;
 
+    @GetMapping("/test")
+    public String test() {
+        return "shadow_main";
+    }
+
     @GetMapping("/shadow/create")
     public String createView(Model model){
 
