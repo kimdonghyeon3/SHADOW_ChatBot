@@ -18,10 +18,11 @@
         <a class="dropdown-item" href="#">설치</a>
     </div>
     </div>
-    <form>
-        <input type="text" placeholder="제목을 입력해주세요.">
-        <input type="text" placeholder="문의 내용을 입력해주세요.">
-        <button type="button">등록</button>
+    <form method="post" th:action="@{/shadow/contact}">
+        <input type="text" name="address" placeholder="응답받으실 이메일 주소를 입력해주세요." />
+        <input type="text" name="title" placeholder="제목을 입력해주세요." />
+        <textarea name="content" placeholder="문의 내용을 입력해주세요."></textarea>
+        <button>등록</button>
     </form>
 </div>
 </html>
