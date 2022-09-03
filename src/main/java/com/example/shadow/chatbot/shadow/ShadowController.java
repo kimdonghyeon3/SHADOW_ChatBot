@@ -55,10 +55,10 @@ public class ShadowController {
 
         HashMap<String, String> favoriteKeywords = new HashMap<>();
 
-        long memberId = 1;
+        //long memberId = 1;
         long shadowId = 1;
 
-        Member member = memberService.findById(1);
+        //Member member = memberService.findById(1);
         Shadow shadow = shadowService.findById(shadowId);
 
         //해당 shadow에 있는 keyword 목록을 가져오자. (favorite이 체크되어있는)
@@ -79,7 +79,6 @@ public class ShadowController {
         });
 
         model.addAttribute("favoriteKeywords", favoriteKeywords);
-        model.addAttribute("hello","hello");
 
         return "chatbot/chat";
     }

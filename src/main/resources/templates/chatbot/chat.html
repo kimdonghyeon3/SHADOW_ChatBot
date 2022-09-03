@@ -14,7 +14,7 @@
         @import url('https://fonts.googleapis.com/css?family=Lato:400,700');
 
         a {
-            color: #F9FBFF;
+            color: black;
             text-decoration: none;
         }
 
@@ -286,9 +286,7 @@
 <body>
 
 
-<div th:each="favoriteKeyword : ${favoriteKeywords}">
-    <a th:href="@{${favoriteKeyword.value}}" th:text="${favoriteKeyword.key}"></a>
-</div>
+
 
 
 <!--챗봇 off상태 말풍선-->
@@ -319,6 +317,12 @@
                     hello
                 </div>
                 <div class="outgoing">
+                    안녕하세요~ Shadow 챗봇 입니다! 고객님들이 자주 찾는 문의 사항입니다.
+                    원하시는 문의를 누르시면, 목적지로 바로 이동됩니다.
+                    <hr/>
+                    <div class="d-flex flex-row justify-content-evenly">
+                        <a class="bg-primary rounded-pill px-2 py-1" th:each="favoriteKeyword : ${favoriteKeywords}" th:href="@{${favoriteKeyword.value}}" th:text="${favoriteKeyword.key}"/>
+                    </div>
                 </div>
         </div>
 
