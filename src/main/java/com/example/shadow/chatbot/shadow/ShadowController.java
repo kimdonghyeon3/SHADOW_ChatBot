@@ -38,13 +38,17 @@ public class ShadowController {
     private static String secretKey = "SHVTeG5SemVXRk9KcU1oSU1VVWpWeW1MQmxCY0xzSk4=";
     private static String apiUrl = "https://z16j1lin9x.apigw.ntruss.com/custom/v1/7654/bb5bef27a0dd572b921c6b22c71e79115c1d4cca1dcbd766d269fa6c2d5bd9ad";
 
-
     @RequestMapping("/chat")
     public String chatGET(){
 
+        // 처음 가져올 떄, 해당 사용자 chat에 있는 favorite을 가져오자. (필요한 정보 : member id와 shadow id 가 필요하다.)
+
+        //가져왔다면, 해당 favorite에 해당하는 keyword, url, description을 넘겨주자.
+
+        //model에 담고, 해당 챗을 열면, 초기 hi, hello 대신에 favorite에 관련된 사항을 넣어주자.
+
         return "chatbot/chat";
     }
-
 
     //@MessageMapping("/sendMessage")
     @RequestMapping("/chat/write")
@@ -202,6 +206,7 @@ public class ShadowController {
         Question question = questionService.findByQuestion(reqMessage);
         /* 보낼 메시지 : responseMessage */
         Shadow shadow = shadowService.findById(1L); // 쿠팡
+
         List<Keyword> keywords = shadow.getKeywords(); // 쿠팡에 대한 키워드(주문, 주문조회, 반품)
         for(Keyword keyword : keywords) { // 주문, 주문조회, 반품
             if(keyword.getName().equals(question.getKeyword())) { // 키워드들 중 보낸 question에 대한 keyword와 같을 경우(반품)
