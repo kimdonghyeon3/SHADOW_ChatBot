@@ -285,6 +285,12 @@
 </head>
 <body>
 
+
+<div th:each="favoriteKeyword : ${favoriteKeywords}">
+    <a th:href="@{${favoriteKeyword.value}}" th:text="${favoriteKeyword.key}"></a>
+</div>
+
+
 <!--챗봇 off상태 말풍선-->
 <button type="button" class="ch-button" onclick="OpenChat()" id="btnChatOpen">
 <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-chat-dots" viewBox="0 0 16 16">
@@ -313,7 +319,6 @@
                     hello
                 </div>
                 <div class="outgoing">
-                    hi
                 </div>
         </div>
 
