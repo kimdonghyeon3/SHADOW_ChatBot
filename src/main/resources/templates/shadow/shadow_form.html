@@ -1,80 +1,88 @@
+<!DOCTYPE html>
 <html
         xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
         xmlns:th="http://www.thymeleaf.org"
         layout:decorate="~{layout_sidebar}">
 
-<div layout:fragment="content" class="container my-3">
-
-    <!-- 사이드 바 -->
-    <nav th:replace="sidebar :: sidebarFragment"></nav>
-
-    <!-- 헤더-->
-    <nav th:replace="header :: headerFragment"></nav>
-    <div id="page-top"> <h2>shadow 생성 폼</h2></div>
-    <!-- Page Content-->
-
-    <h4>내 쇼핑몰 정보 입력하기</h4>
-    <hr/>
-        <form>
-        <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon1">쇼핑몰 명</span>
-            <input type="text" name="name" class="form-control name" placeholder="쇼핑몰 명을 입력해주세요">
-        </div>
-
-        <div class="input-group mb-5">
-            <span class="input-group-text" id="basic-addon2">쇼핑몰 주소</span>
-            <input type="text" name="mainurl" class="form-control mainurl" placeholder="ex) www.coupang.com">
-        </div>
-
-    <h4>내 쇼핑몰 순서도 등록하기</h4>
-    <hr/>
-
-    <table class="table">
-        <thead>
-        <tr class="text-center">
-            <th>키워드</th>
-            <th style="width:70%">순서도</th>
-            <th>자주찾는 목록</th>
-        </tr>
-        </thead>
-        <tbody class="tbody">
-        <tr class="text-center datas">
-            <td>
-                <select class="form-select keyword" name="keyword">
-                <option value="">==키워드 선택==</option>
-                <option th:each="keywordCode : ${keywordCodes}" th:value="${keywordCode}"
-                        th:text="${keywordCode}">FAST</option>
-                </select>
-            </td>
-
-            <td class="text-start flows">
-                <input name="flow" type="text" class="mb-3 flow" />
-                <div class="input-group mb-3">
-                    <span class="input-group-text">안내메시지</span>
-                    <input type="text" name="description" class="form-control description" placeholder="해당 페이지에서 안내할 멘트를 입력해주세요">
+<div layout:fragment="content" class="container-fluid py-4">
+    <div class="row">
+        <div class="col-lg-15 mb-lg-0 mb-4">
+            <div class="card z-index-2 h-100">
+                <div class="card-header pb-0 pt-3 bg-transparent">
+<!--                    <h6 class="text-capitalize">Make Shadow</h6>-->
                 </div>
-                <div class="input-group mb-3">
-                    <span class="input-group-text">url</span>
-                    <input type="text" name="url" class="form-control url" placeholder="ex) www.coupang.com/mycoupang">
+                <div class="card-body p-3">
+                    <div class="chart" style="height: 100%;">
+                        <div id="page-top"> <h2>shadow 생성 폼</h2></div>
+                        <!-- Page Content-->
+
+                        <h4>내 쇼핑몰 정보 입력하기</h4>
+                        <hr/>
+                        <form>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="basic-addon1">쇼핑몰 명</span>
+                                <input type="text" name="name" class="form-control name" placeholder="쇼핑몰 명을 입력해주세요">
+                            </div>
+
+                            <div class="input-group mb-5">
+                                <span class="input-group-text" id="basic-addon2">쇼핑몰 주소</span>
+                                <input type="text" name="mainurl" class="form-control mainurl" placeholder="ex) www.coupang.com">
+                            </div>
+
+                            <h4>내 쇼핑몰 순서도 등록하기</h4>
+                            <hr/>
+
+                            <table class="table">
+                                <thead>
+                                <tr class="text-center">
+                                    <th>키워드</th>
+                                    <th style="width:70%">순서도</th>
+                                    <th>자주찾는 목록</th>
+                                </tr>
+                                </thead>
+                                <tbody class="tbody">
+                                <tr class="text-center datas">
+                                    <td>
+                                        <select class="form-select keyword" name="keyword">
+                                            <option value="">==키워드 선택==</option>
+                                            <option th:each="keywordCode : ${keywordCodes}" th:value="${keywordCode}"
+                                                    th:text="${keywordCode}">FAST</option>
+                                        </select>
+                                    </td>
+
+                                    <td class="text-start flows">
+                                        <input name="flow" type="text" class="mb-3 flow" />
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text">안내메시지</span>
+                                            <input type="text" name="description" class="form-control description" placeholder="해당 페이지에서 안내할 멘트를 입력해주세요">
+                                        </div>
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text">url</span>
+                                            <input type="text" name="url" class="form-control url" placeholder="ex) www.coupang.com/mycoupang">
+                                        </div>
+                                        <button type="button" class="btn btn-primary ml-3 addflowbtn" onclick="addFlow(this)"> + </button>
+                                        <button type="button" class="btn btn-primary ml-3 deleteflowbtn" onclick="deleteFlow(this)"> - </button>
+                                    </td>
+
+                                    <td><input class="form-check-input favorite" name="favorite" type="checkbox" id="flexCheckDefault" style="border: 1px solid #bebfc5">
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+
+                            <button type="button" class="btn btn-primary mb-3" onclick="addKeyword()">키워드 추가</button>
+                            <button type="button" class="btn btn-primary mb-3" onclick="deleteKeyword()">키워드 제거</button>
+
+                            <p>
+                                <button type="button" class="btn btn-primary btn-sm create_shadow">챗봇 생성</button>
+                            </p>
+
+                        </form>
+                    </div>
                 </div>
-                <button type="button" class="btn btn-primary ml-3 addflowbtn" onclick="addFlow(this)"> + </button>
-                <button type="button" class="btn btn-primary ml-3 deleteflowbtn" onclick="deleteFlow(this)"> - </button>
-            </td>
-
-            <td><input class="form-check-input favorite" name="favorite" type="checkbox" id="flexCheckDefault">
-            </td>
-        </tr>
-        </tbody>
-    </table>
-
-        <button type="button" class="btn btn-primary mb-3" onclick="addKeyword()">키워드 추가</button>
-        <button type="button" class="btn btn-primary mb-3" onclick="deleteKeyword()">키워드 제거</button>
-
-        <p>
-            <button type="button" class="btn btn-primary btn-sm create_shadow">챗봇 생성</button>
-        </p>
-
-    </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script layout:fragment="script" type='text/javascript'>
@@ -88,7 +96,7 @@
         //console.log(children);
         //document.getElementsByClassName("flows")[0];
         var flag = e;
-            //document.getElementsByClassName("addflowbtn")[0];
+        //document.getElementsByClassName("addflowbtn")[0];
 
         var flow = document.createElement("input");
 
@@ -272,7 +280,7 @@
             let trTagChildren =trTag.getElementsByTagName("td");
 
             for(let j = 0 ; j < trTagChildren.length ; j ++){       //td태그
-                //console.log(trTagChildren[j]);
+                                                                    //console.log(trTagChildren[j]);
                 let tdTag = trTagChildren[j];
 
                 //첫번째 td = keyword
@@ -294,7 +302,7 @@
                             description : "",
                             url : "",
                         }
-                        
+
                         let flowTag = tdTag.getElementsByClassName("flow")[k];
                         let descriptionTag = tdTag.getElementsByClassName("description")[k];
                         let urlTag = tdTag.getElementsByClassName("url")[k];
@@ -383,4 +391,7 @@
     })
 
 </script>
+
+
+
 </html>

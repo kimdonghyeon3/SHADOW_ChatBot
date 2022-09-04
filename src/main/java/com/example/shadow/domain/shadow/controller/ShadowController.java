@@ -5,8 +5,6 @@ import com.example.shadow.domain.member.service.MemberService;
 import com.example.shadow.domain.shadow.dto.FlowDto;
 import com.example.shadow.domain.shadow.dto.KeywordDto;
 import com.example.shadow.domain.shadow.dto.ShadowDto;
-import com.example.shadow.domain.shadow.entity.*;
-import com.example.shadow.domain.shadow.repository.ShadowRepository;
 import com.example.shadow.domain.shadow.entity.Flow;
 import com.example.shadow.domain.shadow.entity.Flowchart;
 import com.example.shadow.domain.shadow.entity.Keyword;
@@ -52,9 +50,11 @@ public class ShadowController {
     private final FlowService flowService;
     private final MemberService memberService;
 
-    @GetMapping("/test")
-    public String test() {
-        return "shadow_main";
+    @RequestMapping("/test")
+    public String test(Model model) {
+        List<Shadow> shadowList = this.shadowService.findAll();
+        model.addAttribute("shadowList", shadowList);
+        return "test";
     }
 
     @GetMapping("/shadow/create")
