@@ -57,7 +57,7 @@
 - 역할 : 안내 버튼 - 시나리오형
 - 세부 작업 :  DB 또는 API 로부터 얻은 keyword -> 시나리오 대로 버튼 출력
 
-표### 🙂박민준
+### 🙂박민준
 
 - 역할 : 현재 페이지에 따른, text 하이라이트
 - 세부 작업 : keword를 통해 나온 순서도가 현제 페이지에 따라 하이라이트 되는 기능
@@ -227,7 +227,6 @@ update 시, flow 가 중복될때 버그 수정 (eager, flow_id 추가)
 <br>
 
 ### 😀WBS
-<br>
 
 #### WBS 엑셀
 [https://docs.google.com/spreadsheets/d/1mbyUlXgf4MniXAPvGZXqFZ4QALEV3PRuGO6nmig7BFU/edit#gid=0](https://docs.google.com/spreadsheets/d/1mbyUlXgf4MniXAPvGZXqFZ4QALEV3PRuGO6nmig7BFU/edit#gid=0)
