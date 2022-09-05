@@ -14,7 +14,7 @@
         @import url('https://fonts.googleapis.com/css?family=Lato:400,700');
 
         a {
-            color: #F9FBFF;
+            color: black;
             text-decoration: none;
         }
 
@@ -285,6 +285,10 @@
 </head>
 <body>
 
+
+
+
+
 <!--챗봇 off상태 말풍선-->
 <button type="button" class="ch-button" onclick="OpenChat()" id="btnChatOpen">
 <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-chat-dots" viewBox="0 0 16 16">
@@ -313,7 +317,12 @@
                     hello
                 </div>
                 <div class="outgoing">
-                    hi
+                    안녕하세요~ Shadow 챗봇 입니다! 고객님들이 자주 찾는 문의 사항입니다.
+                    원하시는 문의를 누르시면, 목적지로 바로 이동됩니다.
+                    <hr/>
+                    <div class="d-flex flex-row justify-content-evenly">
+                        <a class="bg-primary rounded-pill px-2 py-1" th:each="favoriteKeyword : ${favoriteKeywords}" th:href="@{${favoriteKeyword.value}}" th:text="${favoriteKeyword.key}"/>
+                    </div>
                 </div>
         </div>
 
