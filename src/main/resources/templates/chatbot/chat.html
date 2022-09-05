@@ -321,7 +321,7 @@
                     원하시는 문의를 누르시면, 목적지로 바로 이동됩니다.
                     <hr/>
                     <div class="d-flex flex-row justify-content-evenly">
-                        <a class="bg-primary rounded-pill px-2 py-1" th:each="favoriteKeyword : ${favoriteKeywords}" th:href="@{${favoriteKeyword.value}}" th:text="${favoriteKeyword.key}"/>
+                        <a class="bg-primary rounded-pill px-2 py-1" th:each="favoriteKeyword : ${favoriteKeywords}" th:href="@{https://{id}(id = ${favoriteKeyword.value})}" th:text="${favoriteKeyword.key}"/>
                     </div>
                 </div>
         </div>
