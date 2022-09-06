@@ -244,7 +244,7 @@
             $("#container").hide();
             $("#btnChatOpen").show();
         }
-
+        // chat message 쓰기
         function ChatMessageWrite(event, form){
 
             event.preventDefault();
@@ -261,17 +261,34 @@
             $("#greetings").append("<div class=\"incoming\">" + form.message.value + "</div>");  //html 추가
             $('#greetings').scrollTop($('#greetings').prop('scrollHeight'));    //스크롤 포커스
 
+            // 현재 주소
+            var mainurl = $(location).attr('hostname');
+            console.log("url "+mainurl);
             // fetch 방식이 아닌, jquery 방식
             $.post(
                 '/chat/write', // 주소, action
                 {
-                    chatMessage: form.message.value // 폼 내용, input name, value
+                    chatMessage: form.message.value, // 폼 내용, input name, value
+                    mainurl : mainurl
                 },
-                function(data) { // 콜백 메서드, 통신이 완료된 후, 실행
-
-                    console.log("받은 메시지 : " + data.message);
-
-                    $("#greetings").append("<div class=\"outgoing\">" + data.message + "</div>");    //html 추가
+                function(result) { // 콜백 메서드, 통신이 완료된 후, 실행
+                    console.log("받은 메시지 : " + result.message);
+                    console.log("받은 데이터 : "+ result.data);
+                    const msg = `
+                        <div class = "outgoing">
+                            <p>${result.message}</p>
+                    `;
+                    $("#greetings").append(msg);
+                    $.each(result.data,function(i,flowchart){
+                        console.log("순서 : "+flowchart.seq);
+                        console.log("설명 : "+flowchart.flow.description);
+                        const btn = `
+                            <a class="btn btn-primary" href="${flowchart.flow.url}">${flowchart.flow.name} -> </a>
+                        `;
+                        $("#greetings").append(btn);
+                    });
+                    $("#greetings").append("</div>");
+                    //$("#greetings").append("<div class=\"outgoing\">" + result.message + "</div>");    //html 추가
                     $('#greetings').scrollTop($('#greetings').prop('scrollHeight'));    //스크롤 포커스
                 },
                 'json' // 받은 데이터를 json 으로 해석하겠다.

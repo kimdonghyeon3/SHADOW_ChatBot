@@ -1,5 +1,6 @@
 package com.example.shadow.chatbot.shadow.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -22,6 +23,7 @@ public class Flow {
     @Column
     private String url;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "flow", cascade = {CascadeType.ALL})
     private List<Flowchart> flowCharts = new ArrayList<>();
 }

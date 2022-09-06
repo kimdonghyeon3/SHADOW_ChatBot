@@ -6,17 +6,16 @@ import com.example.shadow.chatbot.service.FlowChartService;
 import com.example.shadow.chatbot.service.KeywordService;
 import com.example.shadow.chatbot.service.QuestionService;
 import com.example.shadow.chatbot.service.ShadowService;
-import com.example.shadow.chatbot.shadow.entity.Flowchart;
-import com.example.shadow.chatbot.shadow.entity.Keyword;
-import com.example.shadow.chatbot.shadow.entity.Question;
+import com.example.shadow.chatbot.shadow.entity.*;
 import com.example.shadow.chatbot.message.ResponseMessage;
-import com.example.shadow.chatbot.shadow.entity.Shadow;
+import com.example.shadow.global.result.ResultResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,9 +30,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Controller
@@ -44,8 +46,11 @@ public class ShadowController {
     private final MemberService memberService;
     private final KeywordService keywordService;
     private final FlowChartService flowChartService;
-    private static String secretKey = "SHVTeG5SemVXRk9KcU1oSU1VVWpWeW1MQmxCY0xzSk4=";
-    private static String apiUrl = "https://z16j1lin9x.apigw.ntruss.com/custom/v1/7654/bb5bef27a0dd572b921c6b22c71e79115c1d4cca1dcbd766d269fa6c2d5bd9ad";
+    // 재순님
+//    private static String secretKey = "SHVTeG5SemVXRk9KcU1oSU1VVWpWeW1MQmxCY0xzSk4=";
+//    private static String apiUrl = "https://z16j1lin9x.apigw.ntruss.com/custom/v1/7654/bb5bef27a0dd572b921c6b22c71e79115c1d4cca1dcbd766d269fa6c2d5bd9ad";
+    private static String secretKey = "U1VoTXZua1BOT3hqVFNjS0Rqemxrc0JCdEZIc2RrSmg=";
+    private static String apiUrl = "https://f4by9xj6rc.apigw.ntruss.com/custom/v1/7840/5324714f7fb3a860659ad721c75c0d677d2e1f165bc0f300db74ddf7a6e2e8b1";
 
     @RequestMapping("/chat")
     public String chatGET(Model model){
@@ -88,20 +93,22 @@ public class ShadowController {
 // 우리가 구독하고 있는 /topic에서 메시지를 보낼 곳으로 이동시킨다. 우리의 prefix는 /shadow이다.(/shadow -> /topic -> CLOVA로 보내기)
     @SendTo("/topic/shadow")
     @ResponseBody
-    public ResponseMessage sendMessage(String chatMessage) throws IOException { // @Payload는 websocket에서 요청할 메시지의 meta 데이터
+    public ResponseEntity<ResultResponse> sendMessage(String chatMessage, String mainurl) throws IOException { // @Payload는 websocket에서 요청할 메시지의 meta 데이터
+
+        Shadow shadow = getShadow(mainurl);
+        log.debug("[scenario] shadow : "+shadow.getId()+" , "+ shadow.getName()+", "+ shadow.getMainurl());
         String reqMessage = chatMessage;
         reqMessage = reqMessage.replace("\"", "");
 
-        ResponseMessage responseMessage = new ResponseMessage();
-
+        // [scenario] 시작
         if (questionService.existByQuestion(reqMessage)) {
-            String flow_str = message(reqMessage);
-            responseMessage.setMessage(flow_str);
-            //////
-//            responseMessage.setMessage(question.getKeyword());
-//            String keyword = keywords.getKeyword();
-            return responseMessage;
+            log.debug("[scenario][case1] 키워드 DB에서 도출 시작");
+            Keyword keyword=getKeyword(reqMessage);
+            log.debug("[scenario] keyword : "+keyword);
+            return getMessage(keyword);
+
         } else {
+            log.debug("[scenario][case2] 키워드 API에서 도출 시작");
             URL url = new URL(apiUrl);
 
             String message = getReqMessage(chatMessage);
@@ -124,6 +131,7 @@ public class ShadowController {
             int responseCode = con.getResponseCode();
 
             if(responseCode==200) { // 정상 호출
+                log.debug("[scenario] API 정상 호출");
                 BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
                 String decodedString;
                 String jsonString = "";
@@ -138,29 +146,34 @@ public class ShadowController {
                     JSONArray bubblesArray = (JSONArray)json.get("bubbles");
                     JSONObject bubbles = (JSONObject)bubblesArray.get(0);
                     JSONObject data = (JSONObject)bubbles.get("data");
-                    String description = "";
-                    description = (String)data.get("description");
-                    chatMessage = description;
-                    String respMessage = chatMessage;
+                    String description = (String)data.get("description");
+                    log.debug("[scenario][case2] 키워드 API에서 도출 , description : "+description);
+                    Keyword keyword = keywordService.findByNameAndShadow(description,shadow);
+                    log.debug("[scenario][case2] 키워드 API에서 도출 , keyword : "+keyword);
 
-                    if(!questionService.existByQuestion(reqMessage)) { // DB에 저장이 안되어 있을 경우
-                        // DB저장
-                        create(reqMessage, respMessage);
+                    if(keyword==null){
+                        String msg = "해당하는 키워드가 없습니다.";
+                        log.error("[scenario] 에러 메세지 : "+msg);
+                        return ResponseEntity.ok(ResultResponse.of("NOT_FOUND_KEYWORD",msg,false));
                     }
-                    String flow_str = message(reqMessage);
-                    responseMessage.setMessage(flow_str);
+
+                    if(!questionService.existByQuestion(reqMessage)) { // DB에 저장이 안되어 있을 경우 DB에 keyword 저장
+                        create(reqMessage, keyword);
+                    }
+                   // return getMessage(keyword);
                 } catch (Exception e) {
                     System.out.println("error");
                     e.printStackTrace();
                 }
                 in.close();
             } else {  // 에러 발생
+                log.debug("[scenario] API 정상 호출 실패");
                 chatMessage = con.getResponseMessage();
+                log.error("[scenario] 에러 메세지 : "+chatMessage);
             }
 
-//            responseMessage.setMessage(chatMessage);
-
-            return responseMessage;
+            log.error("[scenario] 에러 메세지 : "+chatMessage);
+            return ResponseEntity.ok(ResultResponse.of("ERROR_GET_KEYWORD",chatMessage,false));
         }
     }
 
@@ -188,6 +201,9 @@ public class ShadowController {
         return encodeBase64String;
     }
 
+    private Shadow getShadow(String url){
+        return shadowService.findByMainurl(url);
+    }
     //보낼 메세지를 네이버 챗봇에 포맷으로 변경해주는 메소드
     public static String getReqMessage(String chatMessage) {
 
@@ -230,11 +246,46 @@ public class ShadowController {
         return requestBody;
     }
 
-    public void create(String question, String keyword) {
+    public void create(String question, Keyword keyword) {
         questionService.create(question, keyword);
     }
 
-    public String message(String reqMessage) {
+    private Keyword getKeyword(String reqMessage){
+        return questionService.findByQuestion(reqMessage).getKeyword();
+    }
+    private List<Flowchart> getFlowcharts(Keyword keyword){
+        List<Flowchart> flowcharts = keyword.getFlowcharts();
+        if(flowcharts.size()==0){
+            log.error("[scenario][error] keyword has not flowcharts");
+        }
+        return flowcharts;
+    }
+    private List<Flow> getFlows(List<Flowchart> flowcharts){
+        List<Flow> flows=flowcharts.stream().map(Flowchart::getFlow).collect(Collectors.toList());
+        if(flows.size()==0){
+            log.error("[scenario][error] flowcharts has not flows");
+        }
+        log.debug("[scenario] flows : "+flows);
+        return flows;
+    }
+    private ResponseEntity<ResultResponse> getMessage(Keyword keyword){
+
+        List<Flowchart> flowcharts = getFlowcharts(keyword);
+        /*StringBuilder msg = new StringBuilder();
+
+        // 안내 메세지
+        msg.append("안녕하세요.").append("\n");
+        msg.append("shadow가 \'%s\'을 안내합니다.".formatted(keyword.getName())).append("\n");
+        msg.append("아래 빨간 버튼을 따라 눌러주세요.".formatted(keyword.getName())).append("\n");*/
+        String msg="""
+                안녕하세요. <br>
+                shadow가 \'%s\' 을 안내합니다. <br>
+                아래 빨간 버튼을 따라 눌러주세요. <br>
+                """.formatted(keyword.getName());
+        // 전체 flow 응답
+        return ResponseEntity.ok(ResultResponse.of("GET_FLOWS_FROM_KEYWORD",msg,flowcharts));
+    }
+    private String getFlow(String reqMessage) {
         StringBuilder sb = new StringBuilder();
         Question question = questionService.findByQuestion(reqMessage);
         /* 보낼 메시지 : responseMessage */

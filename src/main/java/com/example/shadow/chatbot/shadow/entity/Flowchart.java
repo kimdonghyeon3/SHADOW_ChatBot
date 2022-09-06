@@ -1,11 +1,13 @@
 package com.example.shadow.chatbot.shadow.entity;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Data
 @Entity
+@EqualsAndHashCode(exclude = {"keyword","flow"})
+@ToString(exclude = {"keyword","flow"})
 public class Flowchart {
     @Id // primary key
     @GeneratedValue(strategy = GenerationType.IDENTITY) // auto_increment

@@ -1,13 +1,17 @@
 package com.example.shadow.chatbot.shadow.entity;
 
 import com.example.shadow.chatbot.member.entity.Member;
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
+
 @Data
 @Entity
+@EqualsAndHashCode(exclude = {"shadow"})
+@ToString(exclude = {"shadow"})
 public class Keyword {
 
     @Id // primary key
@@ -20,10 +24,15 @@ public class Keyword {
     @Column
     private Boolean favorite;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "keyword", cascade = {CascadeType.ALL})
     private List<Flowchart> flowcharts;
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Shadow shadow;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "keyword", cascade = {CascadeType.ALL})
+    private List<Question> questions;
 }
