@@ -13,26 +13,28 @@
                 </div>
                 <div class="card-body p-3">
                     <div class="chart" style="height: 100%;">
-                        <div id="page-top"> <h2>shadow 생성 폼</h2></div>
+                        <div id="page-top"> <h2>shadow 생성하기</h2></div>
                         <!-- Page Content-->
 
-                        <h4>내 쇼핑몰 정보 입력하기</h4>
+                        <h4>쇼핑몰 정보 입력하기</h4>
                         <hr/>
                         <form>
-                            <div class="input-group mb-3">
-                                <span class="input-group-text" id="basic-addon1">쇼핑몰 명</span>
-                                <input type="text" name="name" class="form-control name" placeholder="쇼핑몰 명을 입력해주세요">
+                            <div class="input-group input-group-lg mb-3">
+                                <span class="input-group-text" id="inputGroup-sizing-lg">쇼핑몰 명</span>
+                                <input type="text" name="name" class="form-control name" placeholder="  쇼핑몰 명을 입력해주세요" aria-describedby="inputGroup-sizing-lg">
                             </div>
 
-                            <div class="input-group mb-5">
-                                <span class="input-group-text" id="basic-addon2">쇼핑몰 주소</span>
-                                <input type="text" name="mainurl" class="form-control mainurl" placeholder="ex) www.coupang.com">
+
+                            <div class="input-group input-group-lg mb-5">
+                                <span class="input-group-text" id="inputGroup-sizing-lg2">쇼핑몰 주소</span>
+                                <input type="text" name="mainurl" class="form-control mainurl" placeholder="  ex) www.coupang.com" aria-describedby="inputGroup-sizing-lg">
                             </div>
 
-                            <h4>내 쇼핑몰 순서도 등록하기</h4>
+                            <h4>쇼핑몰 순서도 등록하기</h4>
                             <hr/>
 
                             <table class="table">
+
                                 <thead>
                                 <tr class="text-center">
                                     <th>키워드</th>
@@ -40,42 +42,53 @@
                                     <th>자주찾는 목록</th>
                                 </tr>
                                 </thead>
+
                                 <tbody class="tbody">
-                                <tr class="text-center datas">
-                                    <td>
-                                        <select class="form-select keyword" name="keyword">
-                                            <option value="">==키워드 선택==</option>
-                                            <option th:each="keywordCode : ${keywordCodes}" th:value="${keywordCode}"
-                                                    th:text="${keywordCode}">FAST</option>
-                                        </select>
-                                    </td>
+                                    <tr class="text-center datas">
 
-                                    <td class="text-start flows">
-                                        <input name="flow" type="text" class="mb-3 flow" />
-                                        <div class="input-group mb-3">
-                                            <span class="input-group-text">안내메시지</span>
-                                            <input type="text" name="description" class="form-control description" placeholder="해당 페이지에서 안내할 멘트를 입력해주세요">
-                                        </div>
-                                        <div class="input-group mb-3">
-                                            <span class="input-group-text">url</span>
-                                            <input type="text" name="url" class="form-control url" placeholder="ex) www.coupang.com/mycoupang">
-                                        </div>
-                                        <button type="button" class="btn btn-primary ml-3 addflowbtn" onclick="addFlow(this)"> + </button>
-                                        <button type="button" class="btn btn-primary ml-3 deleteflowbtn" onclick="deleteFlow(this)"> - </button>
-                                    </td>
+                                        <!--키워드-->
+                                        <td>
+                                            <select class="form-select keyword" name="keyword">
+                                                <option value="" style="text-align: center"> 키워드 선택 </option>
+                                                <option th:each="keywordCode : ${keywordCodes}" th:value="${keywordCode}"
+                                                        th:text="${keywordCode}">FAST</option>
+                                            </select>
+                                        </td>
 
-                                    <td><input class="form-check-input favorite" name="favorite" type="checkbox" id="flexCheckDefault" style="border: 1px solid #bebfc5">
-                                    </td>
-                                </tr>
+                                        <!--순서도-->
+                                        <td class="text-start flows">
+
+                                            <input name="flow" type="text" class="mb-3 flow" />
+
+                                            <div class="input-group mb-3 description-box">
+                                                <span class="input-group-text">안내메시지</span>
+                                                <input type="text" name="description" class="form-control description" placeholder="해당 페이지에서 안내할 멘트를 입력해주세요">
+                                            </div>
+
+                                            <div class="input-group mb-3 url-box">
+                                                <span class="input-group-text">url</span>
+                                                <input type="text" name="url" class="form-control url" placeholder="ex) www.coupang.com/mycoupang">
+                                            </div>
+
+
+                                            <button type="button" class="btn btn-primary ml-3 addflowbtn" onclick="addFlow(this)"> + </button>
+                                            <button type="button" class="btn btn-primary ml-3 deleteflowbtn" onclick="deleteFlow(this)"> - </button>
+                                        </td>
+
+                                        <!--자주찾는 목록-->
+                                        <td>
+                                            <input class="form-check-input favorite" name="favorite" type="checkbox" id="flexCheckDefault" style="border: 1px solid #bebfc5">
+                                        </td>
+
+                                    </tr>
                                 </tbody>
+
                             </table>
 
                             <button type="button" class="btn btn-primary mb-3" onclick="addKeyword()">키워드 추가</button>
                             <button type="button" class="btn btn-primary mb-3" onclick="deleteKeyword()">키워드 제거</button>
 
-                            <p>
-                                <button type="button" class="btn btn-primary btn-sm create_shadow">챗봇 생성</button>
-                            </p>
+                            <button type="button" class="btn btn-primary create_shadow">챗봇 생성</button>
 
                         </form>
                     </div>
@@ -88,66 +101,31 @@
 <script layout:fragment="script" type='text/javascript'>
 
     function addFlow(e){
-
-        //console.log("flow 추가 버튼");
-        //console.log(e.parentNode);
         var flows = e.parentNode;
-        let children = flows.children;
-        //console.log(children);
-        //document.getElementsByClassName("flows")[0];
         var flag = e;
-        //document.getElementsByClassName("addflowbtn")[0];
 
-        var flow = document.createElement("input");
+        console.log(flows);
 
-        var flow_description = document.createElement("div");
-        var flow_description_span = document.createElement("span");
-        var flow_description_input = document.createElement("input");
+        var flowTag = flows.getElementsByClassName("flow")[0].cloneNode(true);
+        flowTag.value = '';
 
-        var flow_url = document.createElement("div")
-        var flow_url_span = document.createElement("span");
-        var flow_url_input = document.createElement("input");
+        var descriptionTag = flows.getElementsByClassName("description-box")[0].cloneNode(true);
+        descriptionTag.getElementsByClassName("description")[0].value = '';
 
-        flow.setAttribute("type","text");
-        flow.setAttribute("class","mb-3 flow");
-        flow.setAttribute("name","flow");
+        var urlTag = flows.getElementsByClassName("url-box")[0].cloneNode(true);
+        urlTag.getElementsByClassName("url")[0].value = '';
 
-        flow_description.setAttribute("class","input-group mb-3");
-        flow_description_span.setAttribute("class","input-group-text");
-        flow_description_input.setAttribute("type","text");
-        flow_description_input.setAttribute("class","form-control description");
-        flow_description_input.setAttribute("placeholder","해당 페이지에서 안내할 멘트를 입력해주세요");
-        flow_description_input.setAttribute("name","description");
-        flow_description_span.innerHTML = "안내메시지";
-
-        flow_url.setAttribute("class", "input-group mb-3");
-        flow_url_span.setAttribute("class","input-group-text");
-        flow_url_input.setAttribute("type","text");
-        flow_url_input.setAttribute("class","form-control url");
-        flow_url_input.setAttribute("placeholder","ex) www.coupang.com/mycoupang");
-        flow_url_input.setAttribute("name","url");
-        flow_url_span.innerHTML = "url";
-
-        flow_description.append(flow_description_span, flow_description_input);
-        flow_url.append(flow_url_span, flow_url_input);
-
-        //flows.appendChild(flow);
-        flows.insertBefore(flow, flag);
-        flows.insertBefore(flow_description, flag);
-        flows.insertBefore(flow_url, flag);
+        flows.insertBefore(flowTag, flag);
+        flows.insertBefore(descriptionTag, flag);
+        flows.insertBefore(urlTag, flag);
     }
 
     function deleteFlow(e){
         var flows = e.parentNode;
         let children = flows.children;
 
-        console.log("여기 실행되니?");
-        console.log(children.length);
-
-
         if(children.length > 5){
             for(let i = 0 ; i < 3 ; i++){
-                console.log("삭제코드 실행");
                 flows.removeChild(children[children.length-3]);
             }
         }
@@ -172,16 +150,6 @@
         console.log(keywordClone);
         var keyword = keywordClone.cloneNode(true);
         console.log(keyword);
-        //var keyword = document.createElement("select");
-        // keyword.setAttribute("class","form-select keyword");
-        // keyword.setAttribute("name","keyword");
-        // var option1 = document.createElement("option")
-        // option1.innerHTML = "==키워드 선택";
-        // var option2 = document.createElement("option")
-        // option2.setAttribute("th:each","keywordCode : ${keywordCodes}");
-        // option2.setAttribute("th:value","${keywordCode}");
-        // option2.setAttribute("th:text","${keywordCode}");
-        // keyword.append(option1, option2);
 
         //col2 채우기
         var flow = document.createElement("input");
@@ -286,7 +254,7 @@
                 //첫번째 td = keyword
                 if(j == 0){
                     let keywordTag = tdTag.getElementsByClassName("keyword")[0];
-                    console.log("keyword : " + keywordTag.value);
+                    //console.log("keyword : " + keywordTag.value);
                     keywordData.name = keywordTag.value;
                 }
 
@@ -370,24 +338,24 @@
 
         console.log(shadow);
 
-        $.ajax({
-            url : "/shadow/create",
-            dataType : "json",
-            type : "POST",
-            data : {
-                shadow : shadow
-            },
-            success: function(data) {
-                console.log(data.redirect);
-                window.location.href = data.redirect;
-            },
-            failure:function(request){
-                alert("Action failure");
-            },
-            error: function(request) {
-                alert("Connection error");
-            }
-        });
+        // $.ajax({
+        //     url : "/shadow/create",
+        //     dataType : "json",
+        //     type : "POST",
+        //     data : {
+        //         shadow : shadow
+        //     },
+        //     success: function(data) {
+        //         console.log(data.redirect);
+        //         window.location.href = data.redirect;
+        //     },
+        //     failure:function(request){
+        //         alert("Action failure");
+        //     },
+        //     error: function(request) {
+        //         alert("Connection error");
+        //     }
+        // });
     })
 
 </script>
