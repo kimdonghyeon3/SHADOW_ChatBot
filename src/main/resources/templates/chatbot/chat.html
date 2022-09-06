@@ -260,7 +260,7 @@
                 return false;
             }
 
-            $("#greetings").append("<div class=\"incoming\">" + form.message.value + "</div>");  //html 추가
+            $("#greetings").append("<div class=\"outgoing\">" + form.message.value + "</div>");  //html 추가
             $('#greetings').scrollTop($('#greetings').prop('scrollHeight'));    //스크롤 포커스
 
             findScenario(form);
@@ -282,7 +282,7 @@
                     console.log("받은 데이터 : "+ result.data);
                     if(result.data==false){
                         var msg = `
-                            <div class = "outgoing">
+                            <div class = "incoming">
                                 <p>${result.message}</p>
                             </div>
                         `;
@@ -290,7 +290,7 @@
                     } else {
                         flowcharts=result.data;
                         var msg = `
-                            <div class = "outgoing">
+                            <div class = "incoming">
                                 <p>${result.message}</p>
                                 <div class="d-flex justify-content-center">
                         `;
@@ -318,7 +318,7 @@
 
          console.log("flowcharts : "+flowcharts);
          var msg = `
-            <div class = "outgoing">
+            <div class = "incoming">
                 <div class="d-flex justify-content-center">
         `;
          send_message(get_scenario(msg));
@@ -400,9 +400,10 @@
 
 <!--챗봇 중단-->
         <div class="middle" id="greetings">
-                <div class="incoming">
-                </div>
                 <div class="outgoing">
+                    안녕하세요.
+                </div>
+                <div class="incoming">
                     안녕하세요~ Shadow 챗봇 입니다! 고객님들이 자주 찾는 문의 사항입니다.
                     원하시는 문의를 누르시면, 목적지로 바로 이동됩니다.
                     <hr/>
