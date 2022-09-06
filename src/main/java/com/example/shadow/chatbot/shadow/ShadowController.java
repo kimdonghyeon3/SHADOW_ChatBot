@@ -1,13 +1,11 @@
 package com.example.shadow.chatbot.shadow;
 
-import com.example.shadow.chatbot.member.entity.Member;
 import com.example.shadow.chatbot.member.service.MemberService;
 import com.example.shadow.chatbot.service.FlowChartService;
 import com.example.shadow.chatbot.service.KeywordService;
 import com.example.shadow.chatbot.service.QuestionService;
 import com.example.shadow.chatbot.service.ShadowService;
 import com.example.shadow.chatbot.shadow.entity.*;
-import com.example.shadow.chatbot.message.ResponseMessage;
 import com.example.shadow.global.result.ResultResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +17,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.crypto.Mac;
@@ -30,7 +30,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -41,141 +40,17 @@ import java.util.stream.Collectors;
 @Controller
 @Slf4j
 public class ShadowController {
-    private final QuestionService questionService;
-    private final ShadowService shadowService;
-    private final MemberService memberService;
-    private final KeywordService keywordService;
-    private final FlowChartService flowChartService;
     // 재순님
 //    private static String secretKey = "SHVTeG5SemVXRk9KcU1oSU1VVWpWeW1MQmxCY0xzSk4=";
 //    private static String apiUrl = "https://z16j1lin9x.apigw.ntruss.com/custom/v1/7654/bb5bef27a0dd572b921c6b22c71e79115c1d4cca1dcbd766d269fa6c2d5bd9ad";
     private static String secretKey = "U1VoTXZua1BOT3hqVFNjS0Rqemxrc0JCdEZIc2RrSmg=";
     private static String apiUrl = "https://f4by9xj6rc.apigw.ntruss.com/custom/v1/7840/5324714f7fb3a860659ad721c75c0d677d2e1f165bc0f300db74ddf7a6e2e8b1";
-
-    @RequestMapping("/chat")
-    public String chatGET(Model model){
-
-        // 처음 가져올 떄, 해당 사용자 chat에 있는 favorite을 가져오자. (필요한 정보 : member id와 shadow id 가 필요하다.)
-        // 우선 가정하자, member id가 1이고 shadow id가 1인 것을 시작했다고 하자.
-
-        HashMap<String, String> favoriteKeywords = new HashMap<>();
-
-        //long memberId = 1;
-        long shadowId = 1;
-
-        //Member member = memberService.findById(1);
-        Shadow shadow = shadowService.findById(shadowId);
-
-        //해당 shadow에 있는 keyword 목록을 가져오자. (favorite이 체크되어있는)
-        List<Keyword> keywords = keywordService.findByShadowAndFavorite(shadow);
-
-        //그러면 이제 keyword에 맞는 최종 목적지 url을 가져오지
-        //즉 flow의 마지막 단계의 url을 찾아오자는 의미가 된다.
-        keywords.forEach( keyword -> {
-
-            //1. flowchart에서 해당 keyword가 있는 것 중에서, order desc순으로, limit 1을 걸어서 가져오자
-            Flowchart flowchart = flowChartService.findByKeyword(keyword);
-
-            //2. 가져온 flowchart에 저장되어있는 flow id를 통해서, flow에서 url을 가져오자
-            log.info("keyword에서 가져온 flowchart에 seq가 마지막인, flow id = {}", flowchart.getFlow().getId());
-
-            //3. keyword와 url을 합쳐서 Map으로 해서 model에 넣어주자
-            favoriteKeywords.put(keyword.getName(), flowchart.getFlow().getUrl());
-        });
-
-        model.addAttribute("favoriteKeywords", favoriteKeywords);
-
-        return "chatbot/chat";
-    }
-
-    //@MessageMapping("/sendMessage")
-    @RequestMapping("/chat/write")
-// 우리가 구독하고 있는 /topic에서 메시지를 보낼 곳으로 이동시킨다. 우리의 prefix는 /shadow이다.(/shadow -> /topic -> CLOVA로 보내기)
-    @SendTo("/topic/shadow")
-    @ResponseBody
-    public ResponseEntity<ResultResponse> sendMessage(String chatMessage, String mainurl) throws IOException { // @Payload는 websocket에서 요청할 메시지의 meta 데이터
-
-        Shadow shadow = getShadow(mainurl);
-        log.debug("[scenario] shadow : "+shadow.getId()+" , "+ shadow.getName()+", "+ shadow.getMainurl());
-        String reqMessage = chatMessage;
-        reqMessage = reqMessage.replace("\"", "");
-
-        // [scenario] 시작
-        if (questionService.existByQuestion(reqMessage)) {
-            log.debug("[scenario][case1] 키워드 DB에서 도출 시작");
-            Keyword keyword=getKeyword(reqMessage);
-            log.debug("[scenario] keyword : "+keyword);
-            return getMessage(keyword);
-
-        } else {
-            log.debug("[scenario][case2] 키워드 API에서 도출 시작");
-            URL url = new URL(apiUrl);
-
-            String message = getReqMessage(chatMessage);
-            String encodeBase64String = makeSignature(message, secretKey);
-
-            //api서버 접속 (서버 -> 서버 통신)
-            HttpURLConnection con = (HttpURLConnection)url.openConnection();
-            con.setRequestMethod("POST");
-            con.setRequestProperty("Content-Type", "application/json;UTF-8");
-            con.setRequestProperty("X-NCP-CHATBOT_SIGNATURE", encodeBase64String);
-            System.out.println("API 호출 완료");
-
-            // post request
-            con.setDoOutput(true);
-            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-            wr.write(message.getBytes("UTF-8"));
-            wr.flush();
-            wr.close();
-
-            int responseCode = con.getResponseCode();
-
-            if(responseCode==200) { // 정상 호출
-                log.debug("[scenario] API 정상 호출");
-                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
-                String decodedString;
-                String jsonString = "";
-                while ((decodedString = in.readLine()) != null) {
-                    jsonString = decodedString;
-                }
-
-                //받아온 값을 세팅하는 부분
-                JSONParser jsonparser = new JSONParser();
-                try {
-                    JSONObject json = (JSONObject)jsonparser.parse(jsonString);
-                    JSONArray bubblesArray = (JSONArray)json.get("bubbles");
-                    JSONObject bubbles = (JSONObject)bubblesArray.get(0);
-                    JSONObject data = (JSONObject)bubbles.get("data");
-                    String description = (String)data.get("description");
-                    log.debug("[scenario][case2] 키워드 API에서 도출 , description : "+description);
-                    Keyword keyword = keywordService.findByNameAndShadow(description,shadow);
-                    log.debug("[scenario][case2] 키워드 API에서 도출 , keyword : "+keyword);
-
-                    if(keyword==null){
-                        String msg = "해당하는 키워드가 없습니다.";
-                        log.error("[scenario] 에러 메세지 : "+msg);
-                        return ResponseEntity.ok(ResultResponse.of("NOT_FOUND_KEYWORD",msg,false));
-                    }
-
-                    if(!questionService.existByQuestion(reqMessage)) { // DB에 저장이 안되어 있을 경우 DB에 keyword 저장
-                        create(reqMessage, keyword);
-                    }
-                   // return getMessage(keyword);
-                } catch (Exception e) {
-                    System.out.println("error");
-                    e.printStackTrace();
-                }
-                in.close();
-            } else {  // 에러 발생
-                log.debug("[scenario] API 정상 호출 실패");
-                chatMessage = con.getResponseMessage();
-                log.error("[scenario] 에러 메세지 : "+chatMessage);
-            }
-
-            log.error("[scenario] 에러 메세지 : "+chatMessage);
-            return ResponseEntity.ok(ResultResponse.of("ERROR_GET_KEYWORD",chatMessage,false));
-        }
-    }
+    private final QuestionService questionService;
+    private final ShadowService shadowService;
+    private final MemberService memberService;
+    private final KeywordService keywordService;
+    private final FlowChartService flowChartService;
+    private final Long testShadowId = 1L;
 
     //보낼 메세지를 네이버에서 제공해준 암호화로 변경해주는 메소드
     public static String makeSignature(String message, String secretKey) {
@@ -201,9 +76,6 @@ public class ShadowController {
         return encodeBase64String;
     }
 
-    private Shadow getShadow(String url){
-        return shadowService.findByMainurl(url);
-    }
     //보낼 메세지를 네이버 챗봇에 포맷으로 변경해주는 메소드
     public static String getReqMessage(String chatMessage) {
 
@@ -246,45 +118,201 @@ public class ShadowController {
         return requestBody;
     }
 
+    @RequestMapping("/chat")
+    public String chatGET(Model model) {
+
+        // 처음 가져올 떄, 해당 사용자 chat에 있는 favorite을 가져오자. (필요한 정보 : member id와 shadow id 가 필요하다.)
+        // 우선 가정하자, member id가 1이고 shadow id가 1인 것을 시작했다고 하자.
+
+        HashMap<String, String> favoriteKeywords = new HashMap<>();
+
+        //long memberId = 1;
+        long shadowId = 1;
+
+        //Member member = memberService.findById(1);
+        Shadow shadow = shadowService.findById(shadowId);
+
+        //해당 shadow에 있는 keyword 목록을 가져오자. (favorite이 체크되어있는)
+        List<Keyword> keywords = keywordService.findByShadowAndFavorite(shadow);
+
+        //그러면 이제 keyword에 맞는 최종 목적지 url을 가져오지
+        //즉 flow의 마지막 단계의 url을 찾아오자는 의미가 된다.
+        keywords.forEach(keyword -> {
+
+            //1. flowchart에서 해당 keyword가 있는 것 중에서, order desc순으로, limit 1을 걸어서 가져오자
+            Flowchart flowchart = flowChartService.findByKeyword(keyword);
+
+            //2. 가져온 flowchart에 저장되어있는 flow id를 통해서, flow에서 url을 가져오자
+            log.info("keyword에서 가져온 flowchart에 seq가 마지막인, flow id = {}", flowchart.getFlow().getId());
+
+            //3. keyword와 url을 합쳐서 Map으로 해서 model에 넣어주자
+            favoriteKeywords.put(keyword.getName(), flowchart.getFlow().getUrl());
+        });
+
+        model.addAttribute("favoriteKeywords", favoriteKeywords);
+
+        return "chatbot/chat";
+    }
+
+    //@MessageMapping("/sendMessage")
+    @RequestMapping("/chat/write")
+// 우리가 구독하고 있는 /topic에서 메시지를 보낼 곳으로 이동시킨다. 우리의 prefix는 /shadow이다.(/shadow -> /topic -> CLOVA로 보내기)
+    @SendTo("/topic/shadow")
+    @ResponseBody
+    public ResponseEntity<ResultResponse> sendMessage(String chatMessage) throws IOException { // @Payload는 websocket에서 요청할 메시지의 meta 데이터
+        // 테스트용 shadow , testShadowId로 지정
+        Shadow shadow = shadowService.findById(testShadowId);
+        log.debug("[scenario] shadow : " + shadow.getId() + " , " + shadow.getName() + ", " + shadow.getMainurl());
+        String reqMessage = chatMessage;
+        reqMessage = reqMessage.replace("\"", "");
+
+        // [scenario] 시작
+        if (questionService.existByQuestion(reqMessage)) {
+            log.debug("[scenario][case1] 키워드 DB에서 도출 시작");
+            Keyword keyword = getKeyword(reqMessage);
+            log.debug("[scenario] keyword : " + keyword);
+            return getMessage(keyword);
+
+        } else {
+            log.debug("[scenario][case2] 키워드 API에서 도출 시작");
+            URL url = new URL(apiUrl);
+
+            String message = getReqMessage(chatMessage);
+            String encodeBase64String = makeSignature(message, secretKey);
+
+            //api서버 접속 (서버 -> 서버 통신)
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("POST");
+            con.setRequestProperty("Content-Type", "application/json;UTF-8");
+            con.setRequestProperty("X-NCP-CHATBOT_SIGNATURE", encodeBase64String);
+            System.out.println("API 호출 완료");
+
+            // post request
+            con.setDoOutput(true);
+            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+            wr.write(message.getBytes("UTF-8"));
+            wr.flush();
+            wr.close();
+
+            int responseCode = con.getResponseCode();
+
+            if (responseCode == 200) { // 정상 호출
+                log.debug("[scenario] API 정상 호출");
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
+                String decodedString;
+                String jsonString = "";
+                while ((decodedString = in.readLine()) != null) {
+                    jsonString = decodedString;
+                }
+
+                //받아온 값을 세팅하는 부분
+                JSONParser jsonparser = new JSONParser();
+                try {
+                    JSONObject json = (JSONObject) jsonparser.parse(jsonString);
+                    JSONArray bubblesArray = (JSONArray) json.get("bubbles");
+                    JSONObject bubbles = (JSONObject) bubblesArray.get(0);
+                    JSONObject data = (JSONObject) bubbles.get("data");
+                    String description = (String) data.get("description");
+                    log.debug("[scenario][case2] 키워드 API에서 도출 , description : " + description);
+                    Keyword keyword = keywordService.findByNameAndShadow(description, shadow);
+                    log.debug("[scenario][case2] 키워드 API에서 도출 , keyword : " + keyword);
+
+                    if (keyword == null) {
+                        String msg = "해당하는 키워드가 없습니다.";
+                        log.error("[scenario] 에러 메세지 : " + msg);
+                        return ResponseEntity.ok(ResultResponse.of("NOT_FOUND_KEYWORD", msg, false));
+                    }
+
+                    if (!questionService.existByQuestion(reqMessage)) { // DB에 저장이 안되어 있을 경우 DB에 keyword 저장
+                        create(reqMessage, keyword);
+                    }
+                    // return getMessage(keyword);
+                } catch (Exception e) {
+                    System.out.println("error");
+                    e.printStackTrace();
+                }
+                in.close();
+            } else {  // 에러 발생
+                log.debug("[scenario] API 정상 호출 실패");
+                chatMessage = con.getResponseMessage();
+                log.error("[scenario] 에러 메세지 : " + chatMessage);
+            }
+
+            log.error("[scenario] 에러 메세지 : " + chatMessage);
+            return ResponseEntity.ok(ResultResponse.of("ERROR_GET_KEYWORD", chatMessage, false));
+        }
+    }
+
     public void create(String question, Keyword keyword) {
         questionService.create(question, keyword);
     }
 
-    private Keyword getKeyword(String reqMessage){
+    @PostMapping("/chat/click/scenario")
+    @ResponseBody
+    public ResponseEntity<ResultResponse> clickScenario(@RequestParam(value = "flowchartIds[]") List<Long> flowchartIds, @RequestParam("seq") Integer seq) {
+
+        List<Flowchart> flowcharts = new ArrayList<>();
+        flowchartIds.forEach(id -> flowcharts.add(flowChartService.findById(id)));
+        log.debug("[scenario] seq : " + seq + " flowcharts " + flowcharts);
+        String topMsg="";
+
+        if (seq > flowcharts.size()) {
+            topMsg = """
+                    축하합니다. <br>
+                    \'%s\' 를 해결 하였습니다. <br>
+                    더 궁금한 것이 있다면, 처음으로를 눌러주세요. <br>
+                    """.formatted(flowcharts.get(0).getKeyword().getName());
+            return ResponseEntity.ok(ResultResponse.of("GET_SCENARIO_FIN", topMsg, true));
+        }
+
+/*        Flowchart flowchart = flowcharts.get(seq - 1);
+        Flow flow = flowchart.getFlow();
+        msg = """
+            <br>%s
+            """.formatted(flow.getDescription());*/
+
+        return ResponseEntity.ok(ResultResponse.of("GET_SCENARIO", topMsg, flowcharts));
+
+    }
+
+    private Shadow getShadow(String url) {
+        return shadowService.findByMainurl(url);
+    }
+
+    private Keyword getKeyword(String reqMessage) {
         return questionService.findByQuestion(reqMessage).getKeyword();
     }
-    private List<Flowchart> getFlowcharts(Keyword keyword){
+
+    private List<Flowchart> getFlowcharts(Keyword keyword) {
         List<Flowchart> flowcharts = keyword.getFlowcharts();
-        if(flowcharts.size()==0){
+        if (flowcharts.size() == 0) {
             log.error("[scenario][error] keyword has not flowcharts");
         }
         return flowcharts;
     }
-    private List<Flow> getFlows(List<Flowchart> flowcharts){
-        List<Flow> flows=flowcharts.stream().map(Flowchart::getFlow).collect(Collectors.toList());
-        if(flows.size()==0){
+
+    private List<Flow> getFlows(List<Flowchart> flowcharts) {
+        List<Flow> flows = flowcharts.stream().map(Flowchart::getFlow).collect(Collectors.toList());
+        if (flows.size() == 0) {
             log.error("[scenario][error] flowcharts has not flows");
         }
-        log.debug("[scenario] flows : "+flows);
+        log.debug("[scenario] flows : " + flows);
         return flows;
     }
-    private ResponseEntity<ResultResponse> getMessage(Keyword keyword){
+
+    private ResponseEntity<ResultResponse> getMessage(Keyword keyword) {
 
         List<Flowchart> flowcharts = getFlowcharts(keyword);
-        /*StringBuilder msg = new StringBuilder();
-
         // 안내 메세지
-        msg.append("안녕하세요.").append("\n");
-        msg.append("shadow가 \'%s\'을 안내합니다.".formatted(keyword.getName())).append("\n");
-        msg.append("아래 빨간 버튼을 따라 눌러주세요.".formatted(keyword.getName())).append("\n");*/
-        String msg="""
+        String msg = """
                 안녕하세요. <br>
                 shadow가 \'%s\' 을 안내합니다. <br>
                 아래 빨간 버튼을 따라 눌러주세요. <br>
                 """.formatted(keyword.getName());
         // 전체 flow 응답
-        return ResponseEntity.ok(ResultResponse.of("GET_FLOWS_FROM_KEYWORD",msg,flowcharts));
+        return ResponseEntity.ok(ResultResponse.of("GET_FLOWS_FROM_KEYWORD", msg, flowcharts));
     }
+
     private String getFlow(String reqMessage) {
         StringBuilder sb = new StringBuilder();
         Question question = questionService.findByQuestion(reqMessage);
@@ -292,14 +320,14 @@ public class ShadowController {
         Shadow shadow = shadowService.findById(1L); // 쿠팡
 
         List<Keyword> keywords = shadow.getKeywords(); // 쿠팡에 대한 키워드(주문, 주문조회, 반품)
-        for(Keyword keyword : keywords) { // 주문, 주문조회, 반품
-            if(keyword.getName().equals(question.getKeyword())) { // 키워드들 중 보낸 question에 대한 keyword와 같을 경우(반품)
+        for (Keyword keyword : keywords) { // 주문, 주문조회, 반품
+            if (keyword.getName().equals(question.getKeyword())) { // 키워드들 중 보낸 question에 대한 keyword와 같을 경우(반품)
                 System.out.println(keyword.getName());
                 List<Flowchart> flowcharts = keyword.getFlowcharts(); // (반품)에 대한 flowchart 출력
-                for(Flowchart flowchart : flowcharts) { // flowchart들에 대한 flow내용들을 출력
+                for (Flowchart flowchart : flowcharts) { // flowchart들에 대한 flow내용들을 출력
                     sb.append("이름 : " + flowchart.getFlow().getName() + ", "
                             + "설명 : " + flowchart.getFlow().getDescription() + ", "
-                            + "URL : " +  flowchart.getFlow().getUrl() + "\n");
+                            + "URL : " + flowchart.getFlow().getUrl() + "\n");
                 }
             }
         }
