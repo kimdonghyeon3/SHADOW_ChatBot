@@ -29,6 +29,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -154,16 +155,16 @@ public class ShadowController {
         return "chatbot/chat";
     }
 
-    //@MessageMapping("/sendMessage")
-    @RequestMapping("/chat/write")
-// 우리가 구독하고 있는 /topic에서 메시지를 보낼 곳으로 이동시킨다. 우리의 prefix는 /shadow이다.(/shadow -> /topic -> CLOVA로 보내기)
+
+    @RequestMapping("/chat/question")
     @SendTo("/topic/shadow")
     @ResponseBody
-    public ResponseEntity<ResultResponse> sendMessage(String chatMessage) throws IOException { // @Payload는 websocket에서 요청할 메시지의 meta 데이터
+    public ResponseEntity<ResultResponse> sendScenario(String question) throws IOException {
+
         // 테스트용 shadow , testShadowId로 지정
         Shadow shadow = shadowService.findById(testShadowId);
         log.debug("[scenario] shadow : " + shadow.getId() + " , " + shadow.getName() + ", " + shadow.getMainurl());
-        String reqMessage = chatMessage;
+        String reqMessage = question;
         reqMessage = reqMessage.replace("\"", "");
 
         // [scenario] 시작
@@ -177,7 +178,7 @@ public class ShadowController {
             log.debug("[scenario][case2] 키워드 API에서 도출 시작");
             URL url = new URL(apiUrl);
 
-            String message = getReqMessage(chatMessage);
+            String message = getReqMessage(question);
             String encodeBase64String = makeSignature(message, secretKey);
 
             //api서버 접속 (서버 -> 서버 통신)
@@ -218,61 +219,39 @@ public class ShadowController {
                     log.debug("[scenario][case2] 키워드 API에서 도출 , keyword : " + keyword);
 
                     if (keyword == null) {
-                        String msg = "해당하는 키워드가 없습니다.";
+                        String msg = "shadow가 이해하지 못했어요. 다시 한번 입력해 주세요.";
                         log.error("[scenario] 에러 메세지 : " + msg);
+                        in.close();
                         return ResponseEntity.ok(ResultResponse.of("NOT_FOUND_KEYWORD", msg, false));
                     }
 
                     if (!questionService.existByQuestion(reqMessage)) { // DB에 저장이 안되어 있을 경우 DB에 keyword 저장
                         create(reqMessage, keyword);
                     }
-                    // return getMessage(keyword);
+                    in.close();
+                    return getMessage(keyword);
+
                 } catch (Exception e) {
-                    System.out.println("error");
+                    String msg = "shadow가 이해하지 못했어요. 다시 한번 입력해 주세요.";
+                    log.error("[scenario] 에러 메세지 : " + msg);
                     e.printStackTrace();
+                    in.close();
+                    return ResponseEntity.ok(ResultResponse.of("NOT_FOUND_KEYWORD", msg, false));
                 }
-                in.close();
+
             } else {  // 에러 발생
                 log.debug("[scenario] API 정상 호출 실패");
-                chatMessage = con.getResponseMessage();
-                log.error("[scenario] 에러 메세지 : " + chatMessage);
+                question = con.getResponseMessage();
+                log.error("[scenario] 에러 메세지 : " + question);
             }
 
-            log.error("[scenario] 에러 메세지 : " + chatMessage);
-            return ResponseEntity.ok(ResultResponse.of("ERROR_GET_KEYWORD", chatMessage, false));
+            log.error("[scenario] 에러 메세지 : " + question);
+            return ResponseEntity.ok(ResultResponse.of("ERROR_GET_KEYWORD", question, false));
         }
     }
 
     public void create(String question, Keyword keyword) {
         questionService.create(question, keyword);
-    }
-
-    @PostMapping("/chat/click/scenario")
-    @ResponseBody
-    public ResponseEntity<ResultResponse> clickScenario(@RequestParam(value = "flowchartIds[]") List<Long> flowchartIds, @RequestParam("seq") Integer seq) {
-
-        List<Flowchart> flowcharts = new ArrayList<>();
-        flowchartIds.forEach(id -> flowcharts.add(flowChartService.findById(id)));
-        log.debug("[scenario] seq : " + seq + " flowcharts " + flowcharts);
-        String topMsg="";
-
-        if (seq > flowcharts.size()) {
-            topMsg = """
-                    축하합니다. <br>
-                    \'%s\' 를 해결 하였습니다. <br>
-                    더 궁금한 것이 있다면, 처음으로를 눌러주세요. <br>
-                    """.formatted(flowcharts.get(0).getKeyword().getName());
-            return ResponseEntity.ok(ResultResponse.of("GET_SCENARIO_FIN", topMsg, true));
-        }
-
-/*        Flowchart flowchart = flowcharts.get(seq - 1);
-        Flow flow = flowchart.getFlow();
-        msg = """
-            <br>%s
-            """.formatted(flow.getDescription());*/
-
-        return ResponseEntity.ok(ResultResponse.of("GET_SCENARIO", topMsg, flowcharts));
-
     }
 
     private Shadow getShadow(String url) {
@@ -313,24 +292,4 @@ public class ShadowController {
         return ResponseEntity.ok(ResultResponse.of("GET_FLOWS_FROM_KEYWORD", msg, flowcharts));
     }
 
-    private String getFlow(String reqMessage) {
-        StringBuilder sb = new StringBuilder();
-        Question question = questionService.findByQuestion(reqMessage);
-        /* 보낼 메시지 : responseMessage */
-        Shadow shadow = shadowService.findById(1L); // 쿠팡
-
-        List<Keyword> keywords = shadow.getKeywords(); // 쿠팡에 대한 키워드(주문, 주문조회, 반품)
-        for (Keyword keyword : keywords) { // 주문, 주문조회, 반품
-            if (keyword.getName().equals(question.getKeyword())) { // 키워드들 중 보낸 question에 대한 keyword와 같을 경우(반품)
-                System.out.println(keyword.getName());
-                List<Flowchart> flowcharts = keyword.getFlowcharts(); // (반품)에 대한 flowchart 출력
-                for (Flowchart flowchart : flowcharts) { // flowchart들에 대한 flow내용들을 출력
-                    sb.append("이름 : " + flowchart.getFlow().getName() + ", "
-                            + "설명 : " + flowchart.getFlow().getDescription() + ", "
-                            + "URL : " + flowchart.getFlow().getUrl() + "\n");
-                }
-            }
-        }
-        return sb.toString();
-    }
 }

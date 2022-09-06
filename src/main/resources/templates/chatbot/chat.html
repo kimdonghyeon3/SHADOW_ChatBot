@@ -247,10 +247,9 @@
 
         var seq = find_seq(1); // 임의로 1번 순서로 시작
         var flowcharts= new Array();
-        console.log("타입1 : "+Array.isArray(flowcharts));
 
         // 입력 메세지에 따른 시나리오 출력
-        function ChatMessageWrite(event, form){
+        function ChatMessageReceive(event, form){
 
             event.preventDefault();
             console.log(form.message.value);
@@ -264,31 +263,45 @@
             $("#greetings").append("<div class=\"incoming\">" + form.message.value + "</div>");  //html 추가
             $('#greetings').scrollTop($('#greetings').prop('scrollHeight'));    //스크롤 포커스
 
-            $.post(
-                '/chat/write', // 주소, action
-                {
-                    chatMessage: form.message.value, // 폼 내용, input name, value
-                    // mainurl : mainurl // url로 shadow id를 판단할 때 사용 -> 아직 배포과정 미정
-                },
-                function(result) { // 콜백 메서드, 통신이 완료된 후, 실행
-                    console.log("받은 메시지 : " + result.message);
-                    console.log("받은 데이터 : "+ result.data);
-                    flowcharts=result.data;
-                    console.log("타입2 : "+Array.isArray(flowcharts));
-                    var msg = `
-                        <div class = "outgoing">
-                            <p>${result.message}</p>
-                            <div class="d-flex justify-content-center">
-                    `;
-                    send_message(get_scenario(msg));
-
-                },
-                'json'
-            );
+            findScenario(form);
 
             form.message.value = '';
             form.message.focus();
         }
+
+        function findScenario(form){
+
+                $.post(
+                '/chat/question',
+                {
+                    question: form.message.value, // 폼 내용, input name, value
+                    // mainurl : mainurl // url로 shadow id를 판단할 때 사용 -> 아직 배포과정 미정
+                },
+                function(result) {
+                    console.log("받은 메시지 : " + result.message);
+                    console.log("받은 데이터 : "+ result.data);
+                    if(result.data==false){
+                        var msg = `
+                            <div class = "outgoing">
+                                <p>${result.message}</p>
+                            </div>
+                        `;
+                        send_message(msg);
+                    } else {
+                        flowcharts=result.data;
+                        var msg = `
+                            <div class = "outgoing">
+                                <p>${result.message}</p>
+                                <div class="d-flex justify-content-center">
+                        `;
+                        send_message(get_scenario(msg));
+                    }
+                },
+                'json'
+            );
+
+        }
+
         function find_seq(val){
             // 추후 배포과정 이후, 현재 url 을 기반으로 seq 판단하는 로직 추가 필요
             return val;
@@ -300,72 +313,57 @@
          console.log("url "+mainurl);
 
          console.log("click flow url : "+url);
-         seq++;
+         seq++; // 배포 후 수정 필요
          console.log(seq);
 
-        console.log("flowcharts : "+flowcharts);
-        var flowchartIds = new Array();
-        $.each(flowcharts,function(i,flowchart){
-            console.log("순서 : "+flowchart.seq +" flowchart :"+flowchart.id);
-            flowchartIds.push(flowchart.id);
-        });
-         $.post(
-            '/chat/click/scenario',
-            {
-                flowchartIds : flowchartIds,
-                seq : seq
-            },
-            function(result) { // 콜백 메서드, 통신이 완료된 후, 실행
-                console.log("받은 메시지 : " + result.message);
-                console.log("받은 데이터 : "+ result.data);
-                if(result.data == true){
-                   var msg = `
-                    <div class = "outgoing">
-                        <p>${result.message}</p>
-                        <div class="d-flex justify-content-center">
-                            <button class="btn btn-info" onclick="location.href='/chat'">처음으로</button>
-                            <button class="btn btn-info" onclick="CloseChat()">종료하기</button>
-                        </div>
-                    </div>
-                    `;
-                    send_message(msg);
-                } else {
-                flowcharts = result.data;
-                var msg = `
-                    <div class = "outgoing">
-                        <p>${result.message}</p>
-                        <div class="d-flex justify-content-center">
-                `;
-                send_message(get_scenario(msg));
-                }
-            },
-            'json'
-        );
+         console.log("flowcharts : "+flowcharts);
+         var msg = `
+            <div class = "outgoing">
+                <div class="d-flex justify-content-center">
+        `;
+         send_message(get_scenario(msg));
+
 
        }
 
        function get_scenario(msg){
-                console.log("flowcharts : "+flowcharts);
+            console.log("flowcharts : "+flowcharts);
 
-                var btn
-                var description="";
-                $.each(flowcharts,function(i,flowchart){
-                    console.log("순서 : "+flowchart.seq);
-                    console.log("설명 : "+flowchart.flow.description);
-                    if(seq==flowchart.seq){
-                    btn = `
-                        <button class="btn btn-danger" onclick="click_flow_url('${flowchart.flow.url}');">${flowchart.flow.name}</button>
-                        <p> -> </p>
-                    `;
-                    description = `<br><p>${flowchart.flow.description}</p> `;
-                    } else {
-                    btn = `
-                        <button class="btn btn-primary" onclick="click_flow_url('${flowchart.flow.url}');">${flowchart.flow.name}</button>
-                        <p> -> </p>
-                    `;}
-                    msg=msg.concat(btn);
-                });
-                return msg+"</div>"+description+"</div>"
+            var btn
+            var description;
+            var keyword;
+            $.each(flowcharts,function(i,flowchart){
+                keyword=flowchart.keyword.name;
+                console.log("순서 : "+flowchart.seq);
+                console.log("설명 : "+flowchart.flow.description);
+                console.log("키워드 : "+ keyword);
+                if(seq==flowchart.seq){
+                btn = `
+                    <button class="btn btn-danger" onclick="click_flow_url('${flowchart.flow.url}');">${flowchart.flow.name}</button>
+                    <p> -> </p>
+                `;
+                description = `<br><p>${flowchart.flow.description}</p> `;
+                } else {
+                btn = `
+                    <button class="btn btn-primary" onclick="click_flow_url('${flowchart.flow.url}');">${flowchart.flow.name}</button>
+                    <p> -> </p>
+                `;}
+                msg=msg.concat(btn);
+            });
+            if(description==null){
+                description = `
+                    <p>
+                    축하합니다. <br>
+                    \'${keyword}\'을(를) 해결 하였습니다. <br>
+                    더 궁금한 것이 있다면, \'처음으로\' 를 눌러주세요. <br>
+                    </p>
+                    <div class="d-flex justify-content-center">
+                        <button class="btn btn-info" onclick="location.href='/chat'">처음으로</button>
+                        <button class="btn btn-info" onclick="CloseChat()">종료하기</button>
+                    </div>
+                `;
+            }
+            return msg+"</div>"+description+"</div>"
        }
 
        function send_message(msg){
@@ -377,8 +375,6 @@
 
 </head>
 <body>
-
-
 
 <!--챗봇 off상태 말풍선-->
 <button type="button" class="ch-button" onclick="OpenChat()" id="btnChatOpen">
@@ -405,7 +401,6 @@
 <!--챗봇 중단-->
         <div class="middle" id="greetings">
                 <div class="incoming">
-                    hello
                 </div>
                 <div class="outgoing">
                     안녕하세요~ Shadow 챗봇 입니다! 고객님들이 자주 찾는 문의 사항입니다.
@@ -419,7 +414,7 @@
 
 <!--챗봇 하단-->
         <div class="bottom-bar">
-            <form class="send-form" onsubmit="ChatMessageWrite(event, this);">
+            <form class="send-form" onsubmit="ChatMessageReceive(event, this);">
                     <input type="text" id="message" name="message" placeholder="Type a message..." />
                     <button type="submit" id="send">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="black" class="bi bi-send" viewBox="0 0 16 16">
