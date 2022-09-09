@@ -54,36 +54,49 @@
 
                                     <td class="text-start flows">
                                         <div th:each="flowchart : ${keyword.flowcharts}" class="get-flows">
-                                            <input name="flow" type="text" class="mb-3 flow" th:value="${flowchart.flow.name}" />
+
+<!--                                            <input name="flow" type="text" class="mb-3 flow" th:value="${flowchart.flow.name}" />-->
+                                            <div class="input-group mb-3 flow-box">
+                                                <span class="input-group-text">목적지</span>
+                                                <input type="text" name="flow" class="form-control flow" placeholder="이동할 목적지를 적어주세요."
+                                                       th:value="${flowchart.flow.name}"/>
+                                            </div>
+
                                             <div class="input-group mb-3 description-box">
                                                 <span class="input-group-text">안내메시지</span>
                                                 <input type="text" name="description" class="form-control description" placeholder="해당 페이지에서 안내할 멘트를 입력해주세요"
                                                        th:value="${flowchart.flow.description}">
                                             </div>
-                                            <div class="input-group mb-3 url-box">
+
+                                            <div class="input-group mb-3 url-box border-bottom-xl pb-4">
                                                 <span class="input-group-text">url</span>
                                                 <input type="text" name="url" class="form-control url" placeholder="ex) www.coupang.com/mycoupang"
                                                        th:value="${flowchart.flow.url}">
                                             </div>
+
                                         </div>
                                         <button type="button" class="btn btn-primary ml-3 addflowbtn" onclick="addFlow(this)"> + </button>
                                         <button type="button" class="btn btn-primary ml-3 deleteflowbtn" onclick="deleteFlow(this)"> - </button>
                                     </td>
 
                                     <td>
-                                        <input class="form-check-input favorite" name="favorite" type="checkbox" id="flexCheckDefault" th:if="${keyword.favorite}" checked>
-                                        <input class="form-check-input favorite" name="favorite" type="checkbox" id="flexCheckDefault" th:if="!${keyword.favorite}">
+<!--                                        <input class="form-check-input favorite" name="favorite" type="checkbox" id="flexCheckDefault" th:if style="border: 1px solid #bebfc5">-->
+                                        <input class="form-check-input favorite" name="favorite" type="checkbox" id="flexCheckDefault" style="border: 1px solid #bebfc5" th:if="${keyword.favorite}"  checked>
+                                        <input class="form-check-input favorite" name="favorite" type="checkbox" id="flexCheckDefault" style="border: 1px solid #bebfc5" th:if="!${keyword.favorite}">
                                     </td>
                                 </tr>
                                 </tbody>
                             </table>
 
-                            <button type="button" class="btn btn-primary mb-3" onclick="addKeyword()">키워드 추가</button>
-                            <button type="button" class="btn btn-primary mb-3" onclick="deleteKeyword()">키워드 제거</button>
-
-                            <p>
-                                <button type="button" class="btn btn-primary btn-sm create_shadow">수정 하기</button>
-                            </p>
+                            <div class="row">
+                                <div class="col-sm-12 col-lg-6 text-lg-start text-center ps-2">
+                                    <button type="button" class="btn btn-primary mb-3" onclick="addKeyword()">키워드 추가</button>
+                                    <button type="button" class="btn btn-primary mb-3" onclick="deleteKeyword()">키워드 제거</button>
+                                </div>
+                                <div class="col-sm-12 col-lg-6 text-lg-end text-center pe-7">
+                                    <button type="button" class="btn btn-primary create_shadow">챗봇 생성</button>
+                                </div>
+                            </div>
 
                         </form>
 
@@ -97,21 +110,16 @@
 <script layout:fragment="script" type='text/javascript'>
 
     function addFlow(e){
-
         var flows = e.parentNode;
         var flag = e;
+        var flowbox = flows.getElementsByClassName("get-flows")[0].cloneNode(true);
+        var inputTag = flowbox.getElementsByTagName("input");
 
-        //get flow를 하나 복사하자
-        var getFlow = flows.children[0];
-        var cloneNode = getFlow.cloneNode(true);
-
-        let name = cloneNode.getElementsByTagName("input");
-
-        for(var i = 0 ; i < name.length ; i++){
-            name[i].value = "";
+        for(let i = 0 ; i < inputTag.length ; i++){
+            inputTag[i].value='';
         }
 
-        flows.insertBefore(cloneNode, flag);
+        flows.insertBefore(flowbox, flag);
     }
 
     function deleteFlow(e){
@@ -128,78 +136,24 @@
     function addKeyword(){
 
         var flows = document.getElementsByClassName("tbody")[0];
+        let cloneTag = flows.children[0].cloneNode(true);
+        let flowsTag = cloneTag.getElementsByClassName("flows")[0];
+        let flowsTagChilds = flowsTag.children;
+        let length = flowsTagChilds.length;
 
-        //<tr class="text-center datas">
-        var newRow = flows.insertRow(flows.rows.length);
-        newRow.setAttribute("class","text-center datas");
+        for(let i = 0 ; i < length-3 ; i ++){
+            flowsTag.removeChild(flowsTagChilds[0]);
+        }
 
-        var cell1 = newRow.insertCell(0);
-        //<td class="text-start flows">
-        var cell2 = newRow.insertCell(1);
-        cell2.setAttribute("class",'text-start flows');
-        var cell3 = newRow.insertCell(2);
+        let input = cloneTag.getElementsByTagName("input");
 
-        //col1 채우기<input type="text" class="mb-3" />
-        var keywordClone = document.getElementsByClassName("keyword")[0];
-        var keyword = keywordClone.cloneNode(true);
+        for(let i = 0 ; i < input.length ; i++){
+            input[i].value = "";
+        }
 
-        //col2 채우기
-        var flow = document.createElement("input");
+        cloneTag.getElementsByClassName("favorite")[0].checked = false;
 
-        var flow_description = document.createElement("div");
-        var flow_description_span = document.createElement("span");
-        var flow_description_input = document.createElement("input");
-
-        var flow_url = document.createElement("div")
-        var flow_url_span = document.createElement("span");
-        var flow_url_input = document.createElement("input");
-
-        flow.setAttribute("type","text");
-        flow.setAttribute("class","mb-3 flow");
-        flow.setAttribute("name","flow");
-
-        flow_description.setAttribute("class","input-group mb-3");
-        flow_description_span.setAttribute("class","input-group-text");
-        flow_description_input.setAttribute("type","text");
-        flow_description_input.setAttribute("class","form-control description");
-        flow_description_input.setAttribute("placeholder","해당 페이지에서 안내할 멘트를 입력해주세요");
-        flow_description_input.setAttribute("name","description")
-        flow_description_span.innerHTML = "안내메시지";
-
-        flow_url.setAttribute("class", "input-group mb-3");
-        flow_url_span.setAttribute("class","input-group-text");
-        flow_url_input.setAttribute("type","text");
-        flow_url_input.setAttribute("class","form-control url");
-        flow_url_input.setAttribute("placeholder","ex) www.coupang.com/mycoupang");
-        flow_url_input.setAttribute("name","url");
-        flow_url_span.innerHTML = "url";
-
-        //버튼
-        var addbtn = document.createElement("button");
-        var deletebtn = document.createElement("button");
-
-        addbtn.setAttribute("type","button");
-        addbtn.setAttribute("class","btn btn-primary ml-3 addflowbtn");
-        addbtn.setAttribute("onClick","addFlow(this)");
-        addbtn.innerHTML = "+";
-
-        deletebtn.setAttribute("type","button");
-        deletebtn.setAttribute("class","btn btn-primary ml-3 delteflowbtn");
-        deletebtn.setAttribute("onClick","deleteFlow(this)");
-        deletebtn.innerHTML = "-";
-
-        flow_description.append(flow_description_span, flow_description_input);
-        flow_url.append(flow_url_span, flow_url_input);
-
-        //col3 채우기 <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-        var check = document.createElement("input");
-        check.setAttribute("class","form-check-input favorite");
-        check.setAttribute("type","checkbox");
-        check.setAttribute("id","flexCheckDefault");
-
-        cell1.append(keyword);
-        cell2.append(flow, flow_description, flow_url, addbtn, deletebtn);
-        cell3.append(check);
+        flows.append(cloneTag);
     }
 
     function deleteKeyword(){
@@ -225,7 +179,6 @@
 
         for(let i = 0 ; i < length ; i ++){ //keyword 순서 체크 tr태그
             let trTag = children[i];
-            //console.log("trTag" + children[i]);
 
             var keywordData = {
                 name : "",
@@ -250,7 +203,7 @@
                 if(j == 1){
 
                     var tdTagLength = tdTag.getElementsByClassName("flow").length;
-                    //console.log("tdTagLength : " + tdTagLength);
+
                     for(let k = 0 ; k < tdTagLength ; k++){
 
                         var flowData = {
@@ -262,24 +215,16 @@
                         let flowTag = tdTag.getElementsByClassName("flow")[k];
                         let descriptionTag = tdTag.getElementsByClassName("description")[k];
                         let urlTag = tdTag.getElementsByClassName("url")[k];
-                        // console.log("flow : " + flowTag.value);
-                        // console.log("description : " + descriptionTag.value);
-                        // console.log("url : " + urlTag.value);
 
                         flowData.name = flowTag.value;
                         flowData.description = descriptionTag.value;
                         flowData.url = urlTag.value;
-                        //배열에 값 넣기
-                        // keywordData.flow.push(flowTag.value)
-                        // keywordData.description.push(descriptionTag.value)
-                        // keywordData.url.push(urlTag.value)
                         keywordData.flow.push(flowData);
                     }
                 }
                 //세번째 td = favorite
                 if(j == 2){
                     let favoriteTag = tdTag.getElementsByClassName("favorite")[0];
-                    //console.log("favorite : " + favoriteTag.checked);
                     keywordData.favorite = favoriteTag.checked;
                 }
             }
@@ -329,8 +274,6 @@
 
         var id = [[${shadow.id}]];
 
-        console.log(id);
-
         $.ajax({
             url : "/shadow/update/" + id,
             dataType : "json",
@@ -350,7 +293,5 @@
             }
         });
     })
-
 </script>
-
 </html>
