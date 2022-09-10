@@ -14,40 +14,39 @@
                 <div class="card-body p-3">
                     <div class="chart" style="height: 100%;">
                         <!-- Page Content-->
-                        <div id="page-top"> <h2>shadow수정 폼</h2></div>
+                        <div class="mb-5" id="page-top"> <h2>Shadow 수정</h2></div>
                         <!-- Page Content-->
 
-                        <h4>내 쇼핑몰 정보 수정하기</h4>
+                        <h4>쇼핑몰 정보 수정하기</h4>
                         <hr/>
                         <form>
                             <div class="input-group mb-3">
-                                <span class="input-group-text" id="basic-addon1">쇼핑몰 명</span>
+                                <span class="input-group-text font-weight-bold" id="basic-addon1">쇼핑몰 명</span>
                                 <input type="text" name="name" th:value="${shadow.name}" class="form-control name" placeholder="쇼핑몰 명을 입력해주세요">
                             </div>
 
-                            <div class="input-group mb-5">
-                                <span class="input-group-text" id="basic-addon2">쇼핑몰 주소</span>
+                            <div class="input-group mb-2">
+                                <span class="input-group-text font-weight-bold" id="basic-addon2">쇼핑몰 주소</span>
                                 <input type="text" name="mainurl" th:value="${shadow.mainurl}" class="form-control mainurl" placeholder="ex) www.coupang.com">
                             </div>
+                            <hr class="mb-5"/>
+                            <h4>쇼핑몰 순서도 수정하기</h4>
 
-                            <h4>내 쇼핑몰 순서도 수정하기</h4>
-                            <hr/>
-
-                            <table class="table">
-                                <thead>
-                                <tr class="text-center">
-                                    <th>키워드</th>
-                                    <th style="width:70%">순서도</th>
-                                    <th>자주찾는 목록</th>
-                                </tr>
+                            <table class="table table-hover">
+                                <thead class="table">
+                                    <tr class="text-center">
+                                        <th class="fw-bolder">키워드</th>
+                                        <th class="fw-bolder" style="width:70%">순서도</th>
+                                        <th class="fw-bolder">자주찾는 목록</th>
+                                    </tr>
                                 </thead>
                                 <tbody class="tbody">
-                                <tr class="text-center datas" th:each="keyword : ${shadow.keywords}">
+                                <tr class="text-center datas" th:each="keyword : ${shadow.keywords}" style="border-top:2px solid lightgray">
 
                                     <td>
-                                        <select class="form-select keyword" name="keyword">
-                                            <option th:value="${keyword.name}" th:text="${keyword.name}">==키워드 선택==</option>
-                                            <option th:each="keywordCode : ${keywordCodes}" th:if="${keyword.name != keywordCode}" th:value="${keywordCode}"
+                                        <select class="form-select keyword font-weight-bold" name="keyword">
+                                            <option class="font-weight-bold" th:value="${keyword.name}" th:text="${keyword.name}">==키워드 선택==</option>
+                                            <option class="font-weight-bold" th:each="keywordCode : ${keywordCodes}" th:if="${keyword.name != keywordCode}" th:value="${keywordCode}"
                                                     th:text="${keywordCode}">FAST</option>
                                         </select>
                                     </td>
@@ -57,19 +56,19 @@
 
 <!--                                            <input name="flow" type="text" class="mb-3 flow" th:value="${flowchart.flow.name}" />-->
                                             <div class="input-group mb-3 flow-box">
-                                                <span class="input-group-text">목적지</span>
+                                                <span class="input-group-text font-weight-bold">목적지</span>
                                                 <input type="text" name="flow" class="form-control flow" placeholder="이동할 목적지를 적어주세요."
                                                        th:value="${flowchart.flow.name}"/>
                                             </div>
 
                                             <div class="input-group mb-3 description-box">
-                                                <span class="input-group-text">안내메시지</span>
+                                                <span class="input-group-text font-weight-bold">안내메시지</span>
                                                 <input type="text" name="description" class="form-control description" placeholder="해당 페이지에서 안내할 멘트를 입력해주세요"
                                                        th:value="${flowchart.flow.description}">
                                             </div>
 
                                             <div class="input-group mb-3 url-box border-bottom-xl pb-4">
-                                                <span class="input-group-text">url</span>
+                                                <span class="input-group-text font-weight-bold">url</span>
                                                 <input type="text" name="url" class="form-control url" placeholder="ex) www.coupang.com/mycoupang"
                                                        th:value="${flowchart.flow.url}">
                                             </div>
@@ -94,7 +93,7 @@
                                     <button type="button" class="btn btn-primary mb-3" onclick="deleteKeyword()">키워드 제거</button>
                                 </div>
                                 <div class="col-sm-12 col-lg-6 text-lg-end text-center pe-7">
-                                    <button type="button" class="btn btn-primary create_shadow">챗봇 생성</button>
+                                    <button type="button" class="btn btn-primary create_shadow">챗봇 수정</button>
                                 </div>
                             </div>
 
