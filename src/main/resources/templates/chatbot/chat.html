@@ -78,26 +78,6 @@
             margin-left: 3%;
         }
 
-        .avatar {
-            display : flex;
-            justify-content: center;
-            align-items: center;
-            width: 35px;
-            height: 35px;
-            margin-left: 3%;
-            background: linear-gradient(to bottom left, #79C7C5 20%, #A1E2D9 100%);
-            border-radius: 50%;
-            color: #79C7C5;
-        }
-
-        .name {
-            text-transform: uppercase;
-            color: #777777;
-            font-size: 1em;
-            letter-spacing: 2px;
-            font-weight: 600;
-        }
-
         .gap{
             flex-grow : 1;
         }
@@ -198,6 +178,10 @@
         }
 
         /*챗봇 자주찾는 목록*/
+        .favorite-box{
+            gap: 5px;
+        }
+
         .favorite{
             border:2px solid #58CCFF;
             color: #58CCFF;
@@ -390,7 +374,7 @@
 <!--챗봇 하단-->
         <div class="bottom-bar">
             <div class="d-flex flex-row justify-content-evenly favorite-box">
-                <a class="px-2 py-1 favorite" th:each="favoriteKeyword : ${favoriteKeywords}" th:href="@{${favoriteKeyword.value}}" th:text="${favoriteKeyword.key}"/>
+                <a class="px-2 favorite" th:each="favoriteKeyword : ${favoriteKeywords}" th:href="@{${favoriteKeyword.value}}" th:text="${favoriteKeyword.key}"/>
             </div>
             <form class="send-form" onsubmit="ChatMessageWrite(event, this);">
                 <div class="form-box">
