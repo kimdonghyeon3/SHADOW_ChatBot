@@ -128,10 +128,8 @@
             width: fit-content;
             margin : 1% auto 1% 5%;
             padding:10px;
-            background: #58CCFF;
-            -webkit-border-radius: 10px;
-            -moz-border-radius: 10px;
-            border-radius: 10px;
+            background: rgb(236, 240, 243);
+            border-radius: 15px;
         }
         .incoming:after
         {
@@ -139,7 +137,7 @@
             position: absolute;
             border-style: solid;
             border-width: 6px 10px 6px 0;
-            border-color: transparent #58CCFF;
+            border-color: transparent rgb(236, 240, 243);
             display: block;
             width: 0;
             z-index: 1;
@@ -159,8 +157,10 @@
             width: fit-content;
             padding: 10px;
             margin : 1% 3% 1% auto;
-            background: rgb(236, 240, 243);
-            border-radius: 15px;
+            background: #58CCFF;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+            border-radius: 10px;
         }
 
         .outgoing:after
@@ -169,7 +169,7 @@
             position: absolute;
             border-style: solid;
             border-width: 6px 0 6px 10px;
-            border-color: transparent rgb(236, 240, 243);
+            border-color: transparent #58CCFF;
             display: block;
             width: 0;
             z-index: 1;
@@ -424,12 +424,13 @@
 
 <!--챗봇 중단-->
         <div class="middle" id="greetings">
-                <div class="incoming">
+                <div class="outgoing">
                     hello
                 </div>
 
                 <div class="outgoing-box">
-                    <div class="outgoing">
+                    <img th:src="@{/image/icon.png}" style="width: 35px; height: 35px; vertical-align: top" />
+                    <div class="incoming">
                         안녕하세요. 😊 <br/>
                         Shadow 챗봇 입니다! <br/>
                         <br/>
@@ -437,7 +438,6 @@
                         자주 찾는 목적지는 챗봇 하단 버튼을 눌러주세요.<br/>
                         원하는 목적지가 없다면, 궁금한 사항을 채팅해주세요.
                     </div>
-                    <img th:src="@{/image/icon.png}" style="width: 35px; height: 35px; vertical-align: top" />
                 </div>
         </div>
 
@@ -446,7 +446,7 @@
             <div class="d-flex flex-row justify-content-evenly favorite-box">
                 <a class="px-2 favorite" th:each="favoriteKeyword : ${favoriteKeywords}" th:href="@{${favoriteKeyword.value}}" th:text="${favoriteKeyword.key}"/>
             </div>
-            <form class="send-form" onsubmit="ChatMessageWrite(event, this);">
+            <form class="send-form" onsubmit="ChatMessageReceive(event, this);">
                 <div class="form-box">
                     <input class="input-msg" type="text" id="message" name="message" placeholder="Type a message..." />
                     <div class="gap"></div>
