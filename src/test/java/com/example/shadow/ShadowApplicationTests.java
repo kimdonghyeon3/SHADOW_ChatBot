@@ -1,8 +1,12 @@
 package com.example.shadow;
 
-import com.example.shadow.chatbot.Repository.*;
-import com.example.shadow.chatbot.service.QuestionService;
-import com.example.shadow.chatbot.shadow.entity.*;
+import com.example.shadow.chat.Repository.*;
+import com.example.shadow.domain.shadow.Repository.*;
+import com.example.shadow.domain.shadow.entity.Flowchart;
+import com.example.shadow.domain.shadow.entity.Keyword;
+import com.example.shadow.domain.shadow.entity.Question;
+import com.example.shadow.domain.shadow.entity.Shadow;
+import com.example.shadow.domain.shadow.service.QuestionService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
