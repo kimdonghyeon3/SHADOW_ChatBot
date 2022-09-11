@@ -19,4 +19,5 @@ public class MemberService {
         return memberRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("유효하지 않은 사용자 입니다."));
     }
+
 }

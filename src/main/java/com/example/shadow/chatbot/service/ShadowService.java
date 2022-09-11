@@ -12,4 +12,8 @@ public class ShadowService {
     public Shadow findById(long id) {
         return shadowRepository.findById(id).get();
     }
+
+    public Shadow findByMainurl(String url) {
+        return shadowRepository.findByMainurl(url).orElseThrow(() -> new RuntimeException("%s 에 해당하는 shadow 가 없습니다.".formatted(url)));
+    }
 }
