@@ -8,10 +8,9 @@ import javax.persistence.*;
 import java.util.List;
 
 
-@Data
 @Entity
-@EqualsAndHashCode(exclude = {"shadow"})
-@ToString(exclude = {"shadow"})
+@Getter
+@Setter
 public class Keyword {
 
     @Id // primary key

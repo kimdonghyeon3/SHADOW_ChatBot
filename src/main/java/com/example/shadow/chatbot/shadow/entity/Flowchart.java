@@ -4,10 +4,9 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Data
 @Entity
-@EqualsAndHashCode(exclude = {"keyword","flow"})
-@ToString(exclude = {"keyword","flow"})
+@Getter
+@Setter
 public class Flowchart {
     @Id // primary key
     @GeneratedValue(strategy = GenerationType.IDENTITY) // auto_increment

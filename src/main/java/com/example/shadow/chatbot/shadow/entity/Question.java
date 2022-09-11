@@ -1,15 +1,12 @@
 package com.example.shadow.chatbot.shadow.entity;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Data
 @Entity
-@EqualsAndHashCode(exclude = {"keyword"})
-@ToString(exclude = {"keyword"})
+@Getter
+@Setter
 public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
