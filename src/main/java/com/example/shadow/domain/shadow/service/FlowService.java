@@ -33,6 +33,7 @@ public class  FlowService{
         for(KeywordDto keyword : keywords){
             List<FlowDto> flows = keyword.getFlow();
                 for(int i = 0 ; i < flows.size() ; i++){
+                    System.out.println("여기가 언제 실행되고 오류가나니?");
                     save(new Flow(),flows.get(i).getName(),flows.get(i).getDescription(),flows.get(i).getUrl());
                 }
             }

@@ -70,6 +70,11 @@ dependencies {
 	//gson
 	implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.1'
 
+	// email
+	implementation 'org.springframework.boot:spring-boot-starter-mail:2.7.3'
+
+
+
 
 }
 

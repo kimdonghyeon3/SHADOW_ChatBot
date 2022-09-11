@@ -27,7 +27,7 @@ public class SecurityConfig {
             "/css/**",
             "/js/**",
             "/assets/**",
-            "/error/**"
+            "/error/**",
     }; // 정적 파일 인가 없이 모두 허용
     private static final String[] AUTH_ALL_LIST = {
             "/singup/**",
