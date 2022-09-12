@@ -28,5 +28,4 @@ public class Flow {
     @OneToMany(mappedBy = "flow")
     private List<Flowchart> flowcharts;
 
-    // 홈버튼, 마이페이, 조회페이지
 }
