@@ -54,7 +54,14 @@ public class ShadowController {
     public String test(Model model) {
         List<Shadow> shadowList = this.shadowService.findAll();
         model.addAttribute("shadowList", shadowList);
-        return "test";
+        return "testPage";
+    }
+
+    @RequestMapping("/test2")
+    public String test2(Model model) {
+        List<Shadow> shadowList = this.shadowService.findAll();
+        model.addAttribute("shadowList", shadowList);
+        return "testPage2";
     }
 
     @GetMapping("/shadow/create")
