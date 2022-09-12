@@ -75,6 +75,7 @@ public class KeywordService {
                 List<Flowchart> flowcharts = flowChartRepository.findByKeyword(originKeyword);
 
                 for (Flowchart flowchart : flowcharts) {
+                    flowChartRepository.delete(flowchart);
                     flowRepository.delete(flowchart.getFlow());
                 }
 

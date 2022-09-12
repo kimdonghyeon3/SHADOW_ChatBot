@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -97,6 +98,8 @@ public class  FlowService{
                                 continue;
                             }
 
+
+                            flowChartRepository.deleteByFlow(flow);
                             flowRepository.delete(flow);
                         }
                     }else{  //flow가 그대로인 경우
@@ -152,6 +155,9 @@ public class  FlowService{
                                 continue;
                             }
 
+
+
+                            flowChartRepository.deleteByFlow(flow);
                             flowRepository.delete(flow);
                         }
                     }else{  //flow가 그대로인 경우
@@ -206,6 +212,8 @@ public class  FlowService{
                             continue;
                         }
 
+                        Flowchart findflowchart = flowChartRepository.findByFlow(flow);
+                        flowChartRepository.delete(findflowchart);
                         flowRepository.delete(flow);
                     }
                 }else{  //flow가 그대로인 경우
