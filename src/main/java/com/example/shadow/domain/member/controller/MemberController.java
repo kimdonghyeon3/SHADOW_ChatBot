@@ -32,12 +32,13 @@ public class MemberController {
     private PasswordEncoder passwordEncoder;
 
     @GetMapping("/signup")
-    public String signup(MemberDto memberDto) {
+    public String signup(Model model, MemberDto memberDto) {
+        model.addAttribute("pageTitle", "SignUp");
         return "member/signup_form";
     }
 
     @PostMapping("/signup")
-    public String signup(@Valid MemberDto memberDto, BindingResult bindingResult) {
+    public String signup(Model model, @Valid MemberDto memberDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "member/signup_form";
         }
@@ -47,6 +48,7 @@ public class MemberController {
         }
         log.info("memberDto Name = {}", memberDto.getUsername());
         memberService.create(memberDto.getUsername(), memberDto.getPassword1(), memberDto.getName(), memberDto.getEmail());
+        model.addAttribute("pageTitle", "SignUp");
         return "redirect:/";
     }
 
@@ -56,6 +58,7 @@ public class MemberController {
         if (!check) {
             return ResponseEntity.ok(ResultResponse.of("CHECK_USERNAME_GOOD","사용할 수 있는 아이디입니다.", true));
         } else {
+
             return ResponseEntity.ok(ResultResponse.of("CHECK_USERNAME_BAD","중복된 아이디 입니다." ,false));
         }
     }
@@ -96,14 +99,16 @@ public class MemberController {
         }
     }
     @GetMapping("/login")
-    public String login(MemberDto memberDto) {
+    public String login(Model model, MemberDto memberDto) {
+        model.addAttribute("pageTitle", "SignIn");
         return "member/login_form";
     }
 
     @GetMapping("/members")
     public String detail(Model model, Principal principal){
         Member member = memberService.findByUsername(principal.getName());
-        model.addAttribute("member",member);
+        model.addAttribute("member", member);
+        model.addAttribute("pageTitle", "Profile");
         return "member/member_detail";
     }
 
@@ -116,10 +121,11 @@ public class MemberController {
     public String modify(@PathVariable("id") Long id, Model model, MemberUpdateDto memberUpdateDto) {
         Member member = memberService.findById(id);
         model.addAttribute("member", member);
+        model.addAttribute("pageTitle", "User Modify");
         return "member/member_form";
     }
     @PutMapping("/members/{id}")
-    public String update(@PathVariable Long id, @Valid @ModelAttribute("memberUpdateDto") MemberUpdateDto memberUpdateDto, BindingResult bindingResult) {
+    public String update(Model model, @PathVariable Long id, @Valid @ModelAttribute("memberUpdateDto") MemberUpdateDto memberUpdateDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "member/member_form";
         }
@@ -129,6 +135,7 @@ public class MemberController {
             return "member/member_form";
         }
         memberService.update(memberService.findById(id), memberUpdateDto.getPassword1(), memberUpdateDto.getName(), memberUpdateDto.getEmail());
+        model.addAttribute("pageTitle", "User Modify");
         return "redirect:/";
     }
     @PostMapping("/members/{id}/checkEmail")

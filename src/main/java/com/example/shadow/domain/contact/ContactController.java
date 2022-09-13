@@ -3,6 +3,7 @@ package com.example.shadow.domain.contact;
 import com.example.shadow.domain.contact.dto.ContactDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,14 +23,16 @@ public class ContactController {
     }
 
     @GetMapping("/shadow/contact")
-    public String sendMail() {
+    public String sendMail(Model model) {
+        model.addAttribute("pageTitle", "Contact");
         return "contact/contact_form";
     }
 
     @PostMapping("/shadow/contact")
-    public String sendMail(ContactDto contactDto) {
+    public String sendMail(Model model, ContactDto contactDto) {
         contactService.sendSimpleMessage(contactDto);
-        System.out.println("메일 전송 완료");
-        return "redirect:/";
+        model.addAttribute("pageTitle", "Contact");
+
+        return "redirect:/shadow/contact";
     }
 }

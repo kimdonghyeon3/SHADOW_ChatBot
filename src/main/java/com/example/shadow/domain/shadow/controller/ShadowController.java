@@ -17,14 +17,23 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.BufferedReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+// markdown
+import org.commonmark.node.*;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 
 @Controller
 @Slf4j
@@ -50,11 +59,22 @@ public class ShadowController {
     private final FlowService flowService;
     private final MemberService memberService;
 
+    // Script File 위치 지정
+    private final static String LOCAL_MANUAL_PATH = "static/manuals/";
+
     @RequestMapping("/test")
     public String test(Model model) {
         List<Shadow> shadowList = this.shadowService.findAll();
         model.addAttribute("shadowList", shadowList);
-        return "test";
+        model.addAttribute("pageTitle", "test");
+        return "testPage";
+    }
+
+    @RequestMapping("/test2")
+    public String test2(Model model) {
+        List<Shadow> shadowList = this.shadowService.findAll();
+        model.addAttribute("shadowList", shadowList);
+        return "testPage2";
     }
 
     @GetMapping("/shadow/create")
@@ -66,12 +86,13 @@ public class ShadowController {
         keywordCodes.add("구매목록조회");
 
         model.addAttribute("keywordCodes",keywordCodes);
+        model.addAttribute("pageTitle", "Make Shadow");
         return "shadow/shadow_form";
     }
 
     @PostMapping("/shadow/create")
     @ResponseBody
-    public HashMap<String, String> createShadow(String shadow, Principal principal) throws JsonProcessingException {
+    public HashMap<String, String> createShadow(Model model, String shadow, Principal principal) throws JsonProcessingException {
 
         System.out.println("shadow = " + shadow);
 
@@ -89,6 +110,8 @@ public class ShadowController {
         HashMap<String, String> redirectMsg = new HashMap<>();
         redirectMsg.put("redirect", "/shadow/list");
 
+        model.addAttribute("pageTitle", "Make Shadow");
+
         return redirectMsg;
     }
 
@@ -105,13 +128,14 @@ public class ShadowController {
         keywordCodes.add("구매목록조회");
 
         model.addAttribute("keywordCodes",keywordCodes);
+        model.addAttribute("pageTitle", "Modify Shadow");
 
         return "shadow/shadow_update";
     }
 
     @PostMapping("/shadow/update/{id}")
     @ResponseBody
-    public HashMap<String, String> update(String shadow, @PathVariable Long id, Principal principal) throws JsonProcessingException {
+    public HashMap<String, String> update(Model model, String shadow, @PathVariable Long id, Principal principal) throws JsonProcessingException {
 
         ObjectMapper objectMapper = new ObjectMapper();
         ShadowDto shadowDto = objectMapper.readValue(shadow, ShadowDto.class);
@@ -145,6 +169,8 @@ public class ShadowController {
         HashMap<String, String> redirectMsg = new HashMap<>();
         redirectMsg.put("redirect", "/shadow/detail/"+id);
 
+        model.addAttribute("pageTitle", "Modify Shadow");
+
         return redirectMsg;
     }
 
@@ -152,14 +178,17 @@ public class ShadowController {
     public String list(Model model){
         List<Shadow> shadowList = this.shadowService.findAll();
         model.addAttribute("shadowList", shadowList);
+
+        model.addAttribute("pageTitle", "My Shadow List");
         return "shadow/shadow_list";
     }
 
     @RequestMapping("/shadow/detail/{id}")
-    public String detail(@PathVariable Long id, Model model){
+    public String detail(@PathVariable Long id, Model model) throws Exception {
         Shadow shadow = shadowService.findById(id);
         log.debug("shadow : "+shadow.getName()+" / " + shadow.getMainurl());
         model.addAttribute("shadow", shadow);
+        model.addAttribute("pageTitle", "Shadow Detail");
         List<Keyword> keywords = shadow.getKeywords();
         keywords.forEach(keyword ->
                 {
@@ -175,14 +204,36 @@ public class ShadowController {
                 }
         );
 
+        String page = "example.md";
+        // code viewer(Markdown)
+        String markdownValueFormLocal = getMarkdownValueFormLocal(page);
+
+        Parser parser = Parser.builder().build();
+        Node document = parser.parse(markdownValueFormLocal);
+        HtmlRenderer renderer = HtmlRenderer.builder().build();
+
+        model.addAttribute("contents", renderer.render(document));
+
         return "shadow/flow_list";
     }
 
+    public String getMarkdownValueFormLocal(String manualPage) throws Exception {
+        StringBuilder stringBuilder = new StringBuilder();
+        ClassPathResource classPathResource = new ClassPathResource(LOCAL_MANUAL_PATH + manualPage);
+
+        BufferedReader br = Files.newBufferedReader(Paths.get(classPathResource.getURI()));
+        br.lines().forEach(line -> stringBuilder.append(line).append("\n"));
+
+        return stringBuilder.toString();
+    }
+
     @GetMapping("/shadow/delete/{id}")
-    public String delete(@PathVariable Long id){
+    public String delete(Model model, @PathVariable Long id){
         Shadow shadow = shadowService.findById(id);
         keywordService.delete(shadow);
         shadowService.delete(shadow);
+
+        model.addAttribute("pageTitle", "Shadow Delete");
 
         return "redirect:/shadow/list";
     }

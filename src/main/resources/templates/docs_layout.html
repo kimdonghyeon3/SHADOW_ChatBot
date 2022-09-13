@@ -25,7 +25,7 @@
     <!-- new css -->
     <link rel="apple-touch-icon" sizes="76x76" th:href="@{/new/img/apple-icon.png}">
     <!--    <link rel="icon" type="image/png" th:href="@{/new/img/favicon.png}">-->
-    <title th:text="@{${pageTitle} + ' - Shadow'}"></title>
+    <title>Shadow</title>
     <!--     Fonts and icons     -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
     <!-- Nucleo Icons -->
@@ -37,11 +37,22 @@
     <!-- CSS Files -->
     <link id="pagestyle" th:href="@{/new/css/argon-dashboard.css}" rel="stylesheet" />
     <!-- new css end -->
+
+    <!-- img size -->
+    <style>
+        .img-size {
+            /*width: 1100px;
+            height: 600px;*/
+            max-width:100%;
+            height:auto;
+        }
+    </style>
+
 </head>
 <body class="g-sidenav-show bg-gray-100">
 <div class="min-height-300 bg-primary position-absolute w-100"></div>
 
-<aside th:replace="sidebar :: sidebarFragment"></aside>
+<aside th:replace="docs_sidebar :: docsSidebarFragment"></aside>
 
 <main class="main-content position-relative border-radius-lg ">
     <nav th:replace="navbar :: navbarFragment"></nav>
