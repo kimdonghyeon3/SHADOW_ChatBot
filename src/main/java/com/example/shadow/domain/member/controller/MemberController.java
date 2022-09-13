@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @RequiredArgsConstructor
@@ -30,20 +32,23 @@ public class MemberController {
     private PasswordEncoder passwordEncoder;
 
     @GetMapping("/signup")
-    public String signup(MemberDto memberDto) {
-        return "signup_form";
+    public String signup(Model model, MemberDto memberDto) {
+        model.addAttribute("pageTitle", "SignUp");
+        return "member/signup_form";
     }
 
     @PostMapping("/signup")
-    public String signup(@Valid MemberDto memberDto, BindingResult bindingResult) {
+    public String signup(Model model, @Valid MemberDto memberDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "signup_form";
+            return "member/signup_form";
         }
         if (!memberDto.getPassword1().equals(memberDto.getPassword2())) {
             bindingResult.rejectValue("memberPwd2", "passwordInCorrect", "2개의 패스워드가 일치하지 않습니다.");
-            return "signup_form";
+            return "member/signup_form";
         }
+        log.info("memberDto Name = {}", memberDto.getUsername());
         memberService.create(memberDto.getUsername(), memberDto.getPassword1(), memberDto.getName(), memberDto.getEmail());
+        model.addAttribute("pageTitle", "SignUp");
         return "redirect:/";
     }
 
@@ -53,6 +58,7 @@ public class MemberController {
         if (!check) {
             return ResponseEntity.ok(ResultResponse.of("CHECK_USERNAME_GOOD","사용할 수 있는 아이디입니다.", true));
         } else {
+
             return ResponseEntity.ok(ResultResponse.of("CHECK_USERNAME_BAD","중복된 아이디 입니다." ,false));
         }
     }
@@ -65,37 +71,45 @@ public class MemberController {
             return ResponseEntity.ok(ResultResponse.of("CHECK_EMAIL_BAD","중복된 이메일 입니다." ,false));
         }
     }
-
-    @PostMapping("/isCheckedUsername")
-    public ResponseEntity<ResultResponse> checkUsername(@RequestParam boolean isCheckedUsername, @RequestParam boolean isChangedUsername) {
-        log.debug("isChecked : "+ isCheckedUsername);
-        log.debug("isChanged : "+ isChangedUsername);
-        if (isCheckedUsername&&!isChangedUsername) {
-            return ResponseEntity.ok(ResultResponse.of("CHECK_USERNAME_FIN","", true));
-        } else {
-            return ResponseEntity.ok(ResultResponse.of("CHECK_USERNAME_NO","아이디 중복 체크가 필요합니다." ,false));
+    @PostMapping("/isChecked")
+    public ResponseEntity<ResultResponse> checkUsernameAndEmail(@RequestParam boolean isCheckedUsername, @RequestParam boolean isChangedUsername, @RequestParam boolean isCheckedEmail, @RequestParam boolean isChangedEmail) {
+        log.debug("isChecked username : "+ isCheckedUsername);
+        log.debug("isChanged username: "+ isChangedUsername);
+        log.debug("isChecked email : "+ isCheckedEmail);
+        log.debug("isChanged email: "+ isChangedEmail);
+        Map<String,Boolean> data = new HashMap<>();
+        data.put("username",true);
+        data.put("email",true);
+        if (isCheckedUsername && !isChangedUsername && isCheckedEmail && !isChangedEmail) {
+            return ResponseEntity.ok(ResultResponse.of("CHECK_FIN","",data ));
+        } else if(isCheckedEmail && !isChangedEmail){
+            data.replace("username", false);
+            log.debug("isChecked username : "+ isCheckedUsername);
+            log.debug("isChanged username: "+ isChangedUsername);
+            return ResponseEntity.ok(ResultResponse.of("CHECK_USERNAME_NO","아이디 중복 체크가 필요합니다." ,data));
+        } else if(isCheckedUsername && !isChangedUsername){
+            data.replace("email", false);
+            log.debug("isChecked email : "+ isCheckedEmail);
+            log.debug("isChanged email: "+ isChangedEmail);
+            return ResponseEntity.ok(ResultResponse.of("CHECK_EMAIL_NO","이메일 중복 체크가 필요합니다." ,data));
+        } else{
+            data.replace("username", false);
+            data.replace("email", false);
+            return ResponseEntity.ok(ResultResponse.of("CHECK_ALL_NO","아이디, 이메일 중복 체크가 필요합니다." ,data));
         }
     }
-
-    @PostMapping("/isCheckedEmail")
-    public ResponseEntity<ResultResponse> checkEmail( @RequestParam boolean isCheckedEmail, @RequestParam boolean isChangedEmail) {
-        if (isCheckedEmail&&!isChangedEmail) {
-            return ResponseEntity.ok(ResultResponse.of("CHECK_EMAIL_FIN","", true));
-        } else {
-            return ResponseEntity.ok(ResultResponse.of("CHECK_EMAIL_NO","이메일 중복 체크가 필요합니다." ,false));
-        }
-    }
-
     @GetMapping("/login")
-    public String login(MemberDto memberDto) {
-        return "login_form";
+    public String login(Model model, MemberDto memberDto) {
+        model.addAttribute("pageTitle", "SignIn");
+        return "member/login_form";
     }
 
     @GetMapping("/members")
     public String detail(Model model, Principal principal){
         Member member = memberService.findByUsername(principal.getName());
-        model.addAttribute("member",member);
-        return "member_detail";
+        model.addAttribute("member", member);
+        model.addAttribute("pageTitle", "Profile");
+        return "member/member_detail";
     }
 
     @DeleteMapping("/members/{id}")
@@ -107,19 +121,21 @@ public class MemberController {
     public String modify(@PathVariable("id") Long id, Model model, MemberUpdateDto memberUpdateDto) {
         Member member = memberService.findById(id);
         model.addAttribute("member", member);
-        return "member_form";
+        model.addAttribute("pageTitle", "User Modify");
+        return "member/member_form";
     }
     @PutMapping("/members/{id}")
-    public String update(@PathVariable Long id, @Valid @ModelAttribute("memberUpdateDto") MemberUpdateDto memberUpdateDto, BindingResult bindingResult) {
+    public String update(Model model, @PathVariable Long id, @Valid @ModelAttribute("memberUpdateDto") MemberUpdateDto memberUpdateDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "member_form";
+            return "member/member_form";
         }
         if (!memberUpdateDto.getPassword1().equals(memberUpdateDto.getPassword2())) {
             bindingResult.rejectValue("memberPwd2", "passwordInCorrect",
                     "2개의 패스워드가 일치하지 않습니다.");
-            return "member_form";
+            return "member/member_form";
         }
         memberService.update(memberService.findById(id), memberUpdateDto.getPassword1(), memberUpdateDto.getName(), memberUpdateDto.getEmail());
+        model.addAttribute("pageTitle", "User Modify");
         return "redirect:/";
     }
     @PostMapping("/members/{id}/checkEmail")

@@ -1,11 +1,12 @@
 package com.example.shadow.domain.shadow.entity;
 
+import com.example.shadow.domain.member.entity.Member;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
-
 
 @Entity
 @Getter
@@ -23,7 +24,7 @@ public class Keyword {
     private Boolean favorite;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "keyword", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "keyword", fetch = FetchType.EAGER)
     private List<Flowchart> flowcharts;
 
     @ManyToOne
@@ -31,6 +32,6 @@ public class Keyword {
     private Shadow shadow;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "keyword", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "keyword")
     private List<Question> questions;
 }

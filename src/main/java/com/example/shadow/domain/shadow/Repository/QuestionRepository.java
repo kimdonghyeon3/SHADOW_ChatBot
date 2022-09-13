@@ -1,4 +1,4 @@
-package com.example.shadow.domain.shadow.Repository;
+package com.example.shadow.domain.shadow.repository;
 
 import com.example.shadow.domain.shadow.entity.Question;
 import org.springframework.data.jpa.repository.JpaRepository;

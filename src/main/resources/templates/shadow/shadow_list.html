@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:th="http://www.thymeleaf.org"
+        layout:decorate="~{layout}">
+
+<div layout:fragment="content" class="container-fluid py-4">
+    <div class="row">
+        <div class="col-lg-15 mb-lg-0 mb-4">
+            <div class="card z-index-2 h-100">
+                <div class="card-header pb-0 pt-3 bg-transparent">
+<!--                    <h6 class="text-capitalize">Shadow List</h6>-->
+                </div>
+                <div class="card-body p-3">
+                    <div class="chart" style="height: 100%;">
+                        <h2>My Shopping Mall List</h2>
+                        <hr/>
+
+                        <table class="table">
+                            <!--        <thead class="table-dark">-->
+                            <thead>
+                            <tr class="text-center">
+                                <th>쇼핑몰 명</th>
+                                <th> 주소 </th>
+                                <th> 수정 </th>
+                                <th> 삭제 </th>
+                            </tr>
+                            </thead>
+                            <tbody class="tbody">
+                            <tr th:each="shadow : ${shadowList}" class="text-center datas"> <!-- th:object로 만들면 된다... db값을 가져와서 반복-->
+                                <td>
+                                    <a th:href="@{|/shadow/detail/${shadow.id}|}" th:text="${shadow.name}"></a>
+                                </td>
+                                <td>
+                                    <a th:text="${shadow.mainurl}"></a>
+                                </td>
+                                <td>
+                                    <a th:href="@{|/shadow/update/${shadow.id}|}"> 수정</a>
+                                </td>
+                                <td>
+                                    <a onclick="if ( !confirm('정말로 삭제하시겠습니까?') ) return false;" th:href="@{|/shadow/delete/${shadow.id}|}"> 삭제</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</html>

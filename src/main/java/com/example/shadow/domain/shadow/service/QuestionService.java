@@ -1,6 +1,6 @@
 package com.example.shadow.domain.shadow.service;
 
-import com.example.shadow.domain.shadow.Repository.QuestionRepository;
+import com.example.shadow.domain.shadow.repository.QuestionRepository;
 import com.example.shadow.domain.shadow.entity.Keyword;
 import com.example.shadow.domain.shadow.entity.Question;
 import lombok.RequiredArgsConstructor;

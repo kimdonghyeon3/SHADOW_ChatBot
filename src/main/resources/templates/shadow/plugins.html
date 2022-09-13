@@ -1,0 +1,22 @@
+<html
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
+        layout:decorate="~{layout}">
+<div layout:fragment="content" class="container my-3">
+    <!-- 사이드 바 -->
+    <nav th:replace="sidebar :: sidebarFragment"></nav>
+    <!-- 헤더-->
+    <nav th:replace="header :: headerFragment"></nav>
+    <div id="page-top"><h2>내 쇼핑몰에 설치하기</h2></div>
+    <!-- Page Content-->
+    <p>web에 설치하기</p>
+    <p>아래의 챗봇 코드를 복사하여 웹페이지 HTML 하단에 붙여 넣어주세요.</p>
+    <p>온라인 상태의 웹페이지에만 설치가 가능하여 로컬에서 설치할 시 화면에 적용되지 않습니다.</p>
+    <p>챗봇 설치는 Chrome과 Edge 브라우저 사용을 권장합니다.</p>
+    <button>JavaScript</button>
+    <button>복사</button>
+    <div>
+        <p>코드블럭</p>
+    </div>
+</div>
+</html>

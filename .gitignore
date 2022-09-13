@@ -39,3 +39,5 @@ out/
 ### mysql properties ###
 application-mysql.properties
 
+### email properties ###
+application-email.properties
