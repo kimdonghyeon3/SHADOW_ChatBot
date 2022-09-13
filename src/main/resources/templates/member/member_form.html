@@ -24,8 +24,8 @@
 
                             <form th:action="@{|/members/${member.id}|}" th:object="${memberUpdateDto}" method="post"
                                   onsubmit="SubmitForm(this); return false;">
-                                <div th:replace="form_errors :: formErrorsFragment"></div>
-                                <div id="resultDiv" th:replace="login_errors :: loginAlertFragment(${alert}, ${msg})"></div>
+                                <div th:replace="member/form_errors :: formErrorsFragment"></div>
+                                <div id="resultDiv" th:replace="member/login_errors :: loginAlertFragment(${alert}, ${msg})"></div>
                                 <input type="hidden" name="_method" value="put"/>
 
                                 <div class="mb-3">
