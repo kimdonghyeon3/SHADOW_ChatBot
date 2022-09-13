@@ -13,13 +13,113 @@
                 </div>
                 <div class="card-body p-3">
                     <div class="chart" style="height: 100%;">
-                        <div id="page-top"><h2>shadow 튜토리얼</h2></div>
+                        <h2>Tutorial List</h2>
+                        <hr/>
+                        <div id="navbar-example3" class="navbar navbar-light bg-light flex-column align-items-stretch p-3">
+                            <div class="nav nav-pills flex-column">
+                                <a class="nav-link" href="#shadow-introduce">Introduction</a>
+                                <div class="nav nav-pills flex-column">
+                                    <a class="nav-link ms-3 my-1" href="#shadow-explanation">About Shadow Service</a>
+                                    <a class="nav-link ms-3 my-1" href="#shadow-page">Shadow Page</a>
+                                </div><br>
+                                <a class="nav-link" href="#make-new-shadow">Make New Shadow</a>
+                                <div class="flex-column">
+                                    <a class="nav-link ms-3 my-1" href="#login">1. Login</a>
+                                    <a class="nav-link ms-3 my-1" href="#login-form">2. Login Form</a>
+                                    <a class="nav-link ms-3 my-1" href="#make-shadow">3. Make Shadow</a>
+                                    <a class="nav-link ms-3 my-1" href="#insert-info">4. Insert Info</a>
+                                    <a class="nav-link ms-3 my-1" href="#add-or-remove-keyword">4-1. Add/Remove Keyword</a>
+                                    <a class="nav-link ms-3 my-1" href="#created-successfully">5. Created Successfully!</a>
+                                </div><br>
+                                <a class="nav-link" href="#shadow-management">Shadow Management</a>
+                                <div class="nav nav-pills flex-column">
+                                    <a class="nav-link ms-3 my-1" href="#shadow-modify">1-1. Shadow Modify</a>
+<!--                                    <a class="nav-link ms-3 my-1" href="#shadow-modify2">1-2. Shadow Modify2</a>-->
+                                    <a class="nav-link ms-3 my-1" href="#shadow-delete">2-1. Shadow Delete</a>
+<!--                                    <a class="nav-link ms-3 my-1" href="#shadow-delete2">2-2. Shadow Delete2</a>-->
+<!--                                    <a class="nav-link ms-3 my-1" href="#shadow delete3">2-3. Shadow Delete3</a>-->
+                                </div>
+                            </div>
+                        </div>
+                        <hr><br>
+                        <div id="page-top"><h2 id="shadow-introduce">Introduction</h2></div><br>
                         <!-- Page Content-->
+                        <h4 id="shadow-explanation">About Shadow Service</h4>
+                        <hr/>
+                        <p>Shadow는 인터넷 쇼핑몰의 아이콘을 설명하고, 고객이 이용하고자 하는 메뉴를 찾아주며, 원하는 요구사항에 대한 방법을 안내하는 서비스입니다.</p>
+                        <img class="img-size" style="max-width:100%; height:auto;" th:src="@{/images/aboutshadow.PNG}"/>
+                        <hr><br>
+                        <h4 id="shadow-page">Shadow Page</h4>
+                        <hr/>
+                        <p>Shadow 메인페이지 입니다. </p>
+                        <img class="img-size" style="max-width:100%; height:auto;" th:src="@{/images/shadowmain2.PNG}"/>
 
-                        <p>여기는 docs 안에 installation 쪽을 보여줘도 괜찮을 것 같아요</p>
-                        <p>여기는 docs 안에 installation 쪽을 보여줘도 괜찮을 것 같아요</p>
-                        <p>여기는 docs 안에 installation 쪽을 보여줘도 괜찮을 것 같아요</p>
-                        <p>여기는 docs 안에 installation 쪽을 보여줘도 괜찮을 것 같아요</p>
+                        <hr><br><br>
+                        <hr><br>
+                        <div id="page1"><h2 id="make-new-shadow">Make New Shadow</h2></div><br>
+                        <!-- Page Content-->
+                        <h4 id="login">1. Login</h4>
+                        <hr/>
+                        <p>강조되어 있는 로그인 버튼을 클릭하여 로그인 화면으로 이동합니다.</p>
+                        <img class="img-size" style="max-width:100%; height:auto;" th:src="@{/images/main_logout.PNG}"/>
+                        <hr><br>
+                        <h4 id="login-form">2. Login Form</h4>
+                        <hr/>
+                        <p>아이디와 비밀번호를 입력 후 로그인 버튼을 클릭합니다.</p>
+                        <img class="img-size" style="max-width:100%; height:auto;" th:src="@{/images/login_form.PNG}"/>
+                        <hr><br>
+                        <h4 id="make-shadow">3. Make Shadow</h4>
+                        <hr/>
+                        <p>새로운 Shadow를 만들기 위해 강조되어 있는 Make Shadow버튼을 클릭합니다.</p>
+                        <img class="img-size" style="max-width:100%; height:auto;" th:src="@{/images/main_login.PNG}"/>
+                        <hr><br>
+                        <h4 id="insert-info">4. Insert Info</h4>
+                        <hr/>
+                        <p>새로만들 Shadow의 정보를 입력 후 챗봇 생성 버튼을 클릭합니다.</p>
+                        <img class="img-size" style="max-width:100%; height:auto;" th:src="@{/images/make_shadow.PNG}"/>
+                        <hr><br>
+                        <h4 id="add-or-remove-keyword">4-1. Add/remove Keyword</h4>
+                        <hr/>
+                        <p>키워드 추가 혹은 삭제를 위해 버튼을 클릭합니다.</p>
+                        <img class="img-size" style="max-width:100%; height:auto;" th:src="@{/images/keyword.PNG}"/>
+                        <hr><br>
+                        <h4 id="created-successfully">5. Created successfully!</h4>
+                        <hr/>
+                        <p>Smart한 쇼핑을 위한 Shadow가 성공적으로 생성되었습니다!</p>
+                        <img class="img-size" style="max-width:100%; height:auto;" th:src="@{/images/new_shadow.PNG}"/>
+                        <hr><br><br>
+                        <div id="page2"><h2 id="shadow-management">Shadow Management</h2></div><br>
+                        <!-- Page Content-->
+                        <h4>1. Shadow List</h4>
+                        <hr/>
+                        <p>Shadow에 저장되어 있는 쇼핑몰의 정보를 수정합니다.</p>
+                        <img class="img-size" style="max-width:100%; height:auto;" th:src="@{/images/shadow_list.PNG}"/>
+                        <hr><br>
+                        <h4 id="shadow-modify">1-1. Shadow Modify</h4>
+                        <hr/>
+                        <p>1번 버튼을 클릭하여 만들어 둔 Shadow List를 확인합니다. 그리고 2번 버튼을 클릭하여 수정을 시작합니다.</p>
+                        <img class="img-size" style="max-width:100%; height:auto;" th:src="@{/images/shadow_modify.PNG}"/>
+                        <hr><br>
+                        <h4 id="shadow-modify2">1-2. Shadow Modify2</h4>
+                        <hr/>
+                        <p>Shadow에 저장되어 있는 쇼핑몰의 정보를 수정합니다.</p>
+                        <img class="img-size" style="max-width:100%; height:auto;" th:src="@{/images/modify_form.PNG}"/>
+                        <hr><br>
+                        <h4 id="shadow-delete">2-1. Shadow Delete</h4>
+                        <hr/>
+                        <p>1번 버튼을 클릭하여 만들어 둔 Shadow List를 확인합니다. 그리고 2번 버튼을 클릭하여 삭제를 시작합니다.</p>
+                        <img class="img-size" style="max-width:100%; height:auto;" th:src="@{/images/shadow_delete.PNG}"/>
+                        <hr><br>
+                        <h4 id="shadow-delete2">2-2. Shadow Delete2</h4>
+                        <hr/>
+                        <p>삭제 버튼 클릭 시 띄워지는 창의 예 버튼을 클릭합니다.</p>
+                        <img class="img-size" style="max-width:100%; height:auto;" th:src="@{/images/delete_button.PNG}"/>
+                        <hr><br>
+                        <h4 id="shadow delete3">2-3. Shadow Delete3</h4>
+                        <hr/>
+                        <p>"예" 버튼을 클릭하면 성공적으로 Shadow가 삭제됩니다.</p>
+                        <img class="img-size" style="max-width:100%; height:auto;" th:src="@{/images/fin_delete.PNG}"/>
+                        <hr><br>
                     </div>
                 </div>
             </div>
