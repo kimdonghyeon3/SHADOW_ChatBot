@@ -3,7 +3,7 @@
         xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
         xmlns:th="http://www.thymeleaf.org"
         layout:decorate="~{layout}">
-
+<!-- 고쳐보자 대기-->
 <div layout:fragment="content" class="container-fluid py-4">
     <div class="row">
         <div class="col-lg-15 mb-lg-0 mb-4">
@@ -13,70 +13,91 @@
                 </div>
                 <div class="card-body p-3">
                     <div class="chart" style="height: 100%;">
-                        <div id="page-top"> <h2>shadow 생성 폼</h2></div>
+                        <div  class="mb-5" id="page-top"> <h2>shadow 생성</h2></div>
                         <!-- Page Content-->
 
-                        <h4>내 쇼핑몰 정보 입력하기</h4>
+                        <h4>쇼핑몰 정보 입력하기</h4>
                         <hr/>
                         <form>
-                            <div class="input-group mb-3">
-                                <span class="input-group-text" id="basic-addon1">쇼핑몰 명</span>
-                                <input type="text" name="name" class="form-control name" placeholder="쇼핑몰 명을 입력해주세요">
+                            <div class="input-group input-group-lg mb-3">
+                                <span class="input-group-text font-weight-bold" id="inputGroup-sizing-lg">쇼핑몰 명</span>
+                                <input type="text" name="name" class="form-control name" placeholder="  쇼핑몰 명을 입력해주세요" aria-describedby="inputGroup-sizing-lg">
                             </div>
 
-                            <div class="input-group mb-5">
-                                <span class="input-group-text" id="basic-addon2">쇼핑몰 주소</span>
-                                <input type="text" name="mainurl" class="form-control mainurl" placeholder="ex) www.coupang.com">
+
+                            <div class="input-group input-group-lg mb-2">
+                                <span class="input-group-text font-weight-bold" id="inputGroup-sizing-lg2">쇼핑몰 주소</span>
+                                <input type="text" name="mainurl" class="form-control mainurl" placeholder=" ex) www.coupang.com" aria-describedby="inputGroup-sizing-lg">
                             </div>
+                            <hr class="mb-5"/>
+                            <h4>쇼핑몰 순서도 등록하기</h4>
 
-                            <h4>내 쇼핑몰 순서도 등록하기</h4>
-                            <hr/>
+                            <table class="table table-hover">
 
-                            <table class="table">
-                                <thead>
-                                <tr class="text-center">
-                                    <th>키워드</th>
-                                    <th style="width:70%">순서도</th>
-                                    <th>자주찾는 목록</th>
-                                </tr>
+                                <thead class="table">
+                                    <tr class="text-center">
+                                        <th class="fw-bolder">키워드</th>
+                                        <th class="fw-bolder" style="width:70%">순서도</th>
+                                        <th class="fw-bolder">자주찾는 목록</th>
+                                    </tr>
                                 </thead>
+
                                 <tbody class="tbody">
-                                <tr class="text-center datas">
-                                    <td>
-                                        <select class="form-select keyword" name="keyword">
-                                            <option value="">==키워드 선택==</option>
-                                            <option th:each="keywordCode : ${keywordCodes}" th:value="${keywordCode}"
-                                                    th:text="${keywordCode}">FAST</option>
-                                        </select>
-                                    </td>
+                                    <tr class="text-center datas" style="border-top:2px solid lightgray">
 
-                                    <td class="text-start flows">
-                                        <input name="flow" type="text" class="mb-3 flow" />
-                                        <div class="input-group mb-3">
-                                            <span class="input-group-text">안내메시지</span>
-                                            <input type="text" name="description" class="form-control description" placeholder="해당 페이지에서 안내할 멘트를 입력해주세요">
-                                        </div>
-                                        <div class="input-group mb-3">
-                                            <span class="input-group-text">url</span>
-                                            <input type="text" name="url" class="form-control url" placeholder="ex) www.coupang.com/mycoupang">
-                                        </div>
-                                        <button type="button" class="btn btn-primary ml-3 addflowbtn" onclick="addFlow(this)"> + </button>
-                                        <button type="button" class="btn btn-primary ml-3 deleteflowbtn" onclick="deleteFlow(this)"> - </button>
-                                    </td>
+                                        <!--키워드-->
+                                        <td>
+                                            <select class="form-select keyword font-weight-bold" name="keyword">
+                                                <option class="font-weight-bold" value="" style="text-align: center"> 키워드 선택 </option>
+                                                <option class="font-weight-bold" th:each="keywordCode : ${keywordCodes}" th:value="${keywordCode}"
+                                                        th:text="${keywordCode}">FAST</option>
+                                            </select>
+                                        </td>
 
-                                    <td><input class="form-check-input favorite" name="favorite" type="checkbox" id="flexCheckDefault" style="border: 1px solid #bebfc5">
-                                    </td>
-                                </tr>
+                                        <!--순서도-->
+                                        <td class="text-start flows">
+
+                                            <div class="input-group mb-3 flow-box">
+                                                <span class="input-group-text font-weight-bold">목적지</span>
+                                                <input type="text" name="flow" class="form-control flow" placeholder="이동할 목적지를 입력해주세요">
+                                            </div>
+
+<!--                                            <input name="flow" type="text" class="mb-3 flow" />-->
+
+                                            <div class="input-group mb-3 description-box">
+                                                <span class="input-group-text font-weight-bold">안내메시지</span>
+                                                <input type="text" name="description" class="form-control description" placeholder="해당 페이지에서 안내할 멘트를 입력해주세요">
+                                            </div>
+
+                                            <div class="input-group mb-3 url-box border-bottom-xl pb-4">
+                                                <span class="input-group-text font-weight-bold">url</span>
+                                                <input type="text" name="url" class="form-control url" placeholder="ex) www.coupang.com/mycoupang">
+                                                <hr/>
+                                            </div>
+
+                                            <button type="button" class="btn btn-primary ml-3 addflowbtn" onclick="addFlow(this)"> + </button>
+                                            <button type="button" class="btn btn-primary ml-3 deleteflowbtn" onclick="deleteFlow(this)"> - </button>
+                                        </td>
+
+                                        <!--자주찾는 목록-->
+                                        <td>
+                                            <input class="form-check-input favorite" name="favorite" type="checkbox" id="flexCheckDefault" style="border: 1px solid #bebfc5">
+                                        </td>
+
+                                    </tr>
                                 </tbody>
+
                             </table>
 
-                            <button type="button" class="btn btn-primary mb-3" onclick="addKeyword()">키워드 추가</button>
-                            <button type="button" class="btn btn-primary mb-3" onclick="deleteKeyword()">키워드 제거</button>
-
-                            <p>
-                                <button type="button" class="btn btn-primary btn-sm create_shadow">챗봇 생성</button>
-                            </p>
-
+                            <div class="row">
+                                <div class="col-sm-12 col-lg-6 text-lg-start text-center ps-2">
+                                    <button type="button" class="btn btn-primary mb-3" onclick="addKeyword()">키워드 추가</button>
+                                    <button type="button" class="btn btn-primary mb-3" onclick="deleteKeyword()">키워드 제거</button>
+                                </div>
+                                <div class="col-sm-12 col-lg-6 text-lg-end text-center pe-7">
+                                    <button type="button" class="btn btn-primary create_shadow">챗봇 생성</button>
+                                </div>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -88,66 +109,31 @@
 <script layout:fragment="script" type='text/javascript'>
 
     function addFlow(e){
-
-        //console.log("flow 추가 버튼");
-        //console.log(e.parentNode);
         var flows = e.parentNode;
-        let children = flows.children;
-        //console.log(children);
-        //document.getElementsByClassName("flows")[0];
         var flag = e;
-        //document.getElementsByClassName("addflowbtn")[0];
 
-        var flow = document.createElement("input");
+        var flowTag = flows.getElementsByClassName("flow-box")[0].cloneNode(true);
+        flowTag.getElementsByClassName("flow")[0].value = '';
 
-        var flow_description = document.createElement("div");
-        var flow_description_span = document.createElement("span");
-        var flow_description_input = document.createElement("input");
+        var descriptionTag = flows.getElementsByClassName("description-box")[0].cloneNode(true);
+        descriptionTag.getElementsByClassName("description")[0].value = '';
 
-        var flow_url = document.createElement("div")
-        var flow_url_span = document.createElement("span");
-        var flow_url_input = document.createElement("input");
+        var urlTag = flows.getElementsByClassName("url-box")[0].cloneNode(true);
+        urlTag.getElementsByClassName("url")[0].value = '';
 
-        flow.setAttribute("type","text");
-        flow.setAttribute("class","mb-3 flow");
-        flow.setAttribute("name","flow");
+        flows.insertBefore(flowTag, flag);
+        flows.insertBefore(descriptionTag, flag);
+        flows.insertBefore(urlTag, flag);
 
-        flow_description.setAttribute("class","input-group mb-3");
-        flow_description_span.setAttribute("class","input-group-text");
-        flow_description_input.setAttribute("type","text");
-        flow_description_input.setAttribute("class","form-control description");
-        flow_description_input.setAttribute("placeholder","해당 페이지에서 안내할 멘트를 입력해주세요");
-        flow_description_input.setAttribute("name","description");
-        flow_description_span.innerHTML = "안내메시지";
-
-        flow_url.setAttribute("class", "input-group mb-3");
-        flow_url_span.setAttribute("class","input-group-text");
-        flow_url_input.setAttribute("type","text");
-        flow_url_input.setAttribute("class","form-control url");
-        flow_url_input.setAttribute("placeholder","ex) www.coupang.com/mycoupang");
-        flow_url_input.setAttribute("name","url");
-        flow_url_span.innerHTML = "url";
-
-        flow_description.append(flow_description_span, flow_description_input);
-        flow_url.append(flow_url_span, flow_url_input);
-
-        //flows.appendChild(flow);
-        flows.insertBefore(flow, flag);
-        flows.insertBefore(flow_description, flag);
-        flows.insertBefore(flow_url, flag);
+        flag.scrollIntoView();
     }
 
     function deleteFlow(e){
         var flows = e.parentNode;
         let children = flows.children;
 
-        console.log("여기 실행되니?");
-        console.log(children.length);
-
-
         if(children.length > 5){
             for(let i = 0 ; i < 3 ; i++){
-                console.log("삭제코드 실행");
                 flows.removeChild(children[children.length-3]);
             }
         }
@@ -156,94 +142,24 @@
     function addKeyword(){
 
         var flows = document.getElementsByClassName("tbody")[0];
+        let cloneTag = flows.children[0].cloneNode(true);
+        let flowsTag = cloneTag.getElementsByClassName("flows")[0];
+        let flowsTagChilds = flowsTag.children;
+        let length = flowsTagChilds.length;
 
-        //<tr class="text-center datas">
-        var newRow = flows.insertRow(flows.rows.length);
-        newRow.setAttribute("class","text-center datas");
+        for(let i = 0 ; i < length-5 ; i ++){
+            flowsTag.removeChild(flowsTagChilds[0]);
+        }
 
-        var cell1 = newRow.insertCell(0);
-        //<td class="text-start flows">
-        var cell2 = newRow.insertCell(1);
-        cell2.setAttribute("class",'text-start flows');
-        var cell3 = newRow.insertCell(2);
+        let input = cloneTag.getElementsByTagName("input");
 
-        //col1 채우기<input type="text" class="mb-3" />
-        var keywordClone = document.getElementsByClassName("keyword")[0];
-        console.log(keywordClone);
-        var keyword = keywordClone.cloneNode(true);
-        console.log(keyword);
-        //var keyword = document.createElement("select");
-        // keyword.setAttribute("class","form-select keyword");
-        // keyword.setAttribute("name","keyword");
-        // var option1 = document.createElement("option")
-        // option1.innerHTML = "==키워드 선택";
-        // var option2 = document.createElement("option")
-        // option2.setAttribute("th:each","keywordCode : ${keywordCodes}");
-        // option2.setAttribute("th:value","${keywordCode}");
-        // option2.setAttribute("th:text","${keywordCode}");
-        // keyword.append(option1, option2);
+        for(let i = 0 ; i < input.length ; i++){
+            input[i].value = "";
+        }
+        cloneTag.getElementsByClassName("favorite")[0].checked = false;
 
-        //col2 채우기
-        var flow = document.createElement("input");
-
-        var flow_description = document.createElement("div");
-        var flow_description_span = document.createElement("span");
-        var flow_description_input = document.createElement("input");
-
-        var flow_url = document.createElement("div")
-        var flow_url_span = document.createElement("span");
-        var flow_url_input = document.createElement("input");
-
-        flow.setAttribute("type","text");
-        flow.setAttribute("class","mb-3 flow");
-        flow.setAttribute("name","flow");
-
-        flow_description.setAttribute("class","input-group mb-3");
-        flow_description_span.setAttribute("class","input-group-text");
-        flow_description_input.setAttribute("type","text");
-        flow_description_input.setAttribute("class","form-control description");
-        flow_description_input.setAttribute("placeholder","해당 페이지에서 안내할 멘트를 입력해주세요");
-        flow_description_input.setAttribute("name","description")
-        flow_description_span.innerHTML = "안내메시지";
-
-        flow_url.setAttribute("class", "input-group mb-3");
-        flow_url_span.setAttribute("class","input-group-text");
-        flow_url_input.setAttribute("type","text");
-        flow_url_input.setAttribute("class","form-control url");
-        flow_url_input.setAttribute("placeholder","ex) www.coupang.com/mycoupang");
-        flow_url_input.setAttribute("name","url");
-        flow_url_span.innerHTML = "url";
-
-        //버튼
-        // <button type="button" className="btn btn-primary ml-3 addflowbtn" onClick="addFlow(this)"> + </button>
-        // <button type="button" className="btn btn-primary ml-3 deleteflowbtn" onClick="deleteFlow(this)"> - </button>
-        var addbtn = document.createElement("button");
-        var deletebtn = document.createElement("button");
-
-        addbtn.setAttribute("type","button");
-        addbtn.setAttribute("class","btn btn-primary ml-3 addflowbtn");
-        addbtn.setAttribute("onClick","addFlow(this)");
-        addbtn.innerHTML = "+";
-
-        deletebtn.setAttribute("type","button");
-        deletebtn.setAttribute("class","btn btn-primary ml-3 delteflowbtn");
-        deletebtn.setAttribute("onClick","deleteFlow(this)");
-        deletebtn.innerHTML = "-";
-
-        flow_description.append(flow_description_span, flow_description_input);
-        flow_url.append(flow_url_span, flow_url_input);
-
-        //col3 채우기 <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-        var check = document.createElement("input");
-        check.setAttribute("class","form-check-input favorite");
-        check.setAttribute("type","checkbox");
-        check.setAttribute("id","flexCheckDefault");
-        //check.setAttribute("th:field","*{favorite}");
-
-
-        cell1.append(keyword);
-        cell2.append(flow, flow_description, flow_url, addbtn, deletebtn);
-        cell3.append(check);
+        flows.append(cloneTag);
+        flows.children[flows.children.length - 1].scrollIntoView();
     }
 
     function deleteKeyword(){
@@ -259,7 +175,6 @@
         e.preventDefault();
         var children = $(".tbody").children();
         let length = $(".tbody").children().length;
-        //console.log(" tbody child length : " + length);
 
         var data = {
             name : $(".name").val(),
@@ -269,7 +184,6 @@
 
         for(let i = 0 ; i < length ; i ++){ //keyword 순서 체크 tr태그
             let trTag = children[i];
-            //console.log("trTag" + children[i]);
 
             var keywordData = {
                 name : "",
@@ -286,7 +200,6 @@
                 //첫번째 td = keyword
                 if(j == 0){
                     let keywordTag = tdTag.getElementsByClassName("keyword")[0];
-                    console.log("keyword : " + keywordTag.value);
                     keywordData.name = keywordTag.value;
                 }
 
@@ -294,7 +207,7 @@
                 if(j == 1){
 
                     var tdTagLength = tdTag.getElementsByClassName("flow").length;
-                    //console.log("tdTagLength : " + tdTagLength);
+
                     for(let k = 0 ; k < tdTagLength ; k++){
 
                         var flowData = {
@@ -306,21 +219,16 @@
                         let flowTag = tdTag.getElementsByClassName("flow")[k];
                         let descriptionTag = tdTag.getElementsByClassName("description")[k];
                         let urlTag = tdTag.getElementsByClassName("url")[k];
-                        // console.log("flow : " + flowTag.value);
-                        // console.log("description : " + descriptionTag.value);
-                        // console.log("url : " + urlTag.value);
 
                         flowData.name = flowTag.value;
                         flowData.description = descriptionTag.value;
                         flowData.url = urlTag.value;
-                        //배열에 값 넣기
                         keywordData.flow.push(flowData);
                     }
                 }
                 //세번째 td = favorite
                 if(j == 2){
                     let favoriteTag = tdTag.getElementsByClassName("favorite")[0];
-                    //console.log("favorite : " + favoriteTag.checked);
                     keywordData.favorite = favoriteTag.checked;
                 }
             }
@@ -329,8 +237,7 @@
 
         console.log(data);
 
-        //keyword 중복 체크 중복이 있다면 alert으로 알려주고 return
-
+        //공란 체크
         if(data.name === ""){
             alert("쇼핑몰 명을 입력해 주세요");
             return;
@@ -341,6 +248,7 @@
             return;
         }
 
+        //키워드 중복 방지 체크
         for(var i = 0 ; i < data.keyword.length ; i++){
 
             var keyword = data.keyword[i].name;
@@ -389,9 +297,5 @@
             }
         });
     })
-
 </script>
-
-
-
 </html>

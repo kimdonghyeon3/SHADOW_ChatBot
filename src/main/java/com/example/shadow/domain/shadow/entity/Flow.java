@@ -16,7 +16,7 @@ public class Flow {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // auto_increment
     private Long id;
 
-    @Column(nullable = false, length = 20, unique = true)
+    @Column(nullable = false, length = 20)
     private String name;
 
     @Column
@@ -25,8 +25,7 @@ public class Flow {
     @Column
     private String url;
 
-    @OneToMany(mappedBy = "flow", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "flow")
     private List<Flowchart> flowcharts;
 
-    // 홈버튼, 마이페이, 조회페이지
 }

@@ -26,9 +26,4 @@ public class Flowchart implements Serializable {
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Flow flow;
-    //keyword flow order(column)
-    //반품    홈버튼    1
-    //반품    마이페이지  2
-    //배송조회 홈버튼 1
-    //배송조회 조회페이지 2
 }

@@ -15,4 +15,8 @@ public interface FlowChartRepository  extends JpaRepository<Flowchart, Long> {
     List<Flowchart> findByKeyword(Keyword originKeyword);
 
     List<Flow> findByFlow(Flowchart flowchart);
+
+    Flowchart findByFlow(Flow flow);
+
+    void deleteByFlow(Flow flow);
 }

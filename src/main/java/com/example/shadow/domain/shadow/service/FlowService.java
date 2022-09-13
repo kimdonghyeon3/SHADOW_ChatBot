@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,26 +34,13 @@ public class  FlowService{
         for(KeywordDto keyword : keywords){
             List<FlowDto> flows = keyword.getFlow();
                 for(int i = 0 ; i < flows.size() ; i++){
+                    System.out.println("여기가 언제 실행되고 오류가나니?");
                     save(new Flow(),flows.get(i).getName(),flows.get(i).getDescription(),flows.get(i).getUrl());
                 }
             }
         }
 
     public void update(Shadow originShadow, ShadowDto shadowDto) {
-
-//        log.info("SHADOW name = {}, SHADOW mainurl = {}", originShadow.getName(), originShadow.getMainurl());
-//        for(Keyword k : originShadow.getKeywords()){
-//            log.info("keyword = {}", k.getName());
-//            List<Flowchart> flowCharts = k.getFlowcharts();
-//            if(flowCharts == null){
-//                log.info("아직 flowchart가 만들어지지 않았습니다. 새로생긴 keyword란 말이지");
-//                continue;
-//            }
-//            for (Flowchart flowChart : flowCharts) {
-//                log.info("flow name = {}, flow Description = {}, flow URL = {}", flowChart.getFlow().getName(), flowChart.getFlow().getDescription(), flowChart.getFlow().getUrl());
-//            }
-//            log.info("favorite = {}",k.getFavorite());
-//        }
 
         List<Keyword> originKeywords = originShadow.getKeywords();  //기존 키워드
         List<KeywordDto> keywords = shadowDto.getKeyword();         //수정된 키워드
@@ -81,10 +69,7 @@ public class  FlowService{
                             }
                             Flow flow = save(new Flow(),flowcharts.get(j).getName(),flowcharts.get(j).getDescription(),flowcharts.get(j).getUrl());
 
-                            //따로 flowchart를 만들면,, flow를 찾아올 방법이 없다.
-                            //고유한 id로 찾아야하는데, 가져올 방법이없음..
                             Flowchart flowchart = save(new Flowchart(),keywordRepository.findByNameAndShadow(keywords.get(i).getName(), originShadow),flow,j+1);
-
                         }
                     }else if(originFlowchartsLength > flowchartLength){ //flow가 삭제되었을 경우
                         for(int j = 0 ; j < originFlowchartsLength ; j++){
@@ -96,6 +81,7 @@ public class  FlowService{
                                 continue;
                             }
 
+                            flowChartRepository.deleteByFlow(flow);
                             flowRepository.delete(flow);
                         }
                     }else{  //flow가 그대로인 경우
@@ -109,8 +95,6 @@ public class  FlowService{
                 for(int j = 0 ; j < keywords.get(i).getFlow().size() ; j++){
                     Flow flow = save(new Flow(),keywords.get(i).getFlow().get(j).getName() ,keywords.get(i).getFlow().get(j).getDescription() ,keywords.get(i).getFlow().get(j).getUrl());
 
-                    //따로 flowchart를 만들면,, flow를 찾아올 방법이 없다.
-                    //고유한 id로 찾아야하는데, 가져올 방법이없음..
                     Flowchart flowchart = save(new Flowchart(),keywordRepository.findByNameAndShadow(keywords.get(i).getName(), originShadow),flow,j+1);
                 }
             }
@@ -136,10 +120,7 @@ public class  FlowService{
                             }
                             Flow flow = save(new Flow(),flowcharts.get(j).getName(),flowcharts.get(j).getDescription(), flowcharts.get(j).getUrl());
 
-                            //따로 flowchart를 만들면,, flow를 찾아올 방법이 없다.
-                            //고유한 id로 찾아야하는데, 가져올 방법이없음..
                             Flowchart flowchart = save(new Flowchart(),keywordRepository.findByNameAndShadow(keywords.get(i).getName(), originShadow),flow,j+1);
-
                         }
                     }else if(originFlowchartsLength > flowchartsLength){ //flow가 삭제되었을 경우
                         for(int j = 0 ; j < originFlowchartsLength ; j++){
@@ -151,6 +132,7 @@ public class  FlowService{
                                 continue;
                             }
 
+                            flowChartRepository.deleteByFlow(flow);
                             flowRepository.delete(flow);
                         }
                     }else{  //flow가 그대로인 경우
@@ -160,12 +142,6 @@ public class  FlowService{
                     }
                     continue;
                 }
-                //삭제된 경우( 삭제 keyword + flow추가)
-//                Keyword originKeyword = originKeywords.get(i);
-//                keywordRepository.delete(originKeyword);
-                //아 여기서 없애줘야된다.
-                //삭제되어서 쓰레기 정보가 된다면, 해당 정보를 지워줘야 된다.
-
             }
 
         }else{                                              //키워드 일정 (키워드 수가 일정할 경우)
@@ -188,10 +164,7 @@ public class  FlowService{
                         if(flow.getId() == null){
                             flow = flowRepository.findByName(flow.getName());
                         }
-                        log.debug("flow 191 : "+ flow.getName());
 
-                        //따로 flowchart를 만들면,, flow를 찾아올 방법이 없다.
-                        //고유한 id로 찾아야하는데, 가져올 방법이없음..
                         Flowchart flowchart  = save(new Flowchart(),keywordRepository.findByNameAndShadow(keywords.get(i).getName(), originShadow),flow,j+1);
 
                     }
@@ -205,6 +178,8 @@ public class  FlowService{
                             continue;
                         }
 
+                        Flowchart findflowchart = flowChartRepository.findByFlow(flow);
+                        flowChartRepository.delete(findflowchart);
                         flowRepository.delete(flow);
                     }
                 }else{  //flow가 그대로인 경우
@@ -212,10 +187,6 @@ public class  FlowService{
                         save(originFlowcharts.get(j).getFlow(),flowcharts.get(j).getName(),flowcharts.get(j).getDescription(),flowcharts.get(j).getUrl());
                     }
                 }
-//                Keyword originKeyword = originKeywords.get(i);
-//                originKeyword.setName(keywords.get(i).getName());
-//                originKeyword.setFavorite(keywords.get(i).getFavorite());
-//                keywordRepository.save(originKeyword);
             }
         }
 

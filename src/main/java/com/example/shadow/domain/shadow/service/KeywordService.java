@@ -17,7 +17,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class KeywordService {
-
     private final KeywordRepository keywordRepository;
     private final FlowChartRepository flowChartRepository;
     private final FlowRepository flowRepository;
@@ -75,6 +74,7 @@ public class KeywordService {
                 List<Flowchart> flowcharts = flowChartRepository.findByKeyword(originKeyword);
 
                 for (Flowchart flowchart : flowcharts) {
+                    flowChartRepository.delete(flowchart);
                     flowRepository.delete(flowchart.getFlow());
                 }
 
