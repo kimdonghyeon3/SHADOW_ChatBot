@@ -119,6 +119,7 @@ public class KeywordService {
     }
 
     public Keyword findByNameAndShadow(String keyword, Shadow shadow) {
-        return keywordRepository.findByNameAndShadow(keyword,shadow).orElseThrow(()->new RuntimeException("%s keyword는 없습니다.".formatted(keyword)));
+       // return keywordRepository.findByNameAndShadow(keyword,shadow).orElseThrow(()->new RuntimeException("%s keyword는 없습니다.".formatted(keyword)));
+        return keywordRepository.findByNameAndShadow(keyword,shadow);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.shadow.domain.shadow.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,6 +26,7 @@ public class Flow {
     @Column
     private String url;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "flow")
     private List<Flowchart> flowcharts;
 

@@ -9,10 +9,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface FlowChartRepository  extends JpaRepository<Flowchart, Long> {
-    //Flowchart findByFlow(Flow flow);
+public interface FlowChartRepository extends JpaRepository<Flowchart, Long> {
 
+    Flowchart findByKeyword(long keyword_id);
     List<Flowchart> findByKeyword(Keyword originKeyword);
+    Flowchart findTopByKeywordOrderBySeqDesc(Keyword keyword);
 
     List<Flow> findByFlow(Flowchart flowchart);
 
