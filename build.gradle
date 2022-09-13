@@ -73,6 +73,8 @@ dependencies {
 	// email
 	implementation 'org.springframework.boot:spring-boot-starter-mail:2.7.3'
 
+	// markdown - code viewer
+	implementation 'org.commonmark:commonmark:0.19.0'
 
 
 

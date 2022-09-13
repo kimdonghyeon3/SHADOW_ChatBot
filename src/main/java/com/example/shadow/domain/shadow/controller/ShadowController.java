@@ -17,14 +17,23 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.BufferedReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+// markdown
+import org.commonmark.node.*;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 
 @Controller
 @Slf4j
@@ -49,6 +58,9 @@ public class ShadowController {
     private final FlowChartService flowchartService;
     private final FlowService flowService;
     private final MemberService memberService;
+
+    // Script File 위치 지정
+    private final static String LOCAL_MANUAL_PATH = "static/manuals/";
 
     @RequestMapping("/test")
     public String test(Model model) {
@@ -172,7 +184,7 @@ public class ShadowController {
     }
 
     @RequestMapping("/shadow/detail/{id}")
-    public String detail(@PathVariable Long id, Model model){
+    public String detail(@PathVariable Long id, Model model) throws Exception {
         Shadow shadow = shadowService.findById(id);
         log.debug("shadow : "+shadow.getName()+" / " + shadow.getMainurl());
         model.addAttribute("shadow", shadow);
@@ -192,7 +204,27 @@ public class ShadowController {
                 }
         );
 
+        String page = "example.md";
+        // code viewer(Markdown)
+        String markdownValueFormLocal = getMarkdownValueFormLocal(page);
+
+        Parser parser = Parser.builder().build();
+        Node document = parser.parse(markdownValueFormLocal);
+        HtmlRenderer renderer = HtmlRenderer.builder().build();
+
+        model.addAttribute("contents", renderer.render(document));
+
         return "shadow/flow_list";
+    }
+
+    public String getMarkdownValueFormLocal(String manualPage) throws Exception {
+        StringBuilder stringBuilder = new StringBuilder();
+        ClassPathResource classPathResource = new ClassPathResource(LOCAL_MANUAL_PATH + manualPage);
+
+        BufferedReader br = Files.newBufferedReader(Paths.get(classPathResource.getURI()));
+        br.lines().forEach(line -> stringBuilder.append(line).append("\n"));
+
+        return stringBuilder.toString();
     }
 
     @GetMapping("/shadow/delete/{id}")
