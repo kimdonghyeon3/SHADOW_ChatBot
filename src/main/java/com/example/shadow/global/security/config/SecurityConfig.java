@@ -27,11 +27,16 @@ public class SecurityConfig {
             "/css/**",
             "/js/**",
             "/assets/**",
-            "/error/**"
+            "/error/**",
+            "/new/**",
+            "/img/**",
+            "/manuals/**"
     }; // 정적 파일 인가 없이 모두 허용
     private static final String[] AUTH_ALL_LIST = {
             "/singup/**",
-            "/login/**"
+            "/login/**",
+            "/main/**",
+            "/docs/**"
     }; // 모두 허용
     private static final String[] AUTH_ADMIN_LIST = {
             "/admin/**"
@@ -39,7 +44,9 @@ public class SecurityConfig {
     private static final String[] AUTH_AUTHENTICATED_LIST = {
             "/members/**",
             "/chat/**",
-            "/main/**"
+            "/my/**",
+            "/shadow/**",
+            "/contact/**"
     }; // 인가 필요
 
     private final MemberSecurityService customUserDetailsService;

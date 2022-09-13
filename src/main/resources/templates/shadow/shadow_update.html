@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:th="http://www.thymeleaf.org"
+        layout:decorate="~{layout}">
+
+<div layout:fragment="content" class="container-fluid py-4">
+    <div class="row">
+        <div class="col-lg-15 mb-lg-0 mb-4">
+            <div class="card z-index-2 h-100">
+                <div class="card-header pb-0 pt-3 bg-transparent">
+<!--                    <h2 class="text-capitalize mt-3">Shadow's</h2>-->
+                </div>
+                <div class="card-body p-3">
+                    <div class="chart" style="height: 100%;">
+                        <!-- Page Content-->
+                        <div class="mb-5" id="page-top"> <h2>Shadow 수정</h2></div>
+                        <!-- Page Content-->
+
+                        <h4>쇼핑몰 정보 수정하기</h4>
+                        <hr/>
+                        <form>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text font-weight-bold" id="basic-addon1">쇼핑몰 명</span>
+                                <input type="text" name="name" th:value="${shadow.name}" class="form-control name" placeholder="쇼핑몰 명을 입력해주세요">
+                            </div>
+
+                            <div class="input-group mb-2">
+                                <span class="input-group-text font-weight-bold" id="basic-addon2">쇼핑몰 주소</span>
+                                <input type="text" name="mainurl" th:value="${shadow.mainurl}" class="form-control mainurl" placeholder="ex) www.coupang.com">
+                            </div>
+                            <hr class="mb-5"/>
+                            <h4>쇼핑몰 순서도 수정하기</h4>
+
+                            <table class="table table-hover">
+                                <thead class="table">
+                                    <tr class="text-center">
+                                        <th class="fw-bolder">키워드</th>
+                                        <th class="fw-bolder" style="width:70%">순서도</th>
+                                        <th class="fw-bolder">자주찾는 목록</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="tbody">
+                                <tr class="text-center datas" th:each="keyword : ${shadow.keywords}" style="border-top:2px solid lightgray">
+
+                                    <td>
+                                        <select class="form-select keyword font-weight-bold" name="keyword">
+                                            <option class="font-weight-bold" th:value="${keyword.name}" th:text="${keyword.name}">==키워드 선택==</option>
+                                            <option class="font-weight-bold" th:each="keywordCode : ${keywordCodes}" th:if="${keyword.name != keywordCode}" th:value="${keywordCode}"
+                                                    th:text="${keywordCode}">FAST</option>
+                                        </select>
+                                    </td>
+
+                                    <td class="text-start flows">
+                                        <div th:each="flowchart : ${keyword.flowcharts}" class="get-flows">
+
+<!--                                            <input name="flow" type="text" class="mb-3 flow" th:value="${flowchart.flow.name}" />-->
+                                            <div class="input-group mb-3 flow-box">
+                                                <span class="input-group-text font-weight-bold">목적지</span>
+                                                <input type="text" name="flow" class="form-control flow" placeholder="이동할 목적지를 적어주세요."
+                                                       th:value="${flowchart.flow.name}"/>
+                                            </div>
+
+                                            <div class="input-group mb-3 description-box">
+                                                <span class="input-group-text font-weight-bold">안내메시지</span>
+                                                <input type="text" name="description" class="form-control description" placeholder="해당 페이지에서 안내할 멘트를 입력해주세요"
+                                                       th:value="${flowchart.flow.description}">
+                                            </div>
+
+                                            <div class="input-group mb-3 url-box border-bottom-xl pb-4">
+                                                <span class="input-group-text font-weight-bold">url</span>
+                                                <input type="text" name="url" class="form-control url" placeholder="ex) www.coupang.com/mycoupang"
+                                                       th:value="${flowchart.flow.url}">
+                                            </div>
+
+                                        </div>
+                                        <button type="button" class="btn btn-primary ml-3 addflowbtn" onclick="addFlow(this)"> + </button>
+                                        <button type="button" class="btn btn-primary ml-3 deleteflowbtn" onclick="deleteFlow(this)"> - </button>
+                                    </td>
+
+                                    <td>
+<!--                                        <input class="form-check-input favorite" name="favorite" type="checkbox" id="flexCheckDefault" th:if style="border: 1px solid #bebfc5">-->
+                                        <input class="form-check-input favorite" name="favorite" type="checkbox" id="flexCheckDefault" style="border: 1px solid #bebfc5" th:if="${keyword.favorite}"  checked>
+                                        <input class="form-check-input favorite" name="favorite" type="checkbox" id="flexCheckDefault" style="border: 1px solid #bebfc5" th:if="!${keyword.favorite}">
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="row">
+                                <div class="col-sm-12 col-lg-6 text-lg-start text-center ps-2">
+                                    <button type="button" class="btn btn-primary mb-3" onclick="addKeyword()">키워드 추가</button>
+                                    <button type="button" class="btn btn-primary mb-3" onclick="deleteKeyword()">키워드 제거</button>
+                                </div>
+                                <div class="col-sm-12 col-lg-6 text-lg-end text-center pe-7">
+                                    <button type="button" class="btn btn-primary create_shadow">챗봇 수정</button>
+                                </div>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script layout:fragment="script" type='text/javascript'>
+
+    function addFlow(e){
+        var flows = e.parentNode;
+        var flag = e;
+        var flowbox = flows.getElementsByClassName("get-flows")[0].cloneNode(true);
+        var inputTag = flowbox.getElementsByTagName("input");
+
+        for(let i = 0 ; i < inputTag.length ; i++){
+            inputTag[i].value='';
+        }
+
+        flows.insertBefore(flowbox, flag);
+    }
+
+    function deleteFlow(e){
+        var flows = e.parentNode;
+        let children = flows.children;
+
+        console.log(children[children.length-3]);
+
+        if(children.length > 3){
+            flows.removeChild(children[children.length-3]);
+        }
+    }
+
+    function addKeyword(){
+
+        var flows = document.getElementsByClassName("tbody")[0];
+        let cloneTag = flows.children[0].cloneNode(true);
+        let flowsTag = cloneTag.getElementsByClassName("flows")[0];
+        let flowsTagChilds = flowsTag.children;
+        let length = flowsTagChilds.length;
+
+        for(let i = 0 ; i < length-3 ; i ++){
+            flowsTag.removeChild(flowsTagChilds[0]);
+        }
+
+        let input = cloneTag.getElementsByTagName("input");
+
+        for(let i = 0 ; i < input.length ; i++){
+            input[i].value = "";
+        }
+
+        cloneTag.getElementsByClassName("favorite")[0].checked = false;
+
+        flows.append(cloneTag);
+    }
+
+    function deleteKeyword(){
+        var flows = document.getElementsByClassName("tbody")[0];
+
+        if(flows.rows.length > 1){
+            flows.deleteRow(-1);
+        }
+    }
+
+    $(".create_shadow").click(function (e){
+
+        e.preventDefault();
+        var children = $(".tbody").children();
+        let length = $(".tbody").children().length;
+        //console.log(" tbody child length : " + length);
+
+        var data = {
+            name : $(".name").val(),
+            mainurl : $(".mainurl").val(),
+            keyword : [],
+        }
+
+        for(let i = 0 ; i < length ; i ++){ //keyword 순서 체크 tr태그
+            let trTag = children[i];
+
+            var keywordData = {
+                name : "",
+                flow : [],
+                favorite : false,
+            }
+
+            let trTagChildren =trTag.getElementsByTagName("td");
+
+            for(let j = 0 ; j < trTagChildren.length ; j ++){       //td태그
+                                                                    //console.log(trTagChildren[j]);
+                let tdTag = trTagChildren[j];
+
+                //첫번째 td = keyword
+                if(j == 0){
+                    let keywordTag = tdTag.getElementsByClassName("keyword")[0];
+                    console.log("keyword : " + keywordTag.value);
+                    keywordData.name = keywordTag.value;
+                }
+
+                //두번쨰 td = flow description url
+                if(j == 1){
+
+                    var tdTagLength = tdTag.getElementsByClassName("flow").length;
+
+                    for(let k = 0 ; k < tdTagLength ; k++){
+
+                        var flowData = {
+                            name : "",
+                            description : "",
+                            url : "",
+                        }
+
+                        let flowTag = tdTag.getElementsByClassName("flow")[k];
+                        let descriptionTag = tdTag.getElementsByClassName("description")[k];
+                        let urlTag = tdTag.getElementsByClassName("url")[k];
+
+                        flowData.name = flowTag.value;
+                        flowData.description = descriptionTag.value;
+                        flowData.url = urlTag.value;
+                        keywordData.flow.push(flowData);
+                    }
+                }
+                //세번째 td = favorite
+                if(j == 2){
+                    let favoriteTag = tdTag.getElementsByClassName("favorite")[0];
+                    keywordData.favorite = favoriteTag.checked;
+                }
+            }
+            data.keyword.push(keywordData);
+        }
+
+        console.log(data);
+
+        if(data.name === ""){
+            alert("쇼핑몰 명을 입력해 주세요");
+            return;
+        }
+
+        if(data.mainurl === ""){
+            alert("쇼핑몰 주소를 입력해 주세요");
+            return;
+        }
+
+        for(var i = 0 ; i < data.keyword.length ; i++){
+
+            var keyword = data.keyword[i].name;
+
+            if(keyword === ""){
+                alert("키워드를 선택해 주세요");
+                return;
+            }
+            for(var j = i+1 ; j < data.keyword.length ; j++){
+                console.log("keyword : " + keyword);
+                console.log("data.keyword[j] : " + data.keyword[j]);
+                if(keyword === data.keyword[j].name){
+                    alert("중복된 키워드를 사용하실 수 없습니다. (중복된 키워드 : " + keyword + ")");
+                    return;
+                }
+            }
+            var flows = data.keyword[i].flow;
+            for(var j = 0 ; j < flows.length ; j++){
+                if(flows[j].name === "" || flows[j].description === "" || flows[j].url === ""){
+                    alert("공란이 순서도가 있습니다. 순서도를 채워주세요");
+                    return;
+                }
+            }
+        }
+
+        var shadow = JSON.stringify(data);
+
+        console.log(shadow);
+
+        var id = [[${shadow.id}]];
+
+        $.ajax({
+            url : "/shadow/update/" + id,
+            dataType : "json",
+            type : "POST",
+            data : {
+                shadow : shadow
+            },
+            success: function(data) {
+                console.log(data.redirect);
+                window.location.href = data.redirect;
+            },
+            failure:function(request){
+                alert("Action failure");
+            },
+            error: function(request) {
+                alert("Connection error");
+            }
+        });
+    })
+</script>
+</html>
