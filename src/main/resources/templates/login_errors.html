@@ -1,0 +1,15 @@
+<div id="resultDiv" th:fragment="loginAlertFragment (alert, msg)" >
+    <div id="successMsgDiv" class="d-none alert alert-success alert-dismissable" role="alert">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <p id="successMsg" th:text="${msg}"></p>
+    </div>
+    <div th:if="${alert}=='danger'" class="alert alert-danger alert-dismissable" role="alert">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <p id="dangerMsg" th:text="${msg}"></p>
+    </div>
+    <div th:if="${loginErr} == 'PE'" class="alert alert-danger alert-dismissable text-left" id="pwdErr">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <a aria-hidden="true" data-dismiss="alert" class="close" type="button">×</a>
+        Invalid password.
+    </div>
+</div>
