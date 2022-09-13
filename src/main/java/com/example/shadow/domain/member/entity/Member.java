@@ -3,9 +3,7 @@ package com.example.shadow.domain.member.entity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import javax.persistence.*;
 
 @Getter
@@ -13,28 +11,28 @@ import javax.persistence.*;
 @NoArgsConstructor
 //@NoArgsConstructor(access = AccessLevel.PROTECTED) // 기본생성자 제한으로 누락 방지
 @EntityListeners(AuditingEntityListener.class) // entity crud 전, 후 이벤트 처리
-@Table(name = "member_tbl")
+@Table(name = "member")
 public class Member {
 
     @Id
-    @Column(name="member_uid")
+    @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name="member_id", nullable = false, length = 20, unique = true)
+    @Column(nullable = false, length = 20, unique = true)
     private String username;
 
-    @Column(name = "member_role")
+    @Column
     @Enumerated(EnumType.STRING)
     private MemberRole role;
 
-    @Column(name="member_pwd", nullable = false)
+    @Column(nullable = false)
     private String password;
 
-    @Column(name="member_name", nullable = false, length = 20)
+    @Column(nullable = false, length = 20)
     private String name;
 
-    @Column(name="member_email", unique = true)
+    @Column(unique = true)
     private String email;
 
     @Builder
