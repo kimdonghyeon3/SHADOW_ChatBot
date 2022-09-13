@@ -20,7 +20,7 @@
                             </div>
                         </div>
                         <form th:action="@{/signup}" th:object="${memberDto}" method="post" onsubmit="SubmitForm(this); return false;">
-                            <div th:replace="form_errors :: formErrorsFragment"></div>
+                            <div th:replace="member/form_errors :: formErrorsFragment"></div>
                             <!--        <div id="resultDiv" th:replace="login_errors :: loginAlertFragment(${alert}, ${msg})"></div>-->
                             <div class="mb-3">
                                 <label for="name" class="form-label">이름</label>
