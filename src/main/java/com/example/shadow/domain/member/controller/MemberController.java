@@ -33,17 +33,17 @@ public class MemberController {
 
     @GetMapping("/signup")
     public String signup(MemberDto memberDto) {
-        return "signup_form";
+        return "member/signup_form";
     }
 
     @PostMapping("/signup")
     public String signup(@Valid MemberDto memberDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "signup_form";
+            return "member/signup_form";
         }
         if (!memberDto.getPassword1().equals(memberDto.getPassword2())) {
             bindingResult.rejectValue("memberPwd2", "passwordInCorrect", "2개의 패스워드가 일치하지 않습니다.");
-            return "signup_form";
+            return "member/signup_form";
         }
         log.info("memberDto Name = {}", memberDto.getUsername());
         memberService.create(memberDto.getUsername(), memberDto.getPassword1(), memberDto.getName(), memberDto.getEmail());
@@ -97,14 +97,14 @@ public class MemberController {
     }
     @GetMapping("/login")
     public String login(MemberDto memberDto) {
-        return "login_form";
+        return "member/login_form";
     }
 
     @GetMapping("/members")
     public String detail(Model model, Principal principal){
         Member member = memberService.findByUsername(principal.getName());
         model.addAttribute("member",member);
-        return "member_detail";
+        return "member/member_detail";
     }
 
     @DeleteMapping("/members/{id}")
@@ -116,17 +116,17 @@ public class MemberController {
     public String modify(@PathVariable("id") Long id, Model model, MemberUpdateDto memberUpdateDto) {
         Member member = memberService.findById(id);
         model.addAttribute("member", member);
-        return "member_form";
+        return "member/member_form";
     }
     @PutMapping("/members/{id}")
     public String update(@PathVariable Long id, @Valid @ModelAttribute("memberUpdateDto") MemberUpdateDto memberUpdateDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "member_form";
+            return "member/member_form";
         }
         if (!memberUpdateDto.getPassword1().equals(memberUpdateDto.getPassword2())) {
             bindingResult.rejectValue("memberPwd2", "passwordInCorrect",
                     "2개의 패스워드가 일치하지 않습니다.");
-            return "member_form";
+            return "member/member_form";
         }
         memberService.update(memberService.findById(id), memberUpdateDto.getPassword1(), memberUpdateDto.getName(), memberUpdateDto.getEmail());
         return "redirect:/";
