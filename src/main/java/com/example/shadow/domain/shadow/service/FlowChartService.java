@@ -49,4 +49,12 @@ public class FlowChartService {
 
     }
 
+    public Flowchart findByKeyword(Keyword keyword) {
+        return flowChartRepository.findTopByKeywordOrderBySeqDesc(keyword);
+    }
+
+    public Flowchart findById(Long id) {
+        return flowChartRepository.findById(id).orElseThrow(() -> new RuntimeException("flowchart not found"));
+    }
+
 }

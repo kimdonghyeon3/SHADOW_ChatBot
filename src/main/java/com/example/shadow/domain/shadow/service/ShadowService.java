@@ -52,4 +52,7 @@ public class ShadowService {
     public void delete(Shadow shadow) {
         shadowRepository.delete(shadow);
     }
+    public Shadow findByMainurl(String url) {
+        return shadowRepository.findByMainurl(url).orElseThrow(() -> new RuntimeException("%s 에 해당하는 shadow 가 없습니다.".formatted(url)));
+    }
 }
