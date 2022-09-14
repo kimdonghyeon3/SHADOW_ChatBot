@@ -62,21 +62,6 @@ public class ShadowController {
     // Script File 위치 지정
     private final static String LOCAL_MANUAL_PATH = "static/manuals/";
 
-    @RequestMapping("/test")
-    public String test(Model model) {
-        List<Shadow> shadowList = this.shadowService.findAll();
-        model.addAttribute("shadowList", shadowList);
-        model.addAttribute("pageTitle", "test");
-        return "testPage";
-    }
-
-    @RequestMapping("/test2")
-    public String test2(Model model) {
-        List<Shadow> shadowList = this.shadowService.findAll();
-        model.addAttribute("shadowList", shadowList);
-        return "testPage2";
-    }
-
     @GetMapping("/shadow/create")
     public String createView(Model model){
 
