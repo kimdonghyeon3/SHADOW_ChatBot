@@ -16,6 +16,9 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @RequiredArgsConstructor
 @Configuration
@@ -33,6 +36,7 @@ public class SecurityConfig {
             "/manuals/**"
     }; // 정적 파일 인가 없이 모두 허용
     private static final String[] AUTH_ALL_LIST = {
+            "/chat/**",
             "/singup/**",
             "/login/**",
             "/main/**",
@@ -43,8 +47,6 @@ public class SecurityConfig {
     }; // admin 롤 만 허용
     private static final String[] AUTH_AUTHENTICATED_LIST = {
             "/members/**",
-            "/chat/**",
-            "/my/**",
             "/shadow/**",
             "/contact/**"
     }; // 인가 필요
@@ -91,6 +93,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+            .cors().configurationSource(corsConfigurationSource());
+        http
             .authorizeRequests()
                 .antMatchers(AUTH_ALL_LIST).permitAll()
                 .antMatchers(AUTH_ADMIN_LIST).hasRole("ADMIN")
@@ -117,6 +121,20 @@ public class SecurityConfig {
                 .accessDeniedPage("/restrict");
         ;
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.addAllowedOriginPattern("*");
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
 }
