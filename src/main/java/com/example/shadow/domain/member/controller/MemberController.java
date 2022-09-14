@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -118,11 +119,20 @@ public class MemberController {
         return "redirect:/logout";
     }
     @GetMapping("/members/{id}")
-    public String modify(@PathVariable("id") Long id, Model model, MemberUpdateDto memberUpdateDto) {
+    public ModelAndView modify(@PathVariable("id") Long id, Model model, MemberUpdateDto memberUpdateDto, Principal principal, ModelAndView mav) {
         Member member = memberService.findById(id);
-        model.addAttribute("member", member);
-        model.addAttribute("pageTitle", "User Modify");
-        return "member/member_form";
+        log.debug("member get name : "+ member.getUsername());
+        log.debug("login get name : "+ principal.getName());
+        if(!member.getUsername().equals(principal.getName())){
+            mav.addObject("msg","접근이 불가능합니다.");
+            mav.addObject("url","/members");
+            mav.setViewName("alert");
+            return mav;
+        }
+        mav.addObject("member",member);
+        mav.addObject("pageTitle", "User Modify");
+        mav.setViewName("/member/member_form");
+        return mav;
     }
     @PutMapping("/members/{id}")
     public String update(Model model, @PathVariable Long id, @Valid @ModelAttribute("memberUpdateDto") MemberUpdateDto memberUpdateDto, BindingResult bindingResult) {
