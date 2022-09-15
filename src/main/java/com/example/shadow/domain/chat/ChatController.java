@@ -151,7 +151,13 @@ public class ChatController {
 
         model.addAttribute("favoriteKeywords", favoriteKeywords);
 
-        return "chatbot/chat";
+        return "chatbot/chatbody";
+    }
+
+    @RequestMapping("/chat/head")
+    public String chatGET() {
+
+        return "chatbot/chathead";
     }
 
 

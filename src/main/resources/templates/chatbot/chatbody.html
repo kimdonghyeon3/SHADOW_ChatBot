@@ -1,60 +1,43 @@
-<!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>SHADOW</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <!-- JQUERY JS -->
-    <script src="/webjars/jquery/jquery.min.js"></script>
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.0/css/bootstrap.min.css">
-
-    <link rel="stylesheet" href="http://localhost:8080/css/chatbot.css">
-    <script type="text/javascript" src="http://localhost:8080/js/chatbot.js"></script>
-</head>
-<body>
-
 <!--챗봇 off상태 말풍선-->
 <button type="button" class="ch-button" onclick="OpenChat()" id="btnChatOpen">
-    <img th:src="@{/image/icon.png}" style="object-fit: cover; width: 100%" />
+    <img th:src="@{http://localhost:8080/image/icon.png}" style="object-fit: cover; width: 100%" />
 </button>
 
 <!--채팅창-->
 <div class="chat_container" id="container">
     <div class="chatbox">
 
-<!--챗봇 상단-->
+        <!--챗봇 상단-->
         <div class="top-bar">
             <!--아이콘-->
             <div class="icon-image">
-                <img th:src="@{/image/icon_name.png}" style="object-fit: cover; width: 100%" />
+                <img th:src="@{http://localhost:8080/image/icon_name.png}" style="object-fit: cover; width: 100%" />
             </div>
             <div class="gap"></div>
             <!-- 채팅창 닫기 -->
             <button type="button" class="btn-close" aria-label="Close" onclick="CloseChat()"></button>
         </div>
 
-<!--챗봇 중단-->
+        <!--챗봇 중단-->
         <div class="middle" id="greetings">
-                <div class="outgoing">
-                    hello
-                </div>
+            <div class="outgoing">
+                hello
+            </div>
 
-                <div class="outgoing-box">
-                    <img th:src="@{/image/icon.png}" style="width: 35px; height: 35px; vertical-align: top" />
-                    <div class="incoming">
-                        안녕하세요. 😊 <br/>
-                        Shadow 챗봇 입니다! <br/>
-                        <br/>
-                        ※ Shadow 서비스 이용 안내 <br/>
-                        자주 찾는 목적지는 챗봇 하단 버튼을 눌러주세요.<br/>
-                        원하는 목적지가 없다면, 궁금한 사항을 채팅해주세요.
-                    </div>
+            <div class="outgoing-box">
+                <img th:src="@{http://localhost:8080/image/icon.png}" style="width: 35px; height: 35px; vertical-align: top" />
+                <div class="incoming">
+                    안녕하세요. 😊 <br/>
+                    Shadow 챗봇 입니다! <br/>
+                    <br/>
+                    ※ Shadow 서비스 이용 안내 <br/>
+                    자주 찾는 목적지는 챗봇 하단 버튼을 눌러주세요.<br/>
+                    원하는 목적지가 없다면, 궁금한 사항을 채팅해주세요.
                 </div>
+            </div>
         </div>
 
-<!--챗봇 하단-->
+        <!--챗봇 하단-->
         <div class="bottom-bar">
             <div class="d-flex flex-row justify-content-evenly favorite-box">
                 <a class="px-2 favorite" th:each="favoriteKeyword : ${favoriteKeywords}" th:href="@{${favoriteKeyword.value}}" th:text="${favoriteKeyword.key}"/>
@@ -73,5 +56,3 @@
 
     </div>
 </div>
-</body>
-</html>

@@ -17,8 +17,13 @@
     // 입력 메세지에 따른 시나리오 출력
     function ChatMessageReceive(event, form){
 
+        setTimeout(() => console.log("여기 되긴하냐?") , 3000);
+
         event.preventDefault();
         console.log(form.message.value);
+
+
+
         form.message.value = form.message.value.trim();
 
         if ( form.message.value.length == 0 ) {
@@ -29,13 +34,15 @@
         $("#greetings").append("<div class=\"outgoing\">" + form.message.value + "</div>");  //html 추가
         $('#greetings').scrollTop($('#greetings').prop('scrollHeight'));    //스크롤 포커스
 
-        findScenario(form);
+        findScenario(event, form);
 
         form.message.value = '';
         form.message.focus();
     }
 
-    function findScenario(form){
+    function findScenario(event, form){
+
+        event.preventDefault();
 
             $.post(
             '/chat/question',
@@ -136,3 +143,9 @@
         $("#greetings").append(msg);
         $('#greetings').scrollTop($('#greetings').prop('scrollHeight'));
    }
+
+   function test(){
+        console.log("가져는오니???????????????????????????");
+   }
+
+   test();

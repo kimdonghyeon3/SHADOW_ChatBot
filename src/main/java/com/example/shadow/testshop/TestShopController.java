@@ -8,18 +8,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class TestShopController {
 
-    @RequestMapping("/myhome")
+    @RequestMapping("/testshop")
     public String myhome(){
-        return "testshop/myhome";
+        return "testshop/main";
     }
 
-    @RequestMapping("/orderlist")
+    @RequestMapping("/testshop/1")
     public String orderlist(){
-        return "testshop/main";
+        return "testshop/test1";
     }
 
-    @RequestMapping("/return")
+    @RequestMapping("/testshop/2")
     public String returnOrder(){
-        return "testshop/main";
+        return "testshop/test2";
     }
 }
