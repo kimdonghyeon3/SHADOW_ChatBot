@@ -18,7 +18,10 @@ import org.springframework.security.web.header.writers.frameoptions.XFrameOption
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Configuration
@@ -99,6 +102,8 @@ public class SecurityConfig {
                 .antMatchers(AUTH_ALL_LIST).permitAll()
                 .antMatchers(AUTH_ADMIN_LIST).hasRole("ADMIN")
                 .antMatchers(AUTH_AUTHENTICATED_LIST).authenticated();
+                // .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                // .and().cors().and();
         http
                 .csrf()
                 .disable();
@@ -119,7 +124,7 @@ public class SecurityConfig {
         http
                 .exceptionHandling()
                 .accessDeniedPage("/restrict");
-        ;
+
         return http.build();
     }
 
@@ -130,8 +135,10 @@ public class SecurityConfig {
         configuration.addAllowedOriginPattern("*");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
+        configuration.setAllowedMethods(List.of(CorsConfiguration.ALL));
+        configuration.setAllowedHeaders(List.of(CorsConfiguration.ALL));
         configuration.setAllowCredentials(true);
-
+        configuration.setMaxAge(3600L);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

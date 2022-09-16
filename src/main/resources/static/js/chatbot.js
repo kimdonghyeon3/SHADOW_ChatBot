@@ -38,7 +38,7 @@
     function findScenario(form){
 
             $.post(
-            '/chat/question',
+            'http://www.shadow.site:8080/chat/question',
             {
                 question: form.message.value, // 폼 내용, input name, value
                 // mainurl : mainurl // url로 shadow id를 판단할 때 사용 -> 아직 배포과정 미정
@@ -124,7 +124,7 @@
                 더 궁금한 것이 있다면, \'처음으로\' 를 눌러주세요. <br>
                 </p>
                 <div class="d-flex justify-content-center">
-                    <button class="btn btn-info" onclick="location.href='/chat'">처음으로</button>
+                    <button class="btn btn-info" onclick="location.href='http://www.shadow.site:8080/chat'">처음으로</button>
                     <button class="btn btn-info" onclick="CloseChat()">종료하기</button>
                 </div>
             `;
