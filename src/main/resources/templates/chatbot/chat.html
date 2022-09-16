@@ -13,6 +13,7 @@
     <script type="text/javascript" src="http://www.shadow.site:8080/js/chatbot.js"></script>
 </head>
 <body>
+
 <!--챗봇 off상태 말풍선-->
 <button type="button" class="ch-button" onclick="OpenChat()" id="btnChatOpen">
     <img th:src="@{http://www.shadow.site:8080/image/icon.png}" style="object-fit: cover; width: 100%" />
@@ -35,21 +36,38 @@
 
 <!--챗봇 중단-->
         <div class="middle" id="greetings">
-                <div class="outgoing">
-                    hello
-                </div>
+            <div class="outgoing">
+                hello
+            </div>
 
-                <div class="outgoing-box">
-                    <img th:src="@{http://www.shadow.site:8080/image/icon.png}" style="width: 35px; height: 35px; vertical-align: top" />
-                    <div class="incoming">
-                        안녕하세요. 😊 <br/>
-                        Shadow 챗봇 입니다! <br/>
-                        <br/>
-                        ※ Shadow 서비스 이용 안내 <br/>
-                        자주 찾는 목적지는 챗봇 하단 버튼을 눌러주세요.<br/>
-                        원하는 목적지가 없다면, 궁금한 사항을 채팅해주세요.
-                    </div>
+            <div class="outgoing-box">
+                <img th:src="@{http://www.shadow.site:8080/image/icon.png}" style="width: 35px; height: 35px; vertical-align: top" />
+                <div class="incoming">
+                    안녕하세요. 😊 <br/>
+                    Shadow 챗봇 입니다! <br/>
+                    <br/>
+                    ※ Shadow 서비스 이용 안내 <br/>
+                    자주 찾는 목적지는 챗봇 하단 버튼을 눌러주세요.<br/>
+                    원하는 목적지가 없다면, 궁금한 사항을 채팅해주세요.
                 </div>
+            </div>
+            <div th:if="${flowcharts} != null">
+                <div class = "incoming">
+                    <div class="d-flex justify-content-center">
+                        <th:block th:each="flowchart : ${flowcharts}">
+                            <th:block th:if="${seq==flowchart.seq}">
+                                <button class="btn btn-danger" onclick="click_flow_url('${flowchart.flow.url}','${flowchart.seq}','${keyword}');" th:text="${flowchart.flow.name}"></button>
+                                <p> -> </p>
+                            </th:block>
+                            <th:block th:if="${seq!=flowchart.seq}">
+                                <button class="btn btn-primary" onclick="click_flow_url('${flowchart.flow.url}',${flowchart.seq},'${keyword}');" th:text="${flowchart.flow.name}"></button>
+                                <p> -> </p>
+                            </th:block>
+                        </th:block>
+                    </div>
+                    <p th:text="${description}"></p>
+                </div>
+            </div>
         </div>
 
 <!--챗봇 하단-->

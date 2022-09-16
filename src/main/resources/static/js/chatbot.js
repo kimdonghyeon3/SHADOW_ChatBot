@@ -11,7 +11,7 @@
         $("#btnChatOpen").show();
     }
 
-    var seq = find_seq(1); // 임의로 1번 순서로 시작
+    var seq = 1; // 임의로 1번 순서로 시작
     var flowcharts= new Array();
 
     // 입력 메세지에 따른 시나리오 출력
@@ -55,6 +55,7 @@
                     send_message(msg);
                 } else {
                     flowcharts=result.data;
+                    seq=find_seq(find_url());
                     var msg = `
                         <div class = "incoming">
                             <p>${result.message}</p>
@@ -67,30 +68,67 @@
         );
 
     }
-
-    function find_seq(val){
-        // 추후 배포과정 이후, 현재 url 을 기반으로 seq 판단하는 로직 추가 필요
-        return val;
+    function find_url(){
+         // var mainurl = $(location).attr('host');
+         // var pathname = $(location).attr('pathname');
+         var presentUrl = $(location).attr('href');
+         console.log("url "+presentUrl);
+         return presentUrl;
     }
 
-   function click_flow_url(url){
+    function find_seq(url){
+         var foundSeq=1;
+        // 추후 배포과정 이후, 현재 url 을 기반으로 seq 판단하는 로직 추가 필요
+
+        $.each(flowcharts,function(i,flowchart){
+             keyword=flowchart.keyword.name;
+             console.log("순서 : "+flowchart.seq);
+             console.log("url : "+flowchart.flow.url);
+             if(url==flowchart.flow.url){
+                console.log("url : "+ url+" 순서 : "+foundSeq);
+                foundSeq=flowchart.seq;
+             } else{
+                console.log("일치하는 url 이 없음, 처음부터 시작");
+             }
+         });
+        return foundSeq;
+    }
+
+   function click_flow_url(url,flowSeq,keyword){
      // 현재 주소
-     var mainurl = $(location).attr('hostname');
-     console.log("url "+mainurl);
+     // url 입력 받을 때, href / host:path / path  어떤 형태로 받을 지 정해야 한다.
 
      console.log("click flow url : "+url);
-     seq++; // 배포 후 수정 필요
-     console.log(seq);
 
-     console.log("flowcharts : "+flowcharts);
-     var msg = `
-        <div class = "incoming">
-            <div class="d-flex justify-content-center">
-    `;
-     send_message(get_scenario(msg));
+     if(flowcharts==null || flowcharts.length == 0){
+        seq=flowSeq;
+     }else{
+        keyword=flowcharts[0].keyword.name;
+     }
+     moveUrl(url,keyword,seq);
 
 
    }
+/*
+   function check_url_seq(){
+         var presentUrl = find_url();
+
+         if(presentUrl == url){
+            console.log("이동 성공");
+            seq=find_seq(url);
+            console.log("seq : "+seq);
+         } else {
+           console.log("목표 url과 다름, 그대로");
+         }
+
+         console.log("flowcharts : "+flowcharts);
+         var msg = `
+            <div class = "incoming">
+                <div class="d-flex justify-content-center">
+        `;
+         send_message(get_scenario(msg));
+   }
+*/
 
    function get_scenario(msg){
         console.log("flowcharts : "+flowcharts);
@@ -105,7 +143,7 @@
             console.log("키워드 : "+ keyword);
             if(seq==flowchart.seq){
             btn = `
-                <button class="btn btn-danger" onclick="click_flow_url('${flowchart.flow.url}');">${flowchart.flow.name}</button>
+                <button class="btn btn-danger" onclick="click_flow_url('${flowchart.flow.url}',${flowchart.seq});">${flowchart.flow.name}</button>
                 <p> -> </p>
             `;
             description = `<br><p>${flowchart.flow.description}</p> `;
@@ -124,7 +162,7 @@
                 더 궁금한 것이 있다면, \'처음으로\' 를 눌러주세요. <br>
                 </p>
                 <div class="d-flex justify-content-center">
-                    <button class="btn btn-info" onclick="location.href='http://www.shadow.site:8080/chat'">처음으로</button>
+                    <button class="btn btn-info" onclick="LoadChat();">처음으로</button>
                     <button class="btn btn-info" onclick="CloseChat()">종료하기</button>
                 </div>
             `;
@@ -135,4 +173,32 @@
    function send_message(msg){
         $("#greetings").append(msg);
         $('#greetings').scrollTop($('#greetings').prop('scrollHeight'));
+   }
+
+   function LoadChat(){
+        html = `
+            <div class="outgoing">
+                hello
+            </div>
+
+            <div class="outgoing-box">
+                <img src="http://www.shadow.site:8080/image/icon.png" style="width: 35px; height: 35px; vertical-align: top" />
+                <div class="incoming">
+                    안녕하세요. 😊 <br/>
+                    Shadow 챗봇 입니다! <br/>
+                    <br/>
+                    ※ Shadow 서비스 이용 안내 <br/>
+                    자주 찾는 목적지는 챗봇 하단 버튼을 눌러주세요.<br/>
+                    원하는 목적지가 없다면, 궁금한 사항을 채팅해주세요.
+                </div>
+            </div>
+        `;
+        $("#greetings").html(html);
+        $('#greetings').scrollTop($('#greetings').prop('scrollHeight'));
+   }
+
+   function moveUrl(url,keyword,seq){
+
+
+        location.href=url+"?keyword="+keyword+"&seq="+seq;
    }

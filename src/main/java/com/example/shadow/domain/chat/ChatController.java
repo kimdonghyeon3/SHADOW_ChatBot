@@ -20,11 +20,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import javax.persistence.criteria.CriteriaBuilder;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -153,7 +156,44 @@ public class ChatController {
 
         return "chatbot/chat";
     }
+    @PostMapping("/chat")
+    public String chatGET(Model model, @RequestParam("keyword") String keywordName, @RequestParam Integer seq, @RequestParam String url) {
 
+
+        HashMap<String, String> favoriteKeywords = new HashMap<>();
+
+        long shadowId = 1;
+        Shadow shadow = shadowService.findById(shadowId);
+
+        List<Keyword> keywords = keywordService.findByShadowAndFavorite(shadow);
+        keywords.forEach(keyword -> {
+            Flowchart flowchart = flowChartService.findByKeyword(keyword);
+            log.info("keyword에서 가져온 flowchart에 seq가 마지막인, flow id = {}", flowchart.getFlow().getId());
+            favoriteKeywords.put(keyword.getName(), flowchart.getFlow().getUrl());
+        });
+
+        model.addAttribute("favoriteKeywords", favoriteKeywords);
+        Keyword keyword = keywordService.findByName(keywordName);
+
+        String targetUrl = getFlowcharts(keyword).get(seq-1).getFlow().getUrl();
+        String description = getFlowcharts(keyword).get(seq-1).getFlow().getDescription();
+        log.debug("[scenario] targetUrl : "+targetUrl);
+        log.debug("[scenario] description : "+description);
+        if(url.equals(targetUrl)){
+            seq++;
+        }else{
+            log.debug("[scenario] targetUrl : "+targetUrl+" url : "+url+" 다름");
+        }
+
+        log.debug("[scenario] flowcharts : "+getFlowcharts(keyword));
+        log.debug("[scenario] seq : "+seq);
+        model.addAttribute("keyword",keywordName);
+        model.addAttribute("flowcharts",getFlowcharts(keyword));
+        model.addAttribute("seq",seq);
+        model.addAttribute("description",description);
+
+        return "chatbot/chat";
+    }
 
     @RequestMapping("/chat/question")
     @SendTo("/topic/shadow")
