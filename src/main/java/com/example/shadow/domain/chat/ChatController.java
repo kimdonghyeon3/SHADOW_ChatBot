@@ -176,7 +176,7 @@ public class ChatController {
         Keyword keyword = keywordService.findByName(keywordName);
 
         String targetUrl = getFlowcharts(keyword).get(seq-1).getFlow().getUrl();
-        String description = getFlowcharts(keyword).get(seq-1).getFlow().getDescription();
+        String description = seq == getFlowcharts(keyword).size() ? null : getFlowcharts(keyword).get(seq).getFlow().getDescription();
         log.debug("[scenario] targetUrl : "+targetUrl);
         log.debug("[scenario] description : "+description);
         if(url.equals(targetUrl)){

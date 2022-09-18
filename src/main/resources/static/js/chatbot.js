@@ -199,6 +199,5 @@
 
    function moveUrl(url,keyword,seq){
 
-
         location.href=url+"?keyword="+keyword+"&seq="+seq;
    }
