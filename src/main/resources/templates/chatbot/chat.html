@@ -73,12 +73,10 @@
                         <p th:text="${description}"></p>
                     </th:block>
                     <th:block th:if="${description==null || description == ''}">
-                        <p th:text="|축하합니다!|"</p>
-                        <p th:text="|${keyword}을(를) 해결 하였습니다.|"</p>
-                        <p th:text="|더 궁금한 것이 있다면, '처음으로' 를 눌러주세요. |"></p>
+                        <p th:utext="|축하합니다! <br> ${keyword}을(를) 해결 하였습니다. <br> 더 궁금한 것이 있다면, '처음으로' 를 눌러주세요.|"</p>
                         <div class="d-flex justify-content-around">
-                            <button class="btn btn-info" onclick="LoadChat();">처음으로</button>
-                            <button class="btn btn-info" onclick="CloseChat();">종료하기</button>
+                            <button class="btn btn-primary" onclick="LoadChat();">처음으로</button>
+                            <button class="btn btn-primary" onclick="CloseChat();">종료하기</button>
                         </div>
                     </th:block>
                 </div>
