@@ -1,7 +1,7 @@
    console.log('chat js 로딩됨');
 
-    //const shadowUrl = "https://shadows.site"
-    const shadowUrl = "http://www.shadow.site:8080"
+    const shadowUrl = "https://shadows.site"
+    //const shadowUrl = "http://www.shadow.site:8080"
 
     var search = location.search;
     console.log('search : '+search);
