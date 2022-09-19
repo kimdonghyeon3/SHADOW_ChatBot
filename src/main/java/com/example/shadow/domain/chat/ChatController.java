@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -118,16 +119,18 @@ public class ChatController {
         return requestBody;
     }
 
-    @RequestMapping("/chat")
-    public String chatGET(Model model) {
+    @RequestMapping("/chat/{id}")
+    public String chatGET(Model model, @PathVariable Long id) {
 
         // 처음 가져올 떄, 해당 사용자 chat에 있는 favorite을 가져오자. (필요한 정보 : member id와 shadow id 가 필요하다.)
         // 우선 가정하자, member id가 1이고 shadow id가 1인 것을 시작했다고 하자.
 
         HashMap<String, String> favoriteKeywords = new HashMap<>();
 
+        log.info("window.dyc.chatUid = {}", id);
+
         //long memberId = 1;
-        long shadowId = 1;
+        long shadowId = id;
 
         //Member member = memberService.findById(1);
         Shadow shadow = shadowService.findById(shadowId);
@@ -159,7 +162,6 @@ public class ChatController {
 
         return "chatbot/chathead";
     }
-
 
     @RequestMapping("/chat/question")
     @SendTo("/topic/shadow")

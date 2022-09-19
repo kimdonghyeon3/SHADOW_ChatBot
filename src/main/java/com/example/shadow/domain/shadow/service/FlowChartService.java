@@ -34,7 +34,7 @@ public class FlowChartService {
 
                 FlowDto f = k.getFlow().get(i-1);
 
-                Flow flow = flowRepository.findByNameAndDescription(f.getName(), f.getDescription());
+                Flow flow = flowRepository.findByNameAndKeyword(f.getName(), keyword.getId());
                 Flowchart flowchart = new Flowchart();
                 flowchart.setKeyword(keyword);
                 flowchart.setFlow(flow);

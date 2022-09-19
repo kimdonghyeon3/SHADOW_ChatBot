@@ -22,8 +22,6 @@
         event.preventDefault();
         console.log(form.message.value);
 
-
-
         form.message.value = form.message.value.trim();
 
         if ( form.message.value.length == 0 ) {
@@ -44,8 +42,25 @@
 
         event.preventDefault();
 
+        // <div className="outgoing-box">
+        //     <img th:src="@{http://localhost:8080/image/icon.png}"
+        //          style="width: 35px; height: 35px; vertical-align: top"/>
+        //     <div className="incoming">
+        //         안녕하세요. 😊 <br/>
+        //         Shadow 챗봇 입니다! <br/>
+        //         <br/>
+        //         ※ Shadow 서비스 이용 안내 <br/>
+        //         자주 찾는 목적지는 챗봇 하단 버튼을 눌러주세요.<br/>
+        //         원하는 목적지가 없다면, 궁금한 사항을 채팅해주세요.
+        //     </div>
+        // </div>
+
+
+
+        console.log("입력한 챗봇 id");
+        console.log(window.dyc.chatUid);
             $.post(
-            '/chat/question',
+            'http://localhost:8080/chat/question',
             {
                 question: form.message.value, // 폼 내용, input name, value
                 // mainurl : mainurl // url로 shadow id를 판단할 때 사용 -> 아직 배포과정 미정

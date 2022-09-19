@@ -16,12 +16,7 @@ console.log('test js 로딩됨');
 function callChat(){
     console.log('callchat() 시작')
 
-    window.dyc = {
-        chatUid:1
-    }
-
-    console.log(window.dyc)
-    window.dyc.chatUid = 2;
+    console.log(window.dyc.chatUid);
 
     const config = {
       method: "get"
@@ -39,13 +34,13 @@ function callChat(){
             var collection = el.children;
 
             [...collection].map(node =>
-                document.head.appendChild(node)
+                document.head.prepend(node)
             );
-            document.getElementsByClassName("html")[0].setAttribute("xmlns:th","http://www.thymeleaf.org");
+            //document.getElementsByClassName("html")[0].setAttribute("xmlns:th","http://www.thymeleaf.org");
 
         } ).catch(error => console.log(error));
 
-    fetch("http://localhost:8080/chat", config) //chat body 가져오기
+    fetch("http://localhost:8080/chat/"+window.dyc.chatUid, config) //chat body 가져오기
       .then(response => response.text())
       .then(data => {
 
