@@ -38,7 +38,7 @@
     function findScenario(form){
 
             $.post(
-            'http://www.shadow.site:8080/chat/question',
+            'https://shadows.site/chat/question/' + window.dyc.chatUid,
             {
                 question: form.message.value, // 폼 내용, input name, value
                 // mainurl : mainurl // url로 shadow id를 판단할 때 사용 -> 아직 배포과정 미정

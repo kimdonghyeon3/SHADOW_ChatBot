@@ -9,4 +9,6 @@ public interface FlowRepository extends JpaRepository<Flow, Long> {
     Flow findByNameAndDescription(String name, String description);
 
     Flow findByName(String name);
+
+    Flow findByNameAndKeyword(String name, Long keyword);
 }

@@ -2,6 +2,7 @@
 
     const shadowUrl = "https://shadows.site"
     //const shadowUrl = "http://www.shadow.site:8080"
+    //const shadowUrl = "http://localhost:8080"
 
     var search = location.search;
     console.log('search : '+search);
@@ -31,12 +32,13 @@
 
     function StartChat(){
         console.log('StartChat() 시작')
+        console.log(shadowUrl+"/chat/" + window.dyc.chatUid);
 
         const config = {
           method: "get"
         };
 
-        fetch(shadowUrl+"/chat", config)
+        fetch(shadowUrl+"/chat/" + window.dyc.chatUid, config)
           .then(response => response.text())
           .then(data => {
 
@@ -49,7 +51,6 @@
 
           } )
           .catch(error => console.log(error));
-
     }
 
     function ShowChat(){
@@ -64,7 +65,7 @@
                   method: "post"
                 };
 
-                fetch(shadowUrl+"/chat"+"?keyword="+keyword+"&seq="+seq+"&url="+url, config)
+                fetch(shadowUrl+"/chat/"  + window.dyc.chatUid +"?keyword="+keyword+"&seq="+seq+"&url="+url, config)
                   .then(response => response.text())
                   .then(data => {
 

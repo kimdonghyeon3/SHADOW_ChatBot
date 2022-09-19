@@ -104,7 +104,7 @@ public class ShadowController {
         shadowService.create(shadowDto.getName(), shadowDto.getMainurl(), member);
         Shadow findShadow = shadowService.findByNameAndMember(shadowDto.getName(), member);
         keywordService.create(shadowDto.getKeyword(), findShadow);
-        flowService.create(shadowDto.getKeyword());
+        flowService.create(shadowDto.getKeyword(), findShadow);
         flowchartService.create(shadowDto.getKeyword(), findShadow);
 
         HashMap<String, String> redirectMsg = new HashMap<>();

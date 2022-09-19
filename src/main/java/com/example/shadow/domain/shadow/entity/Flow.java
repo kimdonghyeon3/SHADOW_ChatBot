@@ -30,4 +30,6 @@ public class Flow {
     @OneToMany(mappedBy = "flow")
     private List<Flowchart> flowcharts;
 
+    @Column
+    private Long keyword;
 }

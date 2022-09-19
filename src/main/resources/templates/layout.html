@@ -4,6 +4,18 @@
         xmlns:th="http://www.thymeleaf.org"
         lang="ko">
 <head>
+    <!--Open Graph-->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://shadows.site">
+    <meta property="og:title" content="Content Title">
+    <meta property="og:image" content="https://shadows.site/image/opengraph.png">
+    <meta property="og:description" content="익숙하지 않은 내 홈페이지, 모든 사용자가 편리하게 이용하자!">
+    <meta property="og:site_name" content="Shadow 쇼핑몰 도우미">
+    <meta property="og:locale" content="en_KO">
+    <!-- 다음의 태그는 필수는 아니지만, 포함하는 것을 추천함 -->
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <!--    <title>shadow</title>-->
@@ -37,6 +49,17 @@
     <!-- CSS Files -->
     <link id="pagestyle" th:href="@{/css/argon-dashboard.css}" rel="stylesheet" />
     <!-- new css end -->
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YM239B2TDH"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-YM239B2TDH');
+    </script>
+
 </head>
 <body class="g-sidenav-show bg-gray-100">
 <div class="min-height-300 bg-primary position-absolute w-100"></div>

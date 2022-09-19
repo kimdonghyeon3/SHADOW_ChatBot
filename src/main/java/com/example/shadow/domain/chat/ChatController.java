@@ -18,12 +18,10 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -121,8 +119,8 @@ public class ChatController {
         return requestBody;
     }
 
-    @RequestMapping("/chat")
-    public String chatGET(Model model) {
+    @RequestMapping("/chat/{id}")
+    public String chatGET(Model model, @PathVariable Long id) {
 
         // 처음 가져올 떄, 해당 사용자 chat에 있는 favorite을 가져오자. (필요한 정보 : member id와 shadow id 가 필요하다.)
         // 우선 가정하자, member id가 1이고 shadow id가 1인 것을 시작했다고 하자.
@@ -130,7 +128,7 @@ public class ChatController {
         HashMap<String, String> favoriteKeywords = new HashMap<>();
 
         //long memberId = 1;
-        long shadowId = 1;
+        long shadowId = id;
 
         //Member member = memberService.findById(1);
         Shadow shadow = shadowService.findById(shadowId);
@@ -156,13 +154,14 @@ public class ChatController {
 
         return "chatbot/chat";
     }
-    @PostMapping("/chat")
-    public String chatGET(Model model, @RequestParam("keyword") String keywordName, @RequestParam Integer seq, @RequestParam String url) {
+    @PostMapping("/chat/{id}")
+    public String chatGET(Model model, @RequestParam("keyword") String keywordName,
+                          @RequestParam Integer seq, @RequestParam String url, @PathVariable Long id) {
 
 
         HashMap<String, String> favoriteKeywords = new HashMap<>();
 
-        long shadowId = 1;
+        long shadowId = id;
         Shadow shadow = shadowService.findById(shadowId);
 
         List<Keyword> keywords = keywordService.findByShadowAndFavorite(shadow);
@@ -195,13 +194,13 @@ public class ChatController {
         return "chatbot/chat";
     }
 
-    @RequestMapping("/chat/question")
+    @RequestMapping("/chat/question/{id}")
     @SendTo("/topic/shadow")
     @ResponseBody
-    public ResponseEntity<ResultResponse> sendScenario(String question) throws IOException {
+    public ResponseEntity<ResultResponse> sendScenario(String question, @PathVariable Long id) throws IOException {
 
         // 테스트용 shadow , testShadowId로 지정
-        Shadow shadow = shadowService.findById(testShadowId);
+        Shadow shadow = shadowService.findById(id);
         log.debug("[scenario] shadow : " + shadow.getId() + " , " + shadow.getName() + ", " + shadow.getMainurl());
         String reqMessage = question;
         reqMessage = reqMessage.replace("\"", "");
