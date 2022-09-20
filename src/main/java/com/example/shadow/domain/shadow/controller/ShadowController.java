@@ -223,7 +223,7 @@ public class ShadowController {
         // code viewer(Markdown)
         String markdownValueFormLocal = """
                 ```javascript
-                <script type="text/javascript"  async=true charset="UTF-8" src="https://shadows.site/js/chat.js></script>
+                <script type="text/javascript" async=true charset="UTF-8" src="https://shadows.site/js/chat.js"></script>
                         <script>
                             window.dyc = {
                                 chatUid: """ + api_key + "\n" +
