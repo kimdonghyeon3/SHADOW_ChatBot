@@ -6,6 +6,7 @@ import com.example.shadow.domain.shadow.dto.ShadowDto;
 import com.example.shadow.domain.shadow.entity.Shadow;
 import com.example.shadow.domain.shadow.repository.ShadowRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ShadowService {
 
     private final ShadowRepository shadowRepository;
@@ -23,6 +25,7 @@ public class ShadowService {
         shadow.setMainurl(mainurl);
         shadow.setMember(member);
         String api_key = UUID.randomUUID().toString().replace("-","");
+        log.debug("api_key : "+ api_key);
         shadow.setApiKey(api_key);
         shadowRepository.save(shadow);
     }
@@ -61,6 +64,9 @@ public class ShadowService {
 
     public Shadow findByApiKey(String apiKey) {
         return shadowRepository.findByApiKey(apiKey);
+    }
 
+    public List<Shadow> findByMember(Member member) {
+        return shadowRepository.findByMember(member);
     }
 }
