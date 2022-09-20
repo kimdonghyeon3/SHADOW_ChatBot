@@ -14,7 +14,7 @@ public interface ShadowRepository extends JpaRepository<Shadow, Long> {
     Optional<Shadow> findByMainurl(String url);
     Shadow findByName(String name);
     Shadow findByNameAndMember(String name, Member member);
-
+    Shadow findByApiKey(String apiKey);
     List<Shadow> findByMember(Member member);
 
 }

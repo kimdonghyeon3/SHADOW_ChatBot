@@ -26,7 +26,7 @@ public class ShadowService {
         shadow.setMember(member);
         String api_key = UUID.randomUUID().toString().replace("-","");
         log.debug("api_key : "+ api_key);
-        shadow.setAPIKey(api_key);
+        shadow.setApiKey(api_key);
         shadowRepository.save(shadow);
     }
 
@@ -60,6 +60,10 @@ public class ShadowService {
     }
     public Shadow findByMainurl(String url) {
         return shadowRepository.findByMainurl(url).orElseThrow(() -> new RuntimeException("%s 에 해당하는 shadow 가 없습니다.".formatted(url)));
+    }
+
+    public Shadow findByApiKey(String apiKey) {
+        return shadowRepository.findByApiKey(apiKey);
     }
 
     public List<Shadow> findByMember(Member member) {

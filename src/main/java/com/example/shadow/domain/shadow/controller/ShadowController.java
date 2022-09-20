@@ -218,7 +218,7 @@ public class ShadowController {
 
 
 
-        String api_key = shadow.getAPIKey();
+        String api_key = shadow.getApiKey();
 
         // code viewer(Markdown)
         String markdownValueFormLocal = """
