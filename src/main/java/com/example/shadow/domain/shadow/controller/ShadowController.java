@@ -1,6 +1,7 @@
 package com.example.shadow.domain.shadow.controller;
 
 import com.example.shadow.domain.member.entity.Member;
+import com.example.shadow.domain.member.entity.MemberRole;
 import com.example.shadow.domain.member.service.MemberService;
 import com.example.shadow.domain.shadow.dto.FlowDto;
 import com.example.shadow.domain.shadow.dto.KeywordDto;
@@ -63,12 +64,31 @@ public class ShadowController {
     // Script File 위치 지정
     private final static String LOCAL_MANUAL_PATH = "static/manuals/";
 
-    @RequestMapping("/admintest/{id}")
-    public String callShow(Model model, @PathVariable Long id){
+    @RequestMapping("/admin")
+    public ModelAndView list(ModelAndView mav, Principal principal){
 
-        log.info("관리자 페이지 요청 받아지니? = {}", id);
+        log.debug("[admin] 유저 관리자인지 여부 판단 : "+ principal.getName());
 
-        Member member = memberService.findById(id);
+        Member member = memberService.findByUsername(principal.getName());
+        if(!member.getRole().equals(MemberRole.ADMIN)){
+            mav.addObject("msg","접근이 불가능합니다.");
+            mav.addObject("url","/main");
+            mav.setViewName("alert");
+            return mav;
+        }
+        List<Shadow> shadows = shadowService.findAll();
+        mav.addObject("shadows",shadows);
+        mav.setViewName("admin/member_api_db_call");
+        return mav;
+
+    }
+
+    @RequestMapping("/count")
+    public String callShow(Model model, Principal principal){
+
+        log.info("관리자 페이지 요청 받아지니? = {}", principal.getName());
+
+        Member member = memberService.findByUsername(principal.getName());
         List<Shadow> shadows = shadowService.findByMember(member);
         model.addAttribute("shadows",shadows);
 
