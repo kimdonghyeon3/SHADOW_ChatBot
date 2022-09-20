@@ -195,13 +195,14 @@ public class ChatController {
         return "chatbot/chat";
     }
 
-    @RequestMapping("/chat/question/{id}")
+    @RequestMapping("/chat/question/{apiKey}")
     @SendTo("/topic/shadow")
     @ResponseBody
-    public ResponseEntity<ResultResponse> sendScenario(String question, @PathVariable Long id) throws IOException {
+    public ResponseEntity<ResultResponse> sendScenario(String question, @PathVariable String apiKey) throws IOException {
 
         // 테스트용 shadow , testShadowId로 지정
-        Shadow shadow = shadowService.findById(id);
+        long shadowId = shadowService.findByApiKey(apiKey).getId();
+        Shadow shadow = shadowService.findById(shadowId);
         log.debug("[scenario] shadow : " + shadow.getId() + " , " + shadow.getName() + ", " + shadow.getMainurl());
         String reqMessage = question;
         reqMessage = reqMessage.replace("\"", "");

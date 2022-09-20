@@ -1,3 +1,6 @@
+    //const shadowUrl = "https://shadows.site"
+    //const shadowUrl = "http://localhost:8080"
+
     //챗봇 켜기
     function OpenChat(){
         $("#container").show();
@@ -36,9 +39,10 @@
     }
 
     function findScenario(form){
+            console.log("shadowUrl"+shadowUrl);
 
             $.post(
-            'https://shadows.site/chat/question/' + window.dyc.chatUid,
+            'http://localhost:8080/chat/question/' + window.dyc.chatUid,
             {
                 question: form.message.value, // 폼 내용, input name, value
                 // mainurl : mainurl // url로 shadow id를 판단할 때 사용 -> 아직 배포과정 미정
@@ -95,8 +99,6 @@
     }
 
    function click_flow_url(url,flowSeq,keyword){
-     // 현재 주소
-     // url 입력 받을 때, href / host:path / path  어떤 형태로 받을 지 정해야 한다.
 
      console.log("click flow url : "+url);
 
@@ -105,7 +107,7 @@
      }else{
         keyword=flowcharts[0].keyword.name;
      }
-     moveUrl(url,keyword,seq);
+     moveUrl(url,keyword,flowSeq);
 
 
    }
@@ -143,13 +145,13 @@
             console.log("키워드 : "+ keyword);
             if(seq==flowchart.seq){
             btn = `
-                <button class="btn btn-danger" onclick="click_flow_url('${flowchart.flow.url}',${flowchart.seq});">${flowchart.flow.name}</button>
+                <button class="btn btn-danger" onclick="click_flow_url('${flowchart.flow.url}',${flowchart.seq},'${keyword}');">${flowchart.flow.name}</button>
                 <p> -> </p>
             `;
             description = `<br><p>${flowchart.flow.description}</p> `;
             } else {
             btn = `
-                <button class="btn btn-primary" onclick="click_flow_url('${flowchart.flow.url}');">${flowchart.flow.name}</button>
+                <button class="btn btn-primary" onclick="click_flow_url('${flowchart.flow.url}',${flowchart.seq},'${keyword}');">${flowchart.flow.name}</button>
                 <p> -> </p>
             `;}
             msg=msg.concat(btn);
@@ -182,7 +184,7 @@
             </div>
 
             <div class="outgoing-box">
-                <img src="http://www.shadow.site:8080/image/icon.png" style="width: 35px; height: 35px; vertical-align: top" />
+                <img src="https://shadows.site/image/icon.png" style="width: 35px; height: 35px; vertical-align: top" />
                 <div class="incoming">
                     안녕하세요. 😊 <br/>
                     Shadow 챗봇 입니다! <br/>
@@ -199,5 +201,5 @@
 
    function moveUrl(url,keyword,seq){
 
-        location.href=url+"?keyword="+keyword+"&seq="+seq;
+        location.href=url+"?"+window.dyc.chatUid+"&keyword="+keyword+"&seq="+seq;
    }
