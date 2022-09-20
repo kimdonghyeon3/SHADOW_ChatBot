@@ -34,6 +34,7 @@ import java.util.List;
 import org.commonmark.node.*;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @Slf4j
@@ -175,8 +176,9 @@ public class ShadowController {
     }
 
     @RequestMapping("/shadow/list")
-    public String list(Model model){
-        List<Shadow> shadowList = this.shadowService.findAll();
+    public String list(Model model,Principal principal){
+        Member member = this.memberService.findByUsername(principal.getName());
+        List<Shadow> shadowList = this.shadowService.findByMember(member);
         model.addAttribute("shadowList", shadowList);
 
         model.addAttribute("pageTitle", "My Shadow List");
@@ -184,11 +186,21 @@ public class ShadowController {
     }
 
     @RequestMapping("/shadow/detail/{id}")
-    public String detail(@PathVariable Long id, Model model) throws Exception {
+    public ModelAndView detail(@PathVariable Long id, ModelAndView mav, Principal principal) throws Exception {
         Shadow shadow = shadowService.findById(id);
+        Member member = shadow.getMember();
+        if(!member.getUsername().equals(principal.getName())){
+            mav.addObject("msg","접근이 불가능합니다.");
+            mav.addObject("url","/members");
+            mav.setViewName("alert");
+            return mav;
+        }
         log.debug("shadow : "+shadow.getName()+" / " + shadow.getMainurl());
-        model.addAttribute("shadow", shadow);
-        model.addAttribute("pageTitle", "Shadow Detail");
+
+        mav.addObject("shadow",shadow);
+        mav.addObject("pageTitle", "Shadow Detail");
+
+
         List<Keyword> keywords = shadow.getKeywords();
         keywords.forEach(keyword ->
                 {
@@ -212,9 +224,10 @@ public class ShadowController {
         Node document = parser.parse(markdownValueFormLocal);
         HtmlRenderer renderer = HtmlRenderer.builder().build();
 
-        model.addAttribute("contents", renderer.render(document));
+        mav.addObject("contents", renderer.render(document));
 
-        return "shadow/flow_list";
+        mav.setViewName("shadow/flow_list");
+        return mav;
     }
 
     public String getMarkdownValueFormLocal(String manualPage) throws Exception {
