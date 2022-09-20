@@ -69,4 +69,10 @@ public class ShadowService {
     public List<Shadow> findByMember(Member member) {
         return shadowRepository.findByMember(member);
     }
+
+    public void updateApiKey(Shadow originShadow, String new_api_key) {
+        originShadow.setApiKey(new_api_key);
+
+        shadowRepository.save(originShadow);
+    }
 }
