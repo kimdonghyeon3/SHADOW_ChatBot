@@ -34,4 +34,6 @@ public class Shadow {
     @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Member member;
 
+    @Column
+    private String APIKey;
 }

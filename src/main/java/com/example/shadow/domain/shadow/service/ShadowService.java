@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +22,8 @@ public class ShadowService {
         shadow.setName(name);
         shadow.setMainurl(mainurl);
         shadow.setMember(member);
+        String api_key = UUID.randomUUID().toString().replace("-","");
+        shadow.setAPIKey(api_key);
         shadowRepository.save(shadow);
     }
 
