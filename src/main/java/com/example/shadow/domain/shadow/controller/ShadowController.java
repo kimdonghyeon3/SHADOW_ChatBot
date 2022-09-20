@@ -63,6 +63,18 @@ public class ShadowController {
     // Script File 위치 지정
     private final static String LOCAL_MANUAL_PATH = "static/manuals/";
 
+    @RequestMapping("/admintest/{id}")
+    public String callShow(Model model, @PathVariable Long id){
+
+        log.info("관리자 페이지 요청 받아지니? = {}", id);
+
+        Member member = memberService.findById(id);
+        List<Shadow> shadows = shadowService.findByMember(member);
+        model.addAttribute("shadows",shadows);
+
+        return "admin/api_db_call";
+    }
+
     @RequestMapping("/test")
     public String test(Model model) {
         List<Shadow> shadowList = this.shadowService.findAll();
