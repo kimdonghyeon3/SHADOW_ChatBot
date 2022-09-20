@@ -35,5 +35,5 @@ public class Shadow {
     private Member member;
 
     @Column
-    private String APIKey;
+    private String apiKey;
 }

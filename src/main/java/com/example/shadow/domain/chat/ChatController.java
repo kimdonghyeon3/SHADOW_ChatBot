@@ -119,8 +119,8 @@ public class ChatController {
         return requestBody;
     }
 
-    @RequestMapping("/chat/{id}")
-    public String chatGET(Model model, @PathVariable Long id) {
+    @RequestMapping("/chat/{apiKey}")
+    public String chatGET(Model model, @PathVariable String apiKey) {
 
         // 처음 가져올 떄, 해당 사용자 chat에 있는 favorite을 가져오자. (필요한 정보 : member id와 shadow id 가 필요하다.)
         // 우선 가정하자, member id가 1이고 shadow id가 1인 것을 시작했다고 하자.
@@ -128,7 +128,8 @@ public class ChatController {
         HashMap<String, String> favoriteKeywords = new HashMap<>();
 
         //long memberId = 1;
-        long shadowId = id;
+
+        long shadowId = shadowService.findByApiKey(apiKey).getId();
 
         //Member member = memberService.findById(1);
         Shadow shadow = shadowService.findById(shadowId);
@@ -154,14 +155,14 @@ public class ChatController {
 
         return "chatbot/chat";
     }
-    @PostMapping("/chat/{id}")
+    @PostMapping("/chat/{apiKey}")
     public String chatGET(Model model, @RequestParam("keyword") String keywordName,
-                          @RequestParam Integer seq, @RequestParam String url, @PathVariable Long id) {
+                          @RequestParam Integer seq, @RequestParam String url, @PathVariable String apiKey) {
 
 
         HashMap<String, String> favoriteKeywords = new HashMap<>();
 
-        long shadowId = id;
+        long shadowId = shadowService.findByApiKey(apiKey).getId();
         Shadow shadow = shadowService.findById(shadowId);
 
         List<Keyword> keywords = keywordService.findByShadowAndFavorite(shadow);
