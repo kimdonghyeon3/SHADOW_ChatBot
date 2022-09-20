@@ -224,15 +224,14 @@ public class ShadowController {
         // code viewer(Markdown)
         String markdownValueFormLocal = """
                 ```javascript
-                <script type="text/javascript" async=true charset="UTF-8" src="https://shadows.site/js/chat.js"></script>
-                        <script>
-                            window.dyc = {
-                                chatUid: """ + api_key + "\n" +
-                """
-                            }
-                        </script>
+                    <script type="text/javascript" async=true charset="UTF-8" src="https://shadows.site/js/chat.js"></script>
+                    <script>
+                        window.dyc = {
+                            chatUid: \"%s\"              
+                        }
+                    </script>
                 ```
-                """;
+                """.formatted(api_key);
 
         Parser parser = Parser.builder().build();
         Node document = parser.parse(markdownValueFormLocal);
