@@ -216,9 +216,22 @@ public class ShadowController {
                 }
         );
 
-        String page = "example.md";
+
+
+        String api_key = shadow.getAPIKey();
+
         // code viewer(Markdown)
-        String markdownValueFormLocal = getMarkdownValueFormLocal(page);
+        String markdownValueFormLocal = """
+                ```javascript
+                <script type="text/javascript"  async=true charset="UTF-8" src="https://shadows.site/js/chat.js></script>
+                        <script>
+                            window.dyc = {
+                                chatUid: """ + api_key +
+                """
+                            }
+                        </script>
+                ```
+                """;
 
         Parser parser = Parser.builder().build();
         Node document = parser.parse(markdownValueFormLocal);
