@@ -226,7 +226,7 @@ public class ShadowController {
                 <script type="text/javascript"  async=true charset="UTF-8" src="https://shadows.site/js/chat.js></script>
                         <script>
                             window.dyc = {
-                                chatUid: """ + api_key +
+                                chatUid: """ + api_key + "\n" +
                 """
                             }
                         </script>
@@ -241,16 +241,6 @@ public class ShadowController {
 
         mav.setViewName("shadow/flow_list");
         return mav;
-    }
-
-    public String getMarkdownValueFormLocal(String manualPage) throws Exception {
-        StringBuilder stringBuilder = new StringBuilder();
-        ClassPathResource classPathResource = new ClassPathResource(LOCAL_MANUAL_PATH + manualPage);
-
-        BufferedReader br = Files.newBufferedReader(Paths.get(classPathResource.getURI()));
-        br.lines().forEach(line -> stringBuilder.append(line).append("\n"));
-
-        return stringBuilder.toString();
     }
 
     @GetMapping("/shadow/delete/{id}")
