@@ -1,10 +1,7 @@
 package com.example.shadow.domain.chat;
 
 import com.example.shadow.domain.member.service.MemberService;
-import com.example.shadow.domain.shadow.entity.Flow;
-import com.example.shadow.domain.shadow.entity.Flowchart;
-import com.example.shadow.domain.shadow.entity.Keyword;
-import com.example.shadow.domain.shadow.entity.Shadow;
+import com.example.shadow.domain.shadow.entity.*;
 import com.example.shadow.domain.shadow.service.FlowChartService;
 import com.example.shadow.domain.shadow.service.KeywordService;
 import com.example.shadow.domain.shadow.service.QuestionService;
@@ -18,14 +15,12 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import javax.persistence.criteria.CriteriaBuilder;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -158,8 +153,8 @@ public class ChatController {
         return "chatbot/chat";
     }
     @PostMapping("/chat/{apiKey}")
-    public String chatGET(Model model, @RequestParam("keyword") String keywordName,
-                          @RequestParam Integer seq, @RequestParam String url, @PathVariable String apiKey) {
+    public String chatGET(Model model, @RequestParam("shadow_keyword") String keywordName,
+                          @RequestParam("shadow_seq") Integer seq, @RequestParam("shadow_url") String url, @PathVariable String apiKey) {
 
 
         log.info("시나리오에서는 ? = {} ", apiKey);
@@ -195,6 +190,7 @@ public class ChatController {
         model.addAttribute("flowcharts",getFlowcharts(keyword));
         model.addAttribute("seq",seq);
         model.addAttribute("description",description);
+        model.addAttribute("fixedMsg",getFixedMsg(keyword));
 
         return "chatbot/chat";
     }
@@ -211,16 +207,19 @@ public class ChatController {
         String reqMessage = question;
         reqMessage = reqMessage.replace("\"", "");
 
+
         // [scenario] 시작
-        if (questionService.existByQuestion(reqMessage)) {
-            log.debug("[scenario][case1] 키워드 DB에서 도출 시작");
-            Keyword keyword = getKeyword(reqMessage);
-            log.debug("[scenario] keyword : " + keyword);
+        Question q = questionService.existByQuestion(reqMessage) ? questionService.findByQuestion(reqMessage) : null;
+        if(q!=null && q.getKeyword().getShadow().equals(shadow)){
 
-            shadow.addDbCall();
-            shadowService.save(shadow);
+                log.debug("[scenario][case1] 키워드 DB에서 도출 시작");
+                Keyword keyword = getKeyword(reqMessage);
+                log.debug("[scenario] keyword : " + keyword);
 
-            return getMessage(keyword);
+                shadow.addDbCall();
+                shadowService.save(shadow);
+
+                return getMessage(keyword);
 
         } else {
             log.debug("[scenario][case2] 키워드 API에서 도출 시작");
@@ -334,17 +333,19 @@ public class ChatController {
         return flows;
     }
 
-    private ResponseEntity<ResultResponse> getMessage(Keyword keyword) {
-
-        List<Flowchart> flowcharts = getFlowcharts(keyword);
-        // 안내 메세지
-        String msg = """
-                안녕하세요. <br>
+    private String getFixedMsg(Keyword keyword){
+        // 도입부 안내 메세지
+        return """
                 shadow가 \'%s\' 을 안내합니다. <br>
                 아래 빨간 버튼을 따라 눌러주세요. <br>
                 """.formatted(keyword.getName());
+    }
+    private ResponseEntity<ResultResponse> getMessage(Keyword keyword) {
+
+        List<Flowchart> flowcharts = getFlowcharts(keyword);
+
         // 전체 flow 응답
-        return ResponseEntity.ok(ResultResponse.of("GET_FLOWS_FROM_KEYWORD", msg, flowcharts));
+        return ResponseEntity.ok(ResultResponse.of("GET_FLOWS_FROM_KEYWORD", getFixedMsg(keyword), flowcharts));
     }
 
 }
