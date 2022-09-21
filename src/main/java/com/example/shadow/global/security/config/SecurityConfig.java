@@ -51,7 +51,8 @@ public class SecurityConfig {
     private static final String[] AUTH_AUTHENTICATED_LIST = {
             "/members/**",
             "/shadow/**",
-            "/contact/**"
+            "/contact/**",
+            "/admin/**"
     }; // 인가 필요
 
     private final MemberSecurityService customUserDetailsService;
@@ -100,7 +101,7 @@ public class SecurityConfig {
         http
             .authorizeRequests()
                 .antMatchers(AUTH_ALL_LIST).permitAll()
-                .antMatchers(AUTH_ADMIN_LIST).hasRole("ADMIN")
+                //.antMatchers(AUTH_ADMIN_LIST).hasRole("ADMIN")
                 .antMatchers(AUTH_AUTHENTICATED_LIST).authenticated();
                 // .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 // .and().cors().and();

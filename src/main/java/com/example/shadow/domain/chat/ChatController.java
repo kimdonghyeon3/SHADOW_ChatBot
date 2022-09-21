@@ -177,7 +177,7 @@ public class ChatController {
         });
 
         model.addAttribute("favoriteKeywords", favoriteKeywords);
-        Keyword keyword = keywordService.findByName(keywordName);
+        Keyword keyword = keywordService.findByNameAndShadow(keywordName,shadow);
 
         String targetUrl = getFlowcharts(keyword).get(seq-1).getFlow().getUrl();
         String description = seq == getFlowcharts(keyword).size() ? null : getFlowcharts(keyword).get(seq).getFlow().getDescription();
