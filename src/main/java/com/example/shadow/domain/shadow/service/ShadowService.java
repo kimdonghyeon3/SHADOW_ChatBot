@@ -24,6 +24,8 @@ public class ShadowService {
         shadow.setName(name);
         shadow.setMainurl(mainurl);
         shadow.setMember(member);
+        shadow.setApicall(0L);
+        shadow.setDbcall(0L);
         String api_key = UUID.randomUUID().toString().replace("-","");
         log.debug("api_key : "+ api_key);
         shadow.setApiKey(api_key);

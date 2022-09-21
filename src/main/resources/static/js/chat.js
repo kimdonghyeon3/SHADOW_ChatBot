@@ -73,8 +73,6 @@
                     var el = document.createElement('div');
                     el.innerHTML = data;
                     // console.log('element : '+ el);
-                    // document.body.appendChild()가 간헐적으로 TypeError: Cannot read properties of null (reading 'appendChild') 발생.
-                    // 새로고침 할시, 정상 호출 됨.
                     document.body.appendChild( el );
                     addChatScript();
                     addJquery();

@@ -119,8 +119,10 @@ public class ChatController {
         return requestBody;
     }
 
-    @RequestMapping("/chat/{apiKey}")
+    @GetMapping("/chat/{apiKey}")
     public String chatGET(Model model, @PathVariable String apiKey) {
+
+        log.info("apikey로 변경된 값을 잘 가져오는가? = {} ", apiKey);
 
         // 처음 가져올 떄, 해당 사용자 chat에 있는 favorite을 가져오자. (필요한 정보 : member id와 shadow id 가 필요하다.)
         // 우선 가정하자, member id가 1이고 shadow id가 1인 것을 시작했다고 하자.
@@ -159,6 +161,8 @@ public class ChatController {
     public String chatGET(Model model, @RequestParam("keyword") String keywordName,
                           @RequestParam Integer seq, @RequestParam String url, @PathVariable String apiKey) {
 
+
+        log.info("시나리오에서는 ? = {} ", apiKey);
 
         HashMap<String, String> favoriteKeywords = new HashMap<>();
 
@@ -212,6 +216,10 @@ public class ChatController {
             log.debug("[scenario][case1] 키워드 DB에서 도출 시작");
             Keyword keyword = getKeyword(reqMessage);
             log.debug("[scenario] keyword : " + keyword);
+
+            shadow.addDbCall();
+            shadowService.save(shadow);
+
             return getMessage(keyword);
 
         } else {
@@ -239,6 +247,10 @@ public class ChatController {
 
             if (responseCode == 200) { // 정상 호출
                 log.debug("[scenario] API 정상 호출");
+
+                shadow.addApiCall();
+                shadowService.save(shadow);
+
                 BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
                 String decodedString;
                 String jsonString = "";
@@ -269,6 +281,9 @@ public class ChatController {
                         create(reqMessage, keyword);
                     }
                     in.close();
+
+
+
                     return getMessage(keyword);
 
                 } catch (Exception e) {

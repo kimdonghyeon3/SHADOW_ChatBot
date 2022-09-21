@@ -36,4 +36,18 @@ public class Shadow {
 
     @Column
     private String apiKey;
+
+    @Column
+    private Long apicall;
+
+    @Column
+    private Long dbcall;
+
+    public void addApiCall(){
+        apicall += 1;
+    }
+
+    public void addDbCall(){
+        dbcall += 1;
+    }
 }

@@ -12,11 +12,6 @@ public class MainController {
         model.addAttribute("pageTitle", "Main Page");
         return "redirect:/main";
     }
-    @RequestMapping("/admin")
-    public String admin(Model model) {
-        model.addAttribute("pageTitle", "Admin Page");
-        return "admin";
-    }
     @RequestMapping("/main")
     public String main(Model model) {
         model.addAttribute("pageTitle", "Main Page");
