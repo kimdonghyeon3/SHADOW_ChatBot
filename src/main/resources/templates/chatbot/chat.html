@@ -5,408 +5,22 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <!-- JQUERY JS -->
-    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="https://shadows.site/webjars/jquery/jquery.min.js"></script>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.0/css/bootstrap.min.css">
-
-    <style>
-        @import url('https://fonts.googleapis.com/css?family=Lato:400,700');
-        @import url("https://fonts.googleapis.com/earlyaccess/notosanskr.css");
-        a {
-            color: black;
-            text-decoration: none;
-        }
-
-        /*챗봇 off상태 말풍선*/
-        .ch-button{
-            display: none;
-            position: fixed;
-            width: 84px;
-            height: 84px;
-            bottom: 40px;
-            right: 40px;
-            border: 0;
-            outline: 0;
-            color: #79C7C5;
-            background-color: transparent;
-         }
-
-        /*챗봇 on상태 채팅창*/
-        .chat_container {
-            position: fixed;
-            width : 23%;
-            height : 58%;
-            bottom : 0;
-            right : 0;
-            margin : 0 10px 20px 0;
-            /*background: linear-gradient(to bottom left,  #79C7C5 40%, #F9FBFF 100%);*/
-            border-radius: 15px 15px 0px 15px;
-            /*border : 1px solid #79C7C5;*/
-            background-color: rgb(236, 240, 243);
-            box-shadow: 0px 0px 0.4rem 0.1rem rgba(0,0,0,0.1);
-            font-family: "Noto Sans KR", sans-serif;
-        }
-
-        .chatbox {
-            width:100%;
-            height:100%;
-            background-color: rgb(236, 240, 243);
-            border-radius: 15px 15px 0px 15px;
-        }
-
-        /*챗봇 상단*/
-        .top-bar {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            height: 9%;
-            /*background:#F9FBFF;*/
-            background-color: rgb(236, 240, 243);
-            border-radius: 10px 10px 0 0;
-            gap : 8px;
-            /*margin:1px;*/
-        }
-
-        .icon-image{
-            display : flex;
-            justify-content: center;
-            align-items: center;
-            width: 130px;
-            height: 35px;
-            margin-left: 3%;
-        }
-
-        .gap{
-            flex-grow : 1;
-        }
-
-        .btn-close{
-            border: 0;
-            font-size: 1em;
-            color:#A1E2D9;
-            margin-right: 3%;
-            opacity: 0.8;
-            cursor: pointer;
-        }
-
-        /*챗봇 중단*/
-        .middle {
-            display : flex;
-            flex-direction: column;
-            padding: 10px;
-            background: white;
-            width: 100%;
-            opacity: 0.85;
-            top: 60px;
-            height: 75%;
-            overflow-y: auto;
-            border-radius: 15px 0px 0px 0px;
-        }
-        /*스크롤바 */
-        .middle::-webkit-scrollbar {
-            width: 10px;  /* 스크롤바의 너비 */
-        }
-
-        .middle::-webkit-scrollbar-thumb {
-            height: 30%; /* 스크롤바의 길이 */
-            background: #58CCFF; /* 스크롤바의 색상 */
-            border-radius: 10px;
-        }
-
-        .middle::-webkit-scrollbar-track {
-            background: rgba(33, 122, 244, .1);  /*스크롤바 뒷 배경 색상*/
-        }
-
-        /*말풍선 사용자 채팅*/
-        .incoming
-        {
-            font-family: 'Noto Sans KR', sans-serif;
-            font-weight: 500;
-            position: relative;
-            width: fit-content;
-            margin : 1% auto 1% 5%;
-            padding:10px;
-            background: rgb(236, 240, 243);
-            border-radius: 15px;
-        }
-        .incoming:after
-        {
-            content: '';
-            position: absolute;
-            border-style: solid;
-            border-width: 6px 10px 6px 0;
-            border-color: transparent rgb(236, 240, 243);
-            display: block;
-            width: 0;
-            z-index: 1;
-            left: -10px;
-            top: 12px;
-        }
-
-        .outgoing-box{
-            display: flex;
-        }
-
-        .outgoing
-        {
-            font-family: 'Noto Sans KR', sans-serif;
-            font-weight: 500;
-            position: relative;
-            width: fit-content;
-            padding: 10px;
-            margin : 1% 3% 1% auto;
-            background: #58CCFF;
-            -webkit-border-radius: 10px;
-            -moz-border-radius: 10px;
-            border-radius: 10px;
-        }
-
-        .outgoing:after
-        {
-            content: '';
-            position: absolute;
-            border-style: solid;
-            border-width: 6px 0 6px 10px;
-            border-color: transparent #58CCFF;
-            display: block;
-            width: 0;
-            z-index: 1;
-            right: -7px;
-            top: 10px;
-        }
-
-        /*챗봇 자주찾는 목록*/
-        .favorite-box{
-            gap: 5px;
-        }
-
-        .favorite{
-            border:2px solid #58CCFF;
-            color: #58CCFF;
-            font-weight: 400;
-            border-radius: 15px;
-        }
-
-        .favorite:hover{
-            background: #58CCFF;
-            color: white;
-        }
-
-        /*챗봇 하단*/
-        .bottom-bar {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            height: 16%;
-            background-color: white;
-        }
-
-        .send-form{
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 100%;
-        }
-
-        .form-box{
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background:rgb(236, 240, 243);
-            border-radius: 10px;
-            padding: 5px 20px 5px 20px;
-            width: 90%;
-        }
-
-        .input-msg {
-            width: 80%;
-            border: 0;
-            background:rgb(236, 240, 243);
-            color: rgb(236, 240, 243);
-            font-size: 15px;
-        }
-
-        .input-msg::placeholder {
-            color:#A1E2D9;
-            font-size: 13px;
-        }
-
-        .input-msg:focus {
-            color: #777777;
-            outline: 0;
-        }
-
-        #send{
-            color:#A1E2D9;
-            opacity: 0.8;
-            cursor: pointer;
-            border: 0;
-            background-color: transparent;
-        }
-
-        @keyframes bounce {
-            30% { transform: translateY(-2px); }
-            60% { transform: translateY(0px); }
-            80% { transform: translateY(2px); }
-            100% { transform: translateY(0px); opacity: 0.5;  }
-        }
-</style>
-
-    <script th:inline="javascript">
-
-        //챗봇 켜기
-        function OpenChat(){
-            $("#container").show();
-            $("#btnChatOpen").hide();
-            console.log("그럼 여기 되냐?");
-        }
-
-        //챗봇 닫기
-        function CloseChat(){
-            $("#container").hide();
-            $("#btnChatOpen").show();
-        }
-
-        var seq = find_seq(1); // 임의로 1번 순서로 시작
-        var flowcharts= new Array();
-
-        // 입력 메세지에 따른 시나리오 출력
-        function ChatMessageReceive(event, form){
-
-            event.preventDefault();
-            console.log(form.message.value);
-            form.message.value = form.message.value.trim();
-
-            if ( form.message.value.length == 0 ) {
-                form.message.focus();
-                return false;
-            }
-
-            $("#greetings").append("<div class=\"outgoing\">" + form.message.value + "</div>");  //html 추가
-            $('#greetings').scrollTop($('#greetings').prop('scrollHeight'));    //스크롤 포커스
-
-            findScenario(form);
-
-            form.message.value = '';
-            form.message.focus();
-        }
-
-        function findScenario(form){
-
-                $.post(
-                '/chat/question',
-                {
-                    question: form.message.value, // 폼 내용, input name, value
-                    // mainurl : mainurl // url로 shadow id를 판단할 때 사용 -> 아직 배포과정 미정
-                },
-                function(result) {
-                    console.log("받은 메시지 : " + result.message);
-                    console.log("받은 데이터 : "+ result.data);
-                    if(result.data==false){
-                        var msg = `
-                            <div class = "incoming">
-                                <p>${result.message}</p>
-                            </div>
-                        `;
-                        send_message(msg);
-                    } else {
-                        flowcharts=result.data;
-                        var msg = `
-                            <div class = "incoming">
-                                <p>${result.message}</p>
-                                <div class="d-flex justify-content-center">
-                        `;
-                        send_message(get_scenario(msg));
-                    }
-                },
-                'json'
-            );
-
-        }
-
-        function find_seq(val){
-            // 추후 배포과정 이후, 현재 url 을 기반으로 seq 판단하는 로직 추가 필요
-            return val;
-        }
-
-       function click_flow_url(url){
-         // 현재 주소
-         var mainurl = $(location).attr('hostname');
-         console.log("url "+mainurl);
-
-         console.log("click flow url : "+url);
-         seq++; // 배포 후 수정 필요
-         console.log(seq);
-
-         console.log("flowcharts : "+flowcharts);
-         var msg = `
-            <div class = "incoming">
-                <div class="d-flex justify-content-center">
-        `;
-         send_message(get_scenario(msg));
-
-
-       }
-
-       function get_scenario(msg){
-            console.log("flowcharts : "+flowcharts);
-
-            var btn
-            var description;
-            var keyword;
-            $.each(flowcharts,function(i,flowchart){
-                keyword=flowchart.keyword.name;
-                console.log("순서 : "+flowchart.seq);
-                console.log("설명 : "+flowchart.flow.description);
-                console.log("키워드 : "+ keyword);
-                if(seq==flowchart.seq){
-                btn = `
-                    <button class="btn btn-danger" onclick="click_flow_url('${flowchart.flow.url}');">${flowchart.flow.name}</button>
-                    <p> -> </p>
-                `;
-                description = `<br><p>${flowchart.flow.description}</p> `;
-                } else {
-                btn = `
-                    <button class="btn btn-primary" onclick="click_flow_url('${flowchart.flow.url}');">${flowchart.flow.name}</button>
-                    <p> -> </p>
-                `;}
-                msg=msg.concat(btn);
-            });
-            if(description==null){
-                description = `
-                    <p>
-                    축하합니다. <br>
-                    \'${keyword}\'을(를) 해결 하였습니다. <br>
-                    더 궁금한 것이 있다면, \'처음으로\' 를 눌러주세요. <br>
-                    </p>
-                    <div class="d-flex justify-content-center">
-                        <button class="btn btn-info" onclick="location.href='/chat'">처음으로</button>
-                        <button class="btn btn-info" onclick="CloseChat()">종료하기</button>
-                    </div>
-                `;
-            }
-            return msg+"</div>"+description+"</div>"
-       }
-
-       function send_message(msg){
-            $("#greetings").append(msg);
-            $('#greetings').scrollTop($('#greetings').prop('scrollHeight'));
-       }
-    </script>
-
+    <link rel="stylesheet" type="text/css" href="http://localhost:8080/css/chatbot.css">
+    <script type="text/javascript" src="http://localhost:8080/js/chatbot.js"></script>
 </head>
 <body>
 
 <!--챗봇 off상태 말풍선-->
 <button type="button" class="ch-button" onclick="OpenChat()" id="btnChatOpen">
-    <img th:src="@{/image/icon.png}" style="object-fit: cover; width: 100%" />
+    <img th:src="@{https://shadows.site/image/icon.png}" style="object-fit: cover; width: 100%" />
 </button>
 
+<!--https://shadows.site-->
+<!--http://localhost:8080-->
 <!--채팅창-->
 <div class="chat_container" id="container">
     <div class="chatbox">
@@ -415,7 +29,7 @@
         <div class="top-bar">
             <!--아이콘-->
             <div class="icon-image">
-                <img th:src="@{/image/icon_name.png}" style="object-fit: cover; width: 100%" />
+                <img th:src="@{https://shadows.site/image/icon_name.png}" style="object-fit: cover; width: 100%" />
             </div>
             <div class="gap"></div>
             <!-- 채팅창 닫기 -->
@@ -424,21 +38,52 @@
 
 <!--챗봇 중단-->
         <div class="middle" id="greetings">
-                <div class="outgoing">
-                    hello
-                </div>
+            <div class="outgoing">
+                hello
+            </div>
 
-                <div class="outgoing-box">
-                    <img th:src="@{/image/icon.png}" style="width: 35px; height: 35px; vertical-align: top" />
-                    <div class="incoming">
-                        안녕하세요. 😊 <br/>
-                        Shadow 챗봇 입니다! <br/>
-                        <br/>
-                        ※ Shadow 서비스 이용 안내 <br/>
-                        자주 찾는 목적지는 챗봇 하단 버튼을 눌러주세요.<br/>
-                        원하는 목적지가 없다면, 궁금한 사항을 채팅해주세요.
-                    </div>
+            <div class="outgoing-box">
+                <img th:src="@{https://shadows.site/image/icon.png}" style="width: 35px; height: 35px; vertical-align: top" />
+                <div class="incoming">
+                    안녕하세요. 😊 <br/>
+                    Shadow 챗봇 입니다! <br/>
+                    <br/>
+                    ※ Shadow 서비스 이용 안내 <br/>
+                    자주 찾는 목적지는 챗봇 하단 버튼을 눌러주세요.<br/>
+                    원하는 목적지가 없다면, 궁금한 사항을 채팅해주세요.
                 </div>
+            </div>
+            <div th:if="${flowcharts} != null">
+                <div class = "incoming">
+                    <th:block th:if="${description != null}">
+                    <p th:utext="${fixedMsg}"></p>
+                        <div class="d-flex justify-content-center">
+                            <th:block th:each="flowchart : ${flowcharts}">
+                                <th:block th:if="${seq==flowchart.seq}">
+                                    <button class="btn btn-danger"
+                                            th:onclick="click_flow_url([[${flowchart.flow.url}]],[[${flowchart.seq}]],[[${keyword}]]);"
+                                            th:text="${flowchart.flow.name}"></button>
+                                    <p> -> </p>
+                                </th:block>
+                                <th:block th:if="${seq!=flowchart.seq}">
+                                    <button class="btn btn-primary"
+                                            th:onclick="click_flow_url([[${flowchart.flow.url}]],[[${flowchart.seq}]],[[${keyword}]]);"
+                                            th:text="${flowchart.flow.name}"></button>
+                                    <p> -> </p>
+                                </th:block>
+                            </th:block>
+                        </div>
+                        <p th:text="${description}"></p>
+                    </th:block>
+                    <th:block th:if="${description==null || description == ''}">
+                        <p th:utext="|축하합니다! <br> ${keyword}을(를) 해결 하였습니다. <br> 더 궁금한 것이 있다면, '처음으로' 를 눌러주세요.|"</p>
+                        <div class="d-flex justify-content-around">
+                            <button class="btn btn-primary" onclick="LoadChat();">처음으로</button>
+                            <button class="btn btn-primary" onclick="CloseChat();">종료하기</button>
+                        </div>
+                    </th:block>
+                </div>
+            </div>
         </div>
 
 <!--챗봇 하단-->
@@ -460,5 +105,6 @@
 
     </div>
 </div>
+
 </body>
 </html>

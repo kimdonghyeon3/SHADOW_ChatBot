@@ -29,13 +29,14 @@ public class  FlowService{
     private final FlowRepository flowRepository;
     private final FlowChartRepository flowChartRepository;
     private final KeywordRepository keywordRepository;
-    public void create(List<KeywordDto> keywords) {
+    public void create(List<KeywordDto> keywords, Shadow shadow) {
 
         for(KeywordDto keyword : keywords){
             List<FlowDto> flows = keyword.getFlow();
+            Keyword findkeyword = keywordRepository.findByNameAndShadow(keyword.getName(),shadow);
                 for(int i = 0 ; i < flows.size() ; i++){
                     System.out.println("여기가 언제 실행되고 오류가나니?");
-                    save(new Flow(),flows.get(i).getName(),flows.get(i).getDescription(),flows.get(i).getUrl());
+                    save(new Flow(),flows.get(i).getName(),flows.get(i).getDescription(),flows.get(i).getUrl(), findkeyword);
                 }
             }
         }
@@ -60,14 +61,16 @@ public class  FlowService{
                     int originFlowchartsLength = originFlowcharts.size();
                     int flowchartLength = flowcharts.size();
 
+                    Keyword findkeyword = keywordRepository.findByNameAndShadow(keywords.get(i).getName(), originShadow);
+
                     if(originFlowchartsLength < flowchartLength) {   //flow가 추가되었을 경우
                         for(int j = 0 ; j < flowchartLength ; j++){
 
                             if( j < originFlowchartsLength){
-                                save(originFlowcharts.get(j).getFlow(),flowcharts.get(j).getName(),flowcharts.get(j).getDescription(),flowcharts.get(j).getUrl());
+                                save(originFlowcharts.get(j).getFlow(),flowcharts.get(j).getName(),flowcharts.get(j).getDescription(),flowcharts.get(j).getUrl(), findkeyword);
                                 continue;
                             }
-                            Flow flow = save(new Flow(),flowcharts.get(j).getName(),flowcharts.get(j).getDescription(),flowcharts.get(j).getUrl());
+                            Flow flow = save(new Flow(),flowcharts.get(j).getName(),flowcharts.get(j).getDescription(),flowcharts.get(j).getUrl(), findkeyword);
 
                             Flowchart flowchart = save(new Flowchart(),keywordRepository.findByNameAndShadow(keywords.get(i).getName(), originShadow),flow,j+1);
                         }
@@ -77,7 +80,7 @@ public class  FlowService{
                             Flow flow = originFlowcharts.get(j).getFlow();
 
                             if( j < flowchartLength){
-                                save(flow,flowcharts.get(j).getName(),flowcharts.get(j).getDescription(),flowcharts.get(j).getUrl());
+                                save(flow,flowcharts.get(j).getName(),flowcharts.get(j).getDescription(),flowcharts.get(j).getUrl(), findkeyword);
                                 continue;
                             }
 
@@ -86,14 +89,14 @@ public class  FlowService{
                         }
                     }else{  //flow가 그대로인 경우
                         for(int j = 0 ; j < flowchartLength ; j++){
-                            save(originFlowcharts.get(j).getFlow(),flowcharts.get(j).getName(),flowcharts.get(j).getDescription(),flowcharts.get(j).getUrl());
+                            save(originFlowcharts.get(j).getFlow(),flowcharts.get(j).getName(),flowcharts.get(j).getDescription(),flowcharts.get(j).getUrl(), findkeyword);
                         }
                     }
                     continue;
                 }
                 //추가된 경우 ( 추가 keyword + flow추가)
                 for(int j = 0 ; j < keywords.get(i).getFlow().size() ; j++){
-                    Flow flow = save(new Flow(),keywords.get(i).getFlow().get(j).getName() ,keywords.get(i).getFlow().get(j).getDescription() ,keywords.get(i).getFlow().get(j).getUrl());
+                    Flow flow = save(new Flow(),keywords.get(i).getFlow().get(j).getName() ,keywords.get(i).getFlow().get(j).getDescription() ,keywords.get(i).getFlow().get(j).getUrl(), keywordRepository.findByNameAndShadow(keywords.get(i).getName(), originShadow));
 
                     Flowchart flowchart = save(new Flowchart(),keywordRepository.findByNameAndShadow(keywords.get(i).getName(), originShadow),flow,j+1);
                 }
@@ -111,14 +114,16 @@ public class  FlowService{
                     int originFlowchartsLength = originFlowcharts.size();
                     int flowchartsLength = flowcharts.size();
 
+                    Keyword findkeyword = keywordRepository.findByNameAndShadow(keywords.get(i).getName(), originShadow);
+
                     if(originFlowchartsLength < flowchartsLength) {   //flow가 추가되었을 경우
                         for(int j = 0 ; j < flowchartsLength ; j++){
 
                             if( j < originFlowchartsLength){
-                                save(originFlowcharts.get(j).getFlow(),flowcharts.get(j).getName(),flowcharts.get(j).getDescription(),flowcharts.get(j).getUrl());
+                                save(originFlowcharts.get(j).getFlow(),flowcharts.get(j).getName(),flowcharts.get(j).getDescription(),flowcharts.get(j).getUrl(), findkeyword);
                                 continue;
                             }
-                            Flow flow = save(new Flow(),flowcharts.get(j).getName(),flowcharts.get(j).getDescription(), flowcharts.get(j).getUrl());
+                            Flow flow = save(new Flow(),flowcharts.get(j).getName(),flowcharts.get(j).getDescription(), flowcharts.get(j).getUrl(), findkeyword);
 
                             Flowchart flowchart = save(new Flowchart(),keywordRepository.findByNameAndShadow(keywords.get(i).getName(), originShadow),flow,j+1);
                         }
@@ -128,7 +133,7 @@ public class  FlowService{
                             Flow flow = originFlowcharts.get(j).getFlow();
 
                             if( j < flowchartsLength){
-                                save(flow,flowcharts.get(j).getName(),flowcharts.get(j).getDescription(),flowcharts.get(j).getUrl());
+                                save(flow,flowcharts.get(j).getName(),flowcharts.get(j).getDescription(),flowcharts.get(j).getUrl(), findkeyword);
                                 continue;
                             }
 
@@ -137,7 +142,7 @@ public class  FlowService{
                         }
                     }else{  //flow가 그대로인 경우
                         for(int j = 0 ; j < flowchartsLength ; j++){
-                            save(originFlowcharts.get(j).getFlow(),flowcharts.get(j).getName(),flowcharts.get(j).getDescription(),flowcharts.get(j).getUrl());
+                            save(originFlowcharts.get(j).getFlow(),flowcharts.get(j).getName(),flowcharts.get(j).getDescription(),flowcharts.get(j).getUrl(), findkeyword);
                         }
                     }
                     continue;
@@ -153,14 +158,16 @@ public class  FlowService{
                 int originFlowchartsLength = originFlowcharts.size();
                 int flowchartsLength = flowcharts.size();
 
+                Keyword findkeyword = keywordRepository.findByNameAndShadow(keywords.get(i).getName(), originShadow);
+
                 if(originFlowchartsLength < flowchartsLength) {   //flow가 추가되었을 경우
                     for(int j = 0 ; j < flowchartsLength ; j++){
 
                         if( j < originFlowchartsLength){
-                            save(originFlowcharts.get(j).getFlow(),flowcharts.get(j).getName(),flowcharts.get(j).getDescription(),flowcharts.get(j).getUrl());
+                            save(originFlowcharts.get(j).getFlow(),flowcharts.get(j).getName(),flowcharts.get(j).getDescription(),flowcharts.get(j).getUrl(), findkeyword);
                             continue;
                         }
-                        Flow flow = save(new Flow(),flowcharts.get(j).getName(),flowcharts.get(j).getDescription(),flowcharts.get(j).getUrl());
+                        Flow flow = save(new Flow(),flowcharts.get(j).getName(),flowcharts.get(j).getDescription(),flowcharts.get(j).getUrl(), findkeyword);
                         if(flow.getId() == null){
                             flow = flowRepository.findByName(flow.getName());
                         }
@@ -174,7 +181,7 @@ public class  FlowService{
                         Flow flow = originFlowcharts.get(j).getFlow();
 
                         if( j < flowchartsLength){
-                            save(flow,flowcharts.get(j).getName(),flowcharts.get(j).getDescription(),flowcharts.get(j).getUrl());
+                            save(flow,flowcharts.get(j).getName(),flowcharts.get(j).getDescription(),flowcharts.get(j).getUrl(), findkeyword);
                             continue;
                         }
 
@@ -184,7 +191,7 @@ public class  FlowService{
                     }
                 }else{  //flow가 그대로인 경우
                     for(int j = 0 ; j < flowchartsLength ; j++){
-                        save(originFlowcharts.get(j).getFlow(),flowcharts.get(j).getName(),flowcharts.get(j).getDescription(),flowcharts.get(j).getUrl());
+                        save(originFlowcharts.get(j).getFlow(),flowcharts.get(j).getName(),flowcharts.get(j).getDescription(),flowcharts.get(j).getUrl(), findkeyword);
                     }
                 }
             }
@@ -192,10 +199,11 @@ public class  FlowService{
 
     }
 
-    private Flow save(Flow flow, String name, String description, String url) {
+    private Flow save(Flow flow, String name, String description, String url, Keyword keyword) {
         flow.setName(name);
         flow.setDescription(description);
         flow.setUrl(url);
+        flow.setKeyword(keyword.getId());
         try{
            flow=flowRepository.save(flow);
         }catch (DataIntegrityViolationException e){

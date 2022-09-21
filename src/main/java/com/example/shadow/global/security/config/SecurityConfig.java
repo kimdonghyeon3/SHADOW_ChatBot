@@ -16,6 +16,12 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.CorsUtils;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Configuration
@@ -25,14 +31,19 @@ public class SecurityConfig {
     /* 인가 구분을 위한 url path 지정 */
     private static final String[] AUTH_WHITELIST_STATIC = {
             "/css/**",
+            "/fonts/**",
+            "/image/**",
+            "/images/**",
+            "/img/**",
             "/js/**",
+            "/scss",
             "/assets/**",
             "/error/**",
             "/new/**",
-            "/img/**",
             "/manuals/**"
     }; // 정적 파일 인가 없이 모두 허용
     private static final String[] AUTH_ALL_LIST = {
+            "/chat/**",
             "/singup/**",
             "/login/**",
             "/main/**",
@@ -43,10 +54,11 @@ public class SecurityConfig {
     }; // admin 롤 만 허용
     private static final String[] AUTH_AUTHENTICATED_LIST = {
             "/members/**",
-            "/chat/**",
-            "/my/**",
             "/shadow/**",
-            "/contact/**"
+            "/contact/**",
+            "/admin/**",
+            "/count/**",
+            "/**"
     }; // 인가 필요
 
     private final MemberSecurityService customUserDetailsService;
@@ -91,9 +103,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .authorizeRequests()
+            .cors().configurationSource(corsConfigurationSource());
+        http
+                .authorizeRequests()
+//                .antMatchers(AUTH_ADMIN_LIST).hasRole("ADMIN") // 403 페이지 대신 alert 로 변경
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .antMatchers(AUTH_ALL_LIST).permitAll()
-                .antMatchers(AUTH_ADMIN_LIST).hasRole("ADMIN")
                 .antMatchers(AUTH_AUTHENTICATED_LIST).authenticated();
         http
                 .csrf()
@@ -115,8 +130,21 @@ public class SecurityConfig {
         http
                 .exceptionHandling()
                 .accessDeniedPage("/restrict");
-        ;
+
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOriginPatterns(List.of(CorsConfiguration.ALL));
+        configuration.setAllowedMethods(List.of(CorsConfiguration.ALL));
+        configuration.setAllowedHeaders(List.of(CorsConfiguration.ALL));
+        configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
 }

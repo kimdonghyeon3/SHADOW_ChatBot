@@ -1,10 +1,7 @@
 package com.example.shadow.domain.chat;
 
 import com.example.shadow.domain.member.service.MemberService;
-import com.example.shadow.domain.shadow.entity.Flow;
-import com.example.shadow.domain.shadow.entity.Flowchart;
-import com.example.shadow.domain.shadow.entity.Keyword;
-import com.example.shadow.domain.shadow.entity.Shadow;
+import com.example.shadow.domain.shadow.entity.*;
 import com.example.shadow.domain.shadow.service.FlowChartService;
 import com.example.shadow.domain.shadow.service.KeywordService;
 import com.example.shadow.domain.shadow.service.QuestionService;
@@ -20,8 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -118,8 +114,10 @@ public class ChatController {
         return requestBody;
     }
 
-    @RequestMapping("/chat")
-    public String chatGET(Model model) {
+    @GetMapping("/chat/{apiKey}")
+    public String chatGET(Model model, @PathVariable String apiKey) {
+
+        log.info("apikey로 변경된 값을 잘 가져오는가? = {} ", apiKey);
 
         // 처음 가져올 떄, 해당 사용자 chat에 있는 favorite을 가져오자. (필요한 정보 : member id와 shadow id 가 필요하다.)
         // 우선 가정하자, member id가 1이고 shadow id가 1인 것을 시작했다고 하자.
@@ -127,7 +125,8 @@ public class ChatController {
         HashMap<String, String> favoriteKeywords = new HashMap<>();
 
         //long memberId = 1;
-        long shadowId = 1;
+
+        long shadowId = shadowService.findByApiKey(apiKey).getId();
 
         //Member member = memberService.findById(1);
         Shadow shadow = shadowService.findById(shadowId);
@@ -153,25 +152,74 @@ public class ChatController {
 
         return "chatbot/chat";
     }
+    @PostMapping("/chat/{apiKey}")
+    public String chatGET(Model model, @RequestParam("shadow_keyword") String keywordName,
+                          @RequestParam("shadow_seq") Integer seq, @RequestParam("shadow_url") String url, @PathVariable String apiKey) {
 
 
-    @RequestMapping("/chat/question")
+        log.info("시나리오에서는 ? = {} ", apiKey);
+
+        HashMap<String, String> favoriteKeywords = new HashMap<>();
+
+        long shadowId = shadowService.findByApiKey(apiKey).getId();
+        Shadow shadow = shadowService.findById(shadowId);
+
+        List<Keyword> keywords = keywordService.findByShadowAndFavorite(shadow);
+        keywords.forEach(keyword -> {
+            Flowchart flowchart = flowChartService.findByKeyword(keyword);
+            log.info("keyword에서 가져온 flowchart에 seq가 마지막인, flow id = {}", flowchart.getFlow().getId());
+            favoriteKeywords.put(keyword.getName(), flowchart.getFlow().getUrl());
+        });
+
+        model.addAttribute("favoriteKeywords", favoriteKeywords);
+        Keyword keyword = keywordService.findByNameAndShadow(keywordName,shadow);
+
+        String targetUrl = getFlowcharts(keyword).get(seq-1).getFlow().getUrl();
+        String description = seq == getFlowcharts(keyword).size() ? null : getFlowcharts(keyword).get(seq).getFlow().getDescription();
+        log.debug("[scenario] targetUrl : "+targetUrl);
+        log.debug("[scenario] description : "+description);
+        if(url.equals(targetUrl)){
+            seq++;
+        }else{
+            log.debug("[scenario] targetUrl : "+targetUrl+" url : "+url+" 다름");
+        }
+
+        log.debug("[scenario] flowcharts : "+getFlowcharts(keyword));
+        log.debug("[scenario] seq : "+seq);
+        model.addAttribute("keyword",keywordName);
+        model.addAttribute("flowcharts",getFlowcharts(keyword));
+        model.addAttribute("seq",seq);
+        model.addAttribute("description",description);
+        model.addAttribute("fixedMsg",getFixedMsg(keyword));
+
+        return "chatbot/chat";
+    }
+
+    @RequestMapping("/chat/question/{apiKey}")
     @SendTo("/topic/shadow")
     @ResponseBody
-    public ResponseEntity<ResultResponse> sendScenario(String question) throws IOException {
+    public ResponseEntity<ResultResponse> sendScenario(String question, @PathVariable String apiKey) throws IOException {
 
         // 테스트용 shadow , testShadowId로 지정
-        Shadow shadow = shadowService.findById(testShadowId);
+        long shadowId = shadowService.findByApiKey(apiKey).getId();
+        Shadow shadow = shadowService.findById(shadowId);
         log.debug("[scenario] shadow : " + shadow.getId() + " , " + shadow.getName() + ", " + shadow.getMainurl());
         String reqMessage = question;
         reqMessage = reqMessage.replace("\"", "");
 
+
         // [scenario] 시작
-        if (questionService.existByQuestion(reqMessage)) {
-            log.debug("[scenario][case1] 키워드 DB에서 도출 시작");
-            Keyword keyword = getKeyword(reqMessage);
-            log.debug("[scenario] keyword : " + keyword);
-            return getMessage(keyword);
+        Question q = questionService.existByQuestion(reqMessage) ? questionService.findByQuestion(reqMessage) : null;
+        if(q!=null && q.getKeyword().getShadow().equals(shadow)){
+
+                log.debug("[scenario][case1] 키워드 DB에서 도출 시작");
+                Keyword keyword = getKeyword(reqMessage);
+                log.debug("[scenario] keyword : " + keyword);
+
+                shadow.addDbCall();
+                shadowService.save(shadow);
+
+                return getMessage(keyword);
 
         } else {
             log.debug("[scenario][case2] 키워드 API에서 도출 시작");
@@ -198,6 +246,10 @@ public class ChatController {
 
             if (responseCode == 200) { // 정상 호출
                 log.debug("[scenario] API 정상 호출");
+
+                shadow.addApiCall();
+                shadowService.save(shadow);
+
                 BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
                 String decodedString;
                 String jsonString = "";
@@ -228,6 +280,9 @@ public class ChatController {
                         create(reqMessage, keyword);
                     }
                     in.close();
+
+
+
                     return getMessage(keyword);
 
                 } catch (Exception e) {
@@ -278,17 +333,19 @@ public class ChatController {
         return flows;
     }
 
-    private ResponseEntity<ResultResponse> getMessage(Keyword keyword) {
-
-        List<Flowchart> flowcharts = getFlowcharts(keyword);
-        // 안내 메세지
-        String msg = """
-                안녕하세요. <br>
+    private String getFixedMsg(Keyword keyword){
+        // 도입부 안내 메세지
+        return """
                 shadow가 \'%s\' 을 안내합니다. <br>
                 아래 빨간 버튼을 따라 눌러주세요. <br>
                 """.formatted(keyword.getName());
+    }
+    private ResponseEntity<ResultResponse> getMessage(Keyword keyword) {
+
+        List<Flowchart> flowcharts = getFlowcharts(keyword);
+
         // 전체 flow 응답
-        return ResponseEntity.ok(ResultResponse.of("GET_FLOWS_FROM_KEYWORD", msg, flowcharts));
+        return ResponseEntity.ok(ResultResponse.of("GET_FLOWS_FROM_KEYWORD", getFixedMsg(keyword), flowcharts));
     }
 
 }

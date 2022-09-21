@@ -34,4 +34,20 @@ public class Shadow {
     @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Member member;
 
+    @Column
+    private String apiKey;
+
+    @Column
+    private Long apicall;
+
+    @Column
+    private Long dbcall;
+
+    public void addApiCall(){
+        apicall += 1;
+    }
+
+    public void addDbCall(){
+        dbcall += 1;
+    }
 }

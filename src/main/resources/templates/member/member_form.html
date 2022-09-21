@@ -19,7 +19,7 @@
                             </div>
                         </div>
                         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
+                        <script th:inline="javascript" th:src="@{/js/update.js}"></script>
                         <section>
 
                             <form th:action="@{|/members/${member.id}|}" th:object="${memberUpdateDto}" method="post"
@@ -39,14 +39,14 @@
                                 <input type="hidden" id="password1" name="password1" th:value="${member.password}" class="form-control"/>
                                 <input type="hidden" id="password2" name="password2" th:value="${member.password}" class="form-control"/>
 
-                                <button type="button" class="btn btn-primary btn-lg" id="openModalBtn">비밀번호 변경</button>
+                                <button type="button" class="btn btn-primary btn-lg" id="openModalBtn" onclick="openModal();">비밀번호 변경</button>
 
                                 <div class="mb-3">
                                     <label for="email" class="form-label">이메일</label>
                                     <input type="email" id="email" th:name="email" th:value="${member.email}" class="form-control">
                                     <p class="d-none alert alert-success" id="success-email-msg" th:text="${msg}"></p>
                                     <p class="d-none alert alert-danger" id="fail-email-msg" th:text="${msg}"></p>
-                                    <button type="button" class="btn btn-primary mt-3" id="checkEmailBtn">이메일 중복 확인</button>
+                                    <button type="button" class="btn btn-primary mt-3" id="checkEmailBtn" onclick="checkEmail();">이메일 중복 확인</button>
                                 </div>
 
                                 <button type="submit" class="btn btn-primary">수정</button>
@@ -73,7 +73,7 @@
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="submit" class="btn btn-primary">변경</button>
-                                                    <button type="button" class="btn btn-default" id="closeModalBtn">취소</button>
+                                                    <button type="button" class="btn btn-default" id="closeModalBtn" onclick="closeModal();">취소</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -90,5 +90,4 @@
         </div>
     </div>
 </div>
-
 </html>

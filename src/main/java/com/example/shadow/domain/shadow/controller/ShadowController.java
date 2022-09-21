@@ -1,6 +1,7 @@
 package com.example.shadow.domain.shadow.controller;
 
 import com.example.shadow.domain.member.entity.Member;
+import com.example.shadow.domain.member.entity.MemberRole;
 import com.example.shadow.domain.member.service.MemberService;
 import com.example.shadow.domain.shadow.dto.FlowDto;
 import com.example.shadow.domain.shadow.dto.KeywordDto;
@@ -29,11 +30,13 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 // markdown
 import org.commonmark.node.*;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @Slf4j
@@ -62,6 +65,52 @@ public class ShadowController {
     // Script File 위치 지정
     private final static String LOCAL_MANUAL_PATH = "static/manuals/";
 
+    @RequestMapping("/admin")
+    public ModelAndView list(ModelAndView mav, Principal principal){
+
+        log.debug("[admin] 유저 관리자인지 여부 판단 : "+ principal.getName());
+
+        Member member = memberService.findByUsername(principal.getName());
+        if(!member.getRole().equals(MemberRole.ADMIN)){
+            mav.addObject("msg","접근이 불가능합니다.");
+            mav.addObject("url","/main");
+            mav.setViewName("alert");
+            return mav;
+        }
+        List<Shadow> shadows = shadowService.findAll();
+        mav.addObject("shadows",shadows);
+        mav.setViewName("admin/member_api_db_call");
+        return mav;
+
+    }
+
+    @RequestMapping("/count")
+    public String callShow(Model model, Principal principal){
+
+        log.info("관리자 페이지 요청 받아지니? = {}", principal.getName());
+
+        Member member = memberService.findByUsername(principal.getName());
+        List<Shadow> shadows = shadowService.findByMember(member);
+        model.addAttribute("shadows",shadows);
+
+        return "admin/api_db_call";
+    }
+
+    @RequestMapping("/test")
+    public String test(Model model) {
+        List<Shadow> shadowList = this.shadowService.findAll();
+        model.addAttribute("shadowList", shadowList);
+        model.addAttribute("pageTitle", "test");
+        return "testPage";
+    }
+
+    @RequestMapping("/test2")
+    public String test2(Model model) {
+        List<Shadow> shadowList = this.shadowService.findAll();
+        model.addAttribute("shadowList", shadowList);
+        return "testPage2";
+    }
+
     @GetMapping("/shadow/create")
     public String createView(Model model){
 
@@ -89,7 +138,7 @@ public class ShadowController {
         shadowService.create(shadowDto.getName(), shadowDto.getMainurl(), member);
         Shadow findShadow = shadowService.findByNameAndMember(shadowDto.getName(), member);
         keywordService.create(shadowDto.getKeyword(), findShadow);
-        flowService.create(shadowDto.getKeyword());
+        flowService.create(shadowDto.getKeyword(), findShadow);
         flowchartService.create(shadowDto.getKeyword(), findShadow);
 
         HashMap<String, String> redirectMsg = new HashMap<>();
@@ -160,8 +209,9 @@ public class ShadowController {
     }
 
     @RequestMapping("/shadow/list")
-    public String list(Model model){
-        List<Shadow> shadowList = this.shadowService.findAll();
+    public String list(Model model,Principal principal){
+        Member member = this.memberService.findByUsername(principal.getName());
+        List<Shadow> shadowList = this.shadowService.findByMember(member);
         model.addAttribute("shadowList", shadowList);
 
         model.addAttribute("pageTitle", "My Shadow List");
@@ -169,11 +219,21 @@ public class ShadowController {
     }
 
     @RequestMapping("/shadow/detail/{id}")
-    public String detail(@PathVariable Long id, Model model) throws Exception {
+    public ModelAndView detail(@PathVariable Long id, ModelAndView mav, Principal principal) throws Exception {
         Shadow shadow = shadowService.findById(id);
+        Member member = shadow.getMember();
+        if(!member.getUsername().equals(principal.getName())){
+            mav.addObject("msg","접근이 불가능합니다.");
+            mav.addObject("url","/members");
+            mav.setViewName("alert");
+            return mav;
+        }
         log.debug("shadow : "+shadow.getName()+" / " + shadow.getMainurl());
-        model.addAttribute("shadow", shadow);
-        model.addAttribute("pageTitle", "Shadow Detail");
+
+        mav.addObject("shadow",shadow);
+        mav.addObject("pageTitle", "Shadow Detail");
+
+
         List<Keyword> keywords = shadow.getKeywords();
         keywords.forEach(keyword ->
                 {
@@ -189,27 +249,39 @@ public class ShadowController {
                 }
         );
 
-        String page = "example.md";
+
+
+        String api_key = shadow.getApiKey();
+
         // code viewer(Markdown)
-        String markdownValueFormLocal = getMarkdownValueFormLocal(page);
+        String markdownValueFormLocal = """
+                ```javascript
+                    <script type="text/javascript" async=true charset="UTF-8" src="https://shadows.site/js/chat.js"></script>
+                    <script>
+                        window.dyc = {
+                            chatUid: \"%s\"              
+                        }
+                    </script>
+                ```
+                """.formatted(api_key);
 
         Parser parser = Parser.builder().build();
         Node document = parser.parse(markdownValueFormLocal);
         HtmlRenderer renderer = HtmlRenderer.builder().build();
 
-        model.addAttribute("contents", renderer.render(document));
+        mav.addObject("contents", renderer.render(document));
 
-        return "shadow/flow_list";
+        mav.setViewName("shadow/flow_list");
+        return mav;
     }
 
-    public String getMarkdownValueFormLocal(String manualPage) throws Exception {
-        StringBuilder stringBuilder = new StringBuilder();
-        ClassPathResource classPathResource = new ClassPathResource(LOCAL_MANUAL_PATH + manualPage);
+    @RequestMapping("/shadow/update/db/{id}")
+    public String update_api_key(@PathVariable Long id) {
+        Shadow shadow = shadowService.findById(id);
+        String new_api_key = UUID.randomUUID().toString().replace("-","");
+        shadowService.updateApiKey(shadow, new_api_key);
 
-        BufferedReader br = Files.newBufferedReader(Paths.get(classPathResource.getURI()));
-        br.lines().forEach(line -> stringBuilder.append(line).append("\n"));
-
-        return stringBuilder.toString();
+        return "redirect:/shadow/detail/{id}";
     }
 
     @GetMapping("/shadow/delete/{id}")
