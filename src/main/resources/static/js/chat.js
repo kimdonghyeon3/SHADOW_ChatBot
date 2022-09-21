@@ -1,7 +1,7 @@
    console.log('chat js 로딩됨');
 
-    //const shadowUrl = "https://shadows.site"
-    const shadowUrl = "http://localhost:8080"
+    const shadowUrl = "https://shadows.site"
+    //const shadowUrl = "http://localhost:8080"
 
     console.log("chatUid : "+ window.dyc.chatUid);
 

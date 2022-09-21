@@ -37,7 +37,7 @@ out/
 .vscode/
 
 ### mysql properties ###
-application-mysql.properties
+#application-mysql.properties
 
 ### email properties ###
-application-email.properties
+#application-email.properties

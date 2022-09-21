@@ -1,4 +1,4 @@
-    //const shadowUrl = "https://shadows.site"
+    const shadowUrl = "https://shadows.site"
     //const shadowUrl = "http://localhost:8080"
 
     //챗봇 켜기
@@ -42,7 +42,7 @@
             console.log("shadowUrl"+shadowUrl);
 
             $.post(
-            'http://localhost:8080/chat/question/' + window.dyc.chatUid,
+            shadowUrl+'/chat/question/' + window.dyc.chatUid,
             {
                 question: form.message.value, // 폼 내용, input name, value
             },
@@ -182,7 +182,7 @@
             </div>
 
             <div class="outgoing-box">
-                <img src="https://shadows.site/image/icon.png" style="width: 35px; height: 35px; vertical-align: top" />
+                <img src=shadowUrl+"/image/icon.png" style="width: 35px; height: 35px; vertical-align: top" />
                 <div class="incoming">
                     안녕하세요. 😊 <br/>
                     Shadow 챗봇 입니다! <br/>
