@@ -72,7 +72,9 @@ public class ShadowService {
         return shadowRepository.findByMember(member);
     }
 
-    public void save(Shadow shadow) {
-        shadowRepository.save(shadow);
+    public void updateApiKey(Shadow originShadow, String new_api_key) {
+        originShadow.setApiKey(new_api_key);
+
+        shadowRepository.save(originShadow);
     }
 }

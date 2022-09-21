@@ -30,6 +30,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 // markdown
 import org.commonmark.node.*;
@@ -255,15 +256,14 @@ public class ShadowController {
         // code viewer(Markdown)
         String markdownValueFormLocal = """
                 ```javascript
-                <script type="text/javascript"  async=true charset="UTF-8" src="https://shadows.site/js/chat.js></script>
-                        <script>
-                            window.dyc = {
-                                chatUid: """ + api_key + "\n" +
-                """
-                            }
-                        </script>
+                    <script type="text/javascript" async=true charset="UTF-8" src="https://shadows.site/js/chat.js"></script>
+                    <script>
+                        window.dyc = {
+                            chatUid: \"%s\"              
+                        }
+                    </script>
                 ```
-                """;
+                """.formatted(api_key);
 
         Parser parser = Parser.builder().build();
         Node document = parser.parse(markdownValueFormLocal);
@@ -273,6 +273,15 @@ public class ShadowController {
 
         mav.setViewName("shadow/flow_list");
         return mav;
+    }
+
+    @RequestMapping("/shadow/update/db/{id}")
+    public String update_api_key(@PathVariable Long id) {
+        Shadow shadow = shadowService.findById(id);
+        String new_api_key = UUID.randomUUID().toString().replace("-","");
+        shadowService.updateApiKey(shadow, new_api_key);
+
+        return "redirect:/shadow/detail/{id}";
     }
 
     @GetMapping("/shadow/delete/{id}")

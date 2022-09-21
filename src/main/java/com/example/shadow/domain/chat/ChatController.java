@@ -83,6 +83,7 @@ public class ChatController {
         String requestBody = "";
 
         try {
+
             JSONObject obj = new JSONObject();
 
             long timestamp = new Date().getTime();
@@ -204,7 +205,8 @@ public class ChatController {
     public ResponseEntity<ResultResponse> sendScenario(String question, @PathVariable String apiKey) throws IOException {
 
         // 테스트용 shadow , testShadowId로 지정
-        Shadow shadow = shadowService.findById(shadowService.findByApiKey(apiKey).getId());
+        long shadowId = shadowService.findByApiKey(apiKey).getId();
+        Shadow shadow = shadowService.findById(shadowId);
         log.debug("[scenario] shadow : " + shadow.getId() + " , " + shadow.getName() + ", " + shadow.getMainurl());
         String reqMessage = question;
         reqMessage = reqMessage.replace("\"", "");
