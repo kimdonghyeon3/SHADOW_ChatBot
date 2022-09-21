@@ -55,8 +55,8 @@
             </div>
             <div th:if="${flowcharts} != null">
                 <div class = "incoming">
-                    <p th:utext="${fixedMsg}"></p>
                     <th:block th:if="${description != null}">
+                    <p th:utext="${fixedMsg}"></p>
                         <div class="d-flex justify-content-center">
                             <th:block th:each="flowchart : ${flowcharts}">
                                 <th:block th:if="${seq==flowchart.seq}">
