@@ -77,4 +77,8 @@ public class ShadowService {
 
         shadowRepository.save(originShadow);
     }
+
+    public void save(Shadow shadow) {
+        shadowRepository.save(shadow);
+    }
 }
