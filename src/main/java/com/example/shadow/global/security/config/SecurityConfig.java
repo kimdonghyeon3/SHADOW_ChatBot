@@ -31,11 +31,15 @@ public class SecurityConfig {
     /* 인가 구분을 위한 url path 지정 */
     private static final String[] AUTH_WHITELIST_STATIC = {
             "/css/**",
+            "/fonts/**",
+            "/image/**",
+            "/images/**",
+            "/img/**",
             "/js/**",
+            "/scss",
             "/assets/**",
             "/error/**",
             "/new/**",
-            "/img/**",
             "/manuals/**"
     }; // 정적 파일 인가 없이 모두 허용
     private static final String[] AUTH_ALL_LIST = {
@@ -52,7 +56,9 @@ public class SecurityConfig {
             "/members/**",
             "/shadow/**",
             "/contact/**",
-            "/admin/**"
+            "/admin/**",
+            "/count/**",
+            "/**"
     }; // 인가 필요
 
     private final MemberSecurityService customUserDetailsService;
@@ -99,12 +105,11 @@ public class SecurityConfig {
         http
             .cors().configurationSource(corsConfigurationSource());
         http
-            .authorizeRequests()
+                .authorizeRequests()
+//                .antMatchers(AUTH_ADMIN_LIST).hasRole("ADMIN") // 403 페이지 대신 alert 로 변경
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .antMatchers(AUTH_ALL_LIST).permitAll()
-                //.antMatchers(AUTH_ADMIN_LIST).hasRole("ADMIN")
                 .antMatchers(AUTH_AUTHENTICATED_LIST).authenticated();
-                // .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                // .and().cors().and();
         http
                 .csrf()
                 .disable();
@@ -132,10 +137,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-
-        configuration.addAllowedOriginPattern("*");
-        configuration.addAllowedHeader("*");
-        configuration.addAllowedMethod("*");
+        configuration.setAllowedOriginPatterns(List.of(CorsConfiguration.ALL));
         configuration.setAllowedMethods(List.of(CorsConfiguration.ALL));
         configuration.setAllowedHeaders(List.of(CorsConfiguration.ALL));
         configuration.setAllowCredentials(true);

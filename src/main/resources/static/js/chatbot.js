@@ -14,7 +14,7 @@
         $("#btnChatOpen").show();
     }
 
-    var seq = 1; // 임의로 1번 순서로 시작
+    var seq = 1; // 현재 url 이 등록되어 있지 않을 때는 1번 순서로 시작
     var flowcharts= new Array();
 
     // 입력 메세지에 따른 시나리오 출력
@@ -45,7 +45,6 @@
             'http://localhost:8080/chat/question/' + window.dyc.chatUid,
             {
                 question: form.message.value, // 폼 내용, input name, value
-                // mainurl : mainurl // url로 shadow id를 판단할 때 사용 -> 아직 배포과정 미정
             },
             function(result) {
                 console.log("받은 메시지 : " + result.message);
@@ -108,7 +107,6 @@
         keyword=flowcharts[0].keyword.name;
      }
      moveUrl(url,keyword,flowSeq);
-
 
    }
 /*

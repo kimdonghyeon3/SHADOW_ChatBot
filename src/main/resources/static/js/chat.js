@@ -32,30 +32,34 @@
     }
 
     function StartChat(){
-        console.log('StartChat() 시작')
-        console.log(shadowUrl+"/chat/" + window.dyc.chatUid);
+        window.addEventListener('load', function () {
+            console.log('StartChat2() 시작')
+            console.log(shadowUrl+"/chat/" + window.dyc.chatUid);
 
-        const config = {
-          method: "get"
-        };
+            const config = {
+              method: "get"
+            };
 
-        fetch(shadowUrl+"/chat/" + window.dyc.chatUid, config)
-          .then(response => response.text())
-          .then(data => {
+            fetch(shadowUrl+"/chat/" + window.dyc.chatUid, config)
+              .then(response => response.text())
+              .then(data => {
 
-            var el = document.createElement('div');
-            el.innerHTML = data;
-            // console.log('element : '+ el);
-            document.body.appendChild( el );
-            addChatScript();
-            addJquery();
+                var el = document.createElement('div');
+                el.innerHTML = data;
+                // console.log('element : '+ el);
+                document.body.appendChild( el );
+                addChatScript();
+                addJquery();
 
-          } )
-          .catch(error => console.log(error));
+              } )
+              .catch(error => console.log(error));
+        });
+
     }
 
     function ShowChat(){
-        console.log('ShowChat() 시작');
+        window.addEventListener('load', function () {
+        console.log('ShowChat2() 시작');
         let searchParams = new URLSearchParams(search);
         var keyword=searchParams.get('keyword');
         var seq = searchParams.get('seq');
@@ -66,18 +70,21 @@
                   method: "post"
                 };
 
-                fetch(shadowUrl+"/chat/"  + window.dyc.chatUid +"?keyword="+keyword+"&seq="+seq+"&url="+url, config)
+                fetch(shadowUrl+"/chat/"  + window.dyc.chatUid +"?shadow_keyword="+keyword+"&shadow_seq="+seq+"&shadow_url="+url, config)
                   .then(response => response.text())
                   .then(data => {
 
                     var el = document.createElement('div');
                     el.innerHTML = data;
                     // console.log('element : '+ el);
+                    console.log("document body is null? : "+document.body);
+
                     document.body.appendChild( el );
                     addChatScript();
                     addJquery();
 
                   } )
                   .catch(error => console.log(error));
+        });
 
     }
