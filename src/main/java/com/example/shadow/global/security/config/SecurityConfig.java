@@ -57,8 +57,7 @@ public class SecurityConfig {
             "/shadow/**",
             "/contact/**",
             "/admin/**",
-            "/count/**",
-            "/**"
+            "/count/**"
     }; // 인가 필요
 
     private final MemberSecurityService customUserDetailsService;
