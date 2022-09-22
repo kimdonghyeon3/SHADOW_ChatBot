@@ -66,7 +66,7 @@ public class ShadowController {
     private final static String LOCAL_MANUAL_PATH = "static/manuals/";
 
     @RequestMapping("/admin")
-    public ModelAndView list(ModelAndView mav, Principal principal){
+    public ModelAndView list(Model model, ModelAndView mav, Principal principal){
 
         log.debug("[admin] 유저 관리자인지 여부 판단 : "+ principal.getName());
 
@@ -79,6 +79,7 @@ public class ShadowController {
         }
         List<Shadow> shadows = shadowService.findAll();
         mav.addObject("shadows",shadows);
+        mav.addObject("pageTitle", "admin");
         mav.setViewName("admin/member_api_db_call");
         return mav;
 
@@ -92,6 +93,7 @@ public class ShadowController {
         Member member = memberService.findByUsername(principal.getName());
         List<Shadow> shadows = shadowService.findByMember(member);
         model.addAttribute("shadows",shadows);
+        model.addAttribute("pageTitle", "count");
 
         return "admin/api_db_call";
     }
