@@ -21,7 +21,6 @@
                         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
                         <script th:inline="javascript" th:src="@{/js/update.js}"></script>
                         <section>
-
                             <form th:action="@{|/members/${member.id}|}" th:object="${memberUpdateDto}" method="post"
                                   onsubmit="SubmitForm(this); return false;">
                                 <div th:replace="member/form_errors :: formErrorsFragment"></div>
@@ -52,42 +51,40 @@
                                 <button type="submit" class="btn btn-primary">수정</button>
                                 <a type="button" class="btn btn-default" th:href="@{/members}" >취소</a>
                             </form>
-
-                            <!-- 모달 영역 -->
-                            <div id="modalBox" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h4 class="modal-title" id="myModalLabel">비밀 번호 변경</h4></div>
-                                        <div class="modal-body">
-                                            <form onsubmit="savePassword(this); return false;" th:object="${memberUpdateDto}">
-                                                <div class="mb-3">
-                                                    <label for="password" class="form-label">비밀번호</label>
-                                                    <input type="password" id="mpassword1" th:name="password1" th:value="${member.password}"
-                                                           class="form-control">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="password" class="form-label">비밀번호 확인</label>
-                                                    <input type="password" id="mpassword2" th:name="password2" th:value="${member.password}"
-                                                           class="form-control">
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="submit" class="btn btn-primary">변경</button>
-                                                    <button type="button" class="btn btn-default" id="closeModalBtn" onclick="closeModal();">취소</button>
-                                                </div>
-                                            </form>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-
-
                         </section>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <!-- 모달 영역 -->
+    <div id="modalBox" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">비밀 번호 변경</h4></div>
+                <div class="modal-body">
+                    <form onsubmit="savePassword(this); return false;" th:object="${memberUpdateDto}">
+                        <div class="mb-3">
+                            <label for="password" class="form-label">비밀번호</label>
+                            <input type="password" id="mpassword1" th:name="password1" th:value="${member.password}"
+                                   class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">비밀번호 확인</label>
+                            <input type="password" id="mpassword2" th:name="password2" th:value="${member.password}"
+                                   class="form-control">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">변경</button>
+                            <button type="button" class="btn btn-default" id="closeModalBtn" onclick="closeModal();">취소</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
 </div>
+
 </html>
