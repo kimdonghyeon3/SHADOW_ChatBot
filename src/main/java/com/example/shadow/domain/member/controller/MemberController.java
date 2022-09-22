@@ -131,7 +131,7 @@ public class MemberController {
         }
         mav.addObject("member",member);
         mav.addObject("pageTitle", "User Modify");
-        mav.setViewName("/member/member_form");
+        mav.setViewName("member/member_form");
         return mav;
     }
     @PutMapping("/members/{id}")
@@ -151,7 +151,7 @@ public class MemberController {
     @PostMapping("/members/{id}/checkEmail")
     public ResponseEntity<ResultResponse> updateEmailCheck(@PathVariable long id, @RequestParam String email) {
         if(memberService.findById(id).getEmail().equals(email)){
-            return ResponseEntity.ok(ResultResponse.of("UPDATE_EMAIL_NONE","", "same"));
+            return ResponseEntity.ok(ResultResponse.of("UPDATE_EMAIL_NONE","변경사항이 없습니다.", "same"));
         } else{
             final boolean check = memberService.checkEmail(email);
             if (!check) {

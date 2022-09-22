@@ -93,7 +93,8 @@
             success: function(result){
                 if(result.data=='same'){
                     console.log("same");
-                    isCheckedEmail="false";
+                    isCheckedEmail="true";
+                    isChangedEmail="false";
                 }
                 else {
                     if(result.data){
