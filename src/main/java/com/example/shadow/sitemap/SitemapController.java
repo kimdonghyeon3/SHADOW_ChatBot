@@ -10,7 +10,7 @@ import java.util.List;
 public class SitemapController {
     private String DOMAIN = "https://shadows.site";
 
-    @GetMapping(value = "/sitemap.xml")
+    @GetMapping(value = "/sitemap.xml", produces = "application/xml;")
     @ResponseBody
     public XmlUrlSet main() {
         XmlUrlSet xmlUrlSet = new XmlUrlSet();
