@@ -10,7 +10,7 @@ public class MainController {
     @RequestMapping("/")
     public String root(Model model) {
         model.addAttribute("pageTitle", "Main Page");
-        return "redirect:/main";
+        return "test";
     }
     @RequestMapping("/main")
     public String main(Model model) {
@@ -18,8 +18,8 @@ public class MainController {
         return "index";
     }
 
-    @RequestMapping("/test/main")
-    public String test3() {
-        return "test";
-    }
+//    @RequestMapping("/test/main")
+//    public String test3() {
+//        return "test";
+//    }
 }
