@@ -15,7 +15,7 @@
                     <div class="chart" style="height: 100%;">
                         <div class="my-3 border-bottom">
                             <div>
-                                <h4>회원가입</h4>
+                                <h4>회원정보 수정</h4>
                             </div>
                         </div>
                         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -27,22 +27,22 @@
                                 <div id="resultDiv" th:replace="member/login_errors :: loginAlertFragment(${alert}, ${msg})"></div>
                                 <input type="hidden" name="_method" value="put"/>
 
-                                <div class="mb-3">
-                                    <label for="name" class="form-label">이름</label>
+                                <div class="form-floating mb-3">
                                     <input type="text" th:name="name" th:value="${member.name}" class="form-control">
+                                    <label>이름</label>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="username" class="form-label">ID</label>
+                                <div class="form-floating mb-3">
                                     <p type="text" th:text="${member.username}" class="form-control"></p>
+                                    <label for="username">ID</label>
                                 </div>
                                 <input type="hidden" id="password1" name="password1" th:value="${member.password}" class="form-control"/>
                                 <input type="hidden" id="password2" name="password2" th:value="${member.password}" class="form-control"/>
 
                                 <button type="button" class="btn btn-primary btn-lg" id="openModalBtn" onclick="openModal();">비밀번호 변경</button>
 
-                                <div class="mb-3">
-                                    <label for="email" class="form-label">이메일</label>
+                                <div class="form-floating mb-3">
                                     <input type="email" id="email" th:name="email" th:value="${member.email}" class="form-control">
+                                    <label>이메일</label>
                                     <p class="d-none alert alert-success" id="success-email-msg" th:text="${msg}"></p>
                                     <p class="d-none alert alert-danger" id="fail-email-msg" th:text="${msg}"></p>
                                     <button type="button" class="btn btn-primary mt-3" id="checkEmailBtn" onclick="checkEmail();">이메일 중복 확인</button>

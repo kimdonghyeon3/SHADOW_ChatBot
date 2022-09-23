@@ -130,7 +130,7 @@ public class MemberController {
             return mav;
         }
         mav.addObject("member",member);
-        mav.addObject("pageTitle", "User Modify");
+        mav.addObject("pageTitle", "Modify User");
         mav.setViewName("member/member_form");
         return mav;
     }

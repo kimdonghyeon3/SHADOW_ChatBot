@@ -80,7 +80,7 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationSuccessHandler customSuccessHandler() {
-        return new CustomSuccessHandler("/");
+        return new CustomSuccessHandler("/main");
     }
 
     /*  스프링에서 보안상의 이슈로 ignoring() 을 권장하지 않음.
