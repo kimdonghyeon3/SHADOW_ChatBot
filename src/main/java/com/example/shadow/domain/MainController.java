@@ -17,9 +17,4 @@ public class MainController {
         model.addAttribute("pageTitle", "Main Page");
         return "index";
     }
-
-//    @RequestMapping("/test/main")
-//    public String test3() {
-//        return "test";
-//    }
 }
