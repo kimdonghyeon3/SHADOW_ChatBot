@@ -40,7 +40,8 @@ public class SecurityConfig {
             "/assets/**",
             "/error/**",
             "/new/**",
-            "/manuals/**"
+            "/manuals/**",
+            "/sitemap.xml/**"
     }; // 정적 파일 인가 없이 모두 허용
     private static final String[] AUTH_ALL_LIST = {
             "/chat/**",
