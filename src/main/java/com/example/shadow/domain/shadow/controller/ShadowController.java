@@ -79,7 +79,7 @@ public class ShadowController {
         }
         List<Shadow> shadows = shadowService.findAll();
         mav.addObject("shadows",shadows);
-        mav.addObject("pageTitle", "admin");
+        mav.addObject("pageTitle", "Statistics");
         mav.setViewName("admin/member_api_db_call");
         return mav;
 
@@ -93,7 +93,7 @@ public class ShadowController {
         Member member = memberService.findByUsername(principal.getName());
         List<Shadow> shadows = shadowService.findByMember(member);
         model.addAttribute("shadows",shadows);
-        model.addAttribute("pageTitle", "count");
+        model.addAttribute("pageTitle", "Statistics");
 
         return "admin/api_db_call";
     }

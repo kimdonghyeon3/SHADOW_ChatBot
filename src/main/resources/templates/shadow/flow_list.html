@@ -13,10 +13,9 @@
                 </div>
                 <div class="card-body p-3">
                     <div class="chart" style="height: 100%;">
-                        <div id="page-top"><h2>Shadow</h2></div>
+                        <div id="page-top"><h2>Shadow Detail</h2></div><hr>
                         <!-- Page Content-->
                         <div class="mb-5 border-bottom border-dark">
-                            <h3>Detail</h3>
                             <a class="btn btn-outline-primary btn-sm" th:href="@{|/shadow/update/${shadow.id}|}">수정</a>
                             <a class="btn btn-outline-primary btn-sm" onclick="if ( !confirm('정말로 삭제하시겠습니까?') ) return false;" th:href="@{|/shadow/delete/${shadow.id}|}" >삭제</a>
                             <p th:text="|쇼핑몰 명 : ${shadow.name}|"></p>

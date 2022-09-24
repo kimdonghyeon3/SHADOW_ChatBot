@@ -15,11 +15,8 @@
                     <div class="chart" style="height: 100%;">
                         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
                         <script th:inline="javascript" th:src="@{/js/signup.js}"></script>
-                        <div class="my-3 border-bottom">
-                            <div>
-                                <h4>Sign Up</h4>
-                            </div>
-                        </div>
+                        <h2>Sign Up</h2>
+                        <hr/>
                         <form th:action="@{/signup}" th:object="${memberDto}" method="post" onsubmit="SubmitForm(this); return false;">
                             <div th:replace="member/form_errors :: formErrorsFragment"></div>
                             <!--        <div id="resultDiv" th:replace="login_errors :: loginAlertFragment(${alert}, ${msg})"></div>-->
