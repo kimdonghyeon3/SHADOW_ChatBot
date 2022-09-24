@@ -29,7 +29,7 @@
                                 <input type="text" th:field="*{username}" class="form-control">
                                 <p class="d-none alert alert-success" id="success-username-msg" th:text="${msg}"></p>
                                 <p class="d-none alert alert-danger" id="fail-username-msg" th:text="${msg}"></p>
-                                <button type="button" class="btn btn-primary" id="checkUsernameBtn" onclick="checkUsername(this);">아이디 중복 확인</button>
+                                <button type="button" class="btn btn-primary mt-3" id="checkUsernameBtn" onclick="checkUsername(this);">아이디 중복 확인</button>
                             </div>
                             <div class="mb-3">
                                 <label for="password" class="form-label">비밀번호</label>
@@ -37,14 +37,14 @@
                             </div>
                             <div class="mb-3">
                                 <label for="password" class="form-label">비밀번호 확인</label>
-                                <input type="password" th:field="*{password2}" class="form-control">
+                                <input type="password" th:field="*{password2}" class="form-control">-
                             </div>
                             <div class="mb-3">
                                 <label for="email" class="form-label">이메일</label>
                                 <input type="email" th:field="*{email}" class="form-control">
                                 <p class="d-none alert alert-success" id="success-email-msg" th:text="${msg}"></p>
                                 <p class="d-none alert alert-danger" id="fail-email-msg" th:text="${msg}"></p>
-                                <button type="button" class="btn btn-primary" id="checkEmailBtn" onclick="checkEmail(this);">이메일 중복 확인</button>
+                                <button type="button" class="btn btn-primary mt-3" id="checkEmailBtn" onclick="checkEmail(this);">이메일 중복 확인</button>
                             </div>
                             <button type="submit" class="btn btn-primary">회원가입</button>
                         </form>

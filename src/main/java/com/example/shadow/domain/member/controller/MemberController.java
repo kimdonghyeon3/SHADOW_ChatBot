@@ -50,7 +50,7 @@ public class MemberController {
         log.info("memberDto Name = {}", memberDto.getUsername());
         memberService.create(memberDto.getUsername(), memberDto.getPassword1(), memberDto.getName(), memberDto.getEmail());
         model.addAttribute("pageTitle", "SignUp");
-        return "redirect:/";
+        return "redirect:/main";
     }
 
     @PostMapping("/signup/checkUsername")
