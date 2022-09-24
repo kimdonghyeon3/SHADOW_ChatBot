@@ -63,13 +63,11 @@
                     <form onsubmit="savePassword(this); return false;" th:object="${memberUpdateDto}">
                         <div class="mb-3">
                             <label for="password" class="form-label">비밀번호</label>
-                            <input type="password" id="mpassword1" th:name="password1" th:value="${member.password}"
-                                   class="form-control">
+                            <input type="password" id="mpassword1" th:name="password1" class="form-control">
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label">비밀번호 확인</label>
-                            <input type="password" id="mpassword2" th:name="password2" th:value="${member.password}"
-                                   class="form-control">
+                            <input type="password" id="mpassword2" th:name="password2" class="form-control">
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary">변경</button>

@@ -146,7 +146,7 @@ public class MemberController {
         }
         memberService.update(memberService.findById(id), memberUpdateDto.getPassword1(), memberUpdateDto.getName(), memberUpdateDto.getEmail());
         model.addAttribute("pageTitle", "User Modify");
-        return "redirect:/";
+        return "redirect:/members";
     }
     @PostMapping("/members/{id}/checkEmail")
     public ResponseEntity<ResultResponse> updateEmailCheck(@PathVariable long id, @RequestParam String email) {
