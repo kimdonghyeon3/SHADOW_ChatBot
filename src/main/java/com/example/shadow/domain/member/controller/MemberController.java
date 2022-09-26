@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -41,16 +42,24 @@ public class MemberController {
     @PostMapping("/signup")
     public String signup(Model model, @Valid MemberDto memberDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
+            log.debug("hasError");
             return "member/signup_form";
         }
         if (!memberDto.getPassword1().equals(memberDto.getPassword2())) {
-            bindingResult.rejectValue("memberPwd2", "passwordInCorrect", "2개의 패스워드가 일치하지 않습니다.");
+            log.debug("passwordInCorrect");
+            bindingResult.addError(new FieldError("member", "memberPwd2","2개의 패스워드가 일치하지 않습니다."));
             return "member/signup_form";
         }
         log.info("memberDto Name = {}", memberDto.getUsername());
-        memberService.create(memberDto.getUsername(), memberDto.getPassword1(), memberDto.getName(), memberDto.getEmail());
-        model.addAttribute("pageTitle", "SignUp");
-        return "redirect:/main";
+        try {
+            memberService.create(memberDto.getUsername(), memberDto.getPassword1(), memberDto.getName(), memberDto.getEmail());
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            bindingResult.reject("signup failed", e.getMessage());
+            return "/member/signup_form";
+        }
+        memberService.login(memberDto.getUsername(),memberDto.getPassword1());
+        return "redirect:/members";
     }
 
     @PostMapping("/signup/checkUsername")

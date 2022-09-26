@@ -7,6 +7,8 @@ import com.example.shadow.global.exception.SignupUsernameDuplicatedException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -61,4 +63,8 @@ public class MemberService {
         return memberRepository.existsByEmail(email);
     }
 
+    public void login(String username, String password) {
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
+        SecurityContextHolder.getContext().setAuthentication(token);
+    }
 }

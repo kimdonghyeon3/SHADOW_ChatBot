@@ -22,17 +22,17 @@ public class ContactController {
         this.contactService = contactService;
     }
 
-    @GetMapping("/shadow/contact")
+    @GetMapping("/contact")
     public String sendMail(Model model) {
         model.addAttribute("pageTitle", "Contact");
         return "contact/contact_form";
     }
 
-    @PostMapping("/shadow/contact")
+    @PostMapping("/contact")
     public String sendMail(Model model, ContactDto contactDto) {
         contactService.sendSimpleMessage(contactDto);
         model.addAttribute("pageTitle", "Contact");
 
-        return "redirect:/shadow/contact";
+        return "redirect:/contact";
     }
 }
