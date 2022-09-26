@@ -77,6 +77,7 @@ public class ShadowController {
             mav.setViewName("alert");
             return mav;
         }
+        log.debug("[admin] 모든 shadows 찾기");
         List<Shadow> shadows = shadowService.findAll();
         mav.addObject("shadows",shadows);
         mav.addObject("pageTitle", "Statistics");

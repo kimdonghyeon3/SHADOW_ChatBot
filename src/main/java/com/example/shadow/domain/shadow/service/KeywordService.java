@@ -100,7 +100,7 @@ public class KeywordService {
                             flowChartRepository.findByKeyword(keyword)
                                     .forEach(
                                             flowchart -> {
-                                                flowChartRepository.findByFlow(flowchart)
+                                                flowRepository.findByFlowcharts(flowchart)
                                                         .forEach(flow -> flowRepository.delete(flow));
                                                 flowChartRepository.delete(flowchart);
                                             }
