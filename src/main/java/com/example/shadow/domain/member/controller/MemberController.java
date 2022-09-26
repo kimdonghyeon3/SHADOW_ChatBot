@@ -4,6 +4,9 @@ import com.example.shadow.domain.member.dto.MemberDto;
 import com.example.shadow.domain.member.dto.MemberUpdateDto;
 import com.example.shadow.domain.member.entity.Member;
 import com.example.shadow.domain.member.service.MemberService;
+import com.example.shadow.domain.shadow.entity.Shadow;
+import com.example.shadow.domain.shadow.service.KeywordService;
+import com.example.shadow.domain.shadow.service.ShadowService;
 import com.example.shadow.global.exception.SignupEmailDuplicatedException;
 import com.example.shadow.global.exception.SignupUsernameDuplicatedException;
 import com.example.shadow.global.result.ResultResponse;
@@ -21,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -31,6 +35,9 @@ import java.util.Map;
 public class MemberController {
 
     private final MemberService memberService;
+    private final ShadowService shadowService;
+    private final KeywordService keywordService;
+
     private PasswordEncoder passwordEncoder;
 
     @GetMapping("/signup")
@@ -124,6 +131,16 @@ public class MemberController {
 
     @DeleteMapping("/members/{id}")
     public String delete(@PathVariable long id){
+
+        List<Shadow> shadows = shadowService.findByMemberId(id);
+        log.debug("[delete] shadow find by member id : "+shadows);
+        shadows.forEach(s -> keywordService.delete(s));
+        log.debug("[delete] keyword delete at shadow fin: ");
+
+        shadows.forEach(s -> shadowService.delete(s));
+        log.debug("[delete] shadow delete at shadow fin : ");
+        //keywordService.delete(shadow);
+        //shadowService.delete(shadow);
         memberService.delete(id);
         return "redirect:/logout";
     }

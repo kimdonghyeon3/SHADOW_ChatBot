@@ -81,4 +81,8 @@ public class ShadowService {
     public void save(Shadow shadow) {
         shadowRepository.save(shadow);
     }
+
+    public List<Shadow> findByMemberId(long id) {
+        return shadowRepository.findByMemberId(id);
+    }
 }
