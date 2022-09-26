@@ -10,7 +10,7 @@ public class MainController {
     @RequestMapping("/")
     public String root(Model model) {
         model.addAttribute("pageTitle", "Main Page");
-        return "redirect:/main";
+        return "intro";
     }
     @RequestMapping("/main")
     public String main(Model model) {
