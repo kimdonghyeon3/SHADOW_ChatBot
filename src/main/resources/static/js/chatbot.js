@@ -41,6 +41,7 @@
     function findScenario(form){
 
             $.post(
+//            'http://localhost:8080/chat/question/' + window.dyc.chatUid,
             'https://shadows.site/chat/question/' + window.dyc.chatUid,
             {
                 question: form.message.value, // 폼 내용, input name, value

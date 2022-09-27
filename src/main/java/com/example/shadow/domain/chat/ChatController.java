@@ -209,11 +209,11 @@ public class ChatController {
 
 
         // [scenario] 시작
-        Question q = questionService.existByQuestion(reqMessage) ? questionService.findByQuestion(reqMessage) : null;
-        if(q!=null && q.getKeyword().getShadow().equals(shadow)){
+        Question q = questionService.existByQuestion(reqMessage) ? questionService.findByQuestionAndShadow(reqMessage,shadow) : null;
+        if(q!=null){
 
                 log.debug("[scenario][case1] 키워드 DB에서 도출 시작");
-                Keyword keyword = getKeyword(reqMessage);
+                Keyword keyword = getKeyword(reqMessage,shadow);
                 log.debug("[scenario] keyword : " + keyword);
 
                 shadow.addDbCall();
@@ -276,7 +276,8 @@ public class ChatController {
                         return ResponseEntity.ok(ResultResponse.of("NOT_FOUND_KEYWORD", msg, false));
                     }
 
-                    if (!questionService.existByQuestion(reqMessage)) { // DB에 저장이 안되어 있을 경우 DB에 keyword 저장
+                    if (!questionService.existByQuestionAndKeyword(reqMessage,keyword)) { // DB에 저장이 안되어 있을 경우 DB에 keyword 저장
+                        log.debug("[scenario] db에 저장 : "+reqMessage);
                         create(reqMessage, keyword);
                     }
                     in.close();
@@ -312,8 +313,8 @@ public class ChatController {
         return shadowService.findByMainurl(url);
     }
 
-    private Keyword getKeyword(String reqMessage) {
-        return questionService.findByQuestion(reqMessage).getKeyword();
+    private Keyword getKeyword(String reqMessage,Shadow shadow) {
+        return questionService.findByQuestionAndShadow(reqMessage,shadow).getKeyword();
     }
 
     private List<Flowchart> getFlowcharts(Keyword keyword) {
