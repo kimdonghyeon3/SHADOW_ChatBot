@@ -54,10 +54,10 @@
 <!--                                <p th:text="${member.email}"></p>-->
 <!--                            </div>-->
                         <div class="bottombtn_box">
-                            <button type="button" class="btn btn-primary registerbtn bottombtn mb-1"  th:onclick="|location.href='@{|/members/${member.id}|}'|">회원정보수정</button>
+                            <button type="button" class="btn btn-primary registerbtn bottombtn mb-1"  th:onclick="|location.href='@{|/members/checkPwd/${member.id}|}'|">회원정보수정</button>
                             <form id="deleteMember" th:action="@{|/members/${member.id}|}" method="post">
                                 <input type="hidden" name="_method" value="delete"/>
-                                <button class="btn btn-primary" id="delete-btn">회원탈퇴</button>
+                                <button onclick="if ( !confirm('정말로 삭제하시겠습니까?') ) return false;" class="btn btn-primary" id="delete-btn">회원탈퇴</button>
                             </form>
                         </div>
                     </div>
@@ -65,6 +65,11 @@
             </div>
         </div>
     </div>
+    <script>
+        function deleteMember(form){
+
+        }
+    </script>
 </div>
 
 </html>
