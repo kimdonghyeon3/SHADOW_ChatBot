@@ -38,7 +38,7 @@ public class MemberController {
     private final ShadowService shadowService;
     private final KeywordService keywordService;
 
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/signup")
     public String signup(Model model, MemberDto memberDto) {
@@ -144,14 +144,36 @@ public class MemberController {
         memberService.delete(id);
         return "redirect:/logout";
     }
-    @GetMapping("/members/{id}")
-    public ModelAndView modify(@PathVariable("id") Long id, Model model, MemberUpdateDto memberUpdateDto, Principal principal, ModelAndView mav) {
+    @GetMapping("/members/checkPwd/{id}")
+    public ModelAndView checkPwd(@PathVariable("id") Long id, ModelAndView mav, Principal principal){
         Member member = memberService.findById(id);
         log.debug("member get name : "+ member.getUsername());
         log.debug("login get name : "+ principal.getName());
         if(!member.getUsername().equals(principal.getName())){
             mav.addObject("msg","접근이 불가능합니다.");
             mav.addObject("url","/members");
+            mav.setViewName("alert");
+            return mav;
+        }
+        mav.addObject("member",member);
+        mav.addObject("pageTitle", "Check Password");
+        mav.setViewName("member/checkPwd");
+        return mav;
+    }
+    @PostMapping("/members/{id}")
+    public ModelAndView modify(@PathVariable("id") Long id, Model model, String password, MemberUpdateDto memberUpdateDto, Principal principal, ModelAndView mav) {
+        Member member = memberService.findById(id);
+        log.debug("member get name : "+ member.getUsername());
+        log.debug("login get name : "+ principal.getName());
+        if(!member.getUsername().equals(principal.getName())||password==null){
+            mav.addObject("msg","접근이 불가능합니다.");
+            mav.addObject("url","/members");
+            mav.setViewName("alert");
+            return mav;
+        }
+        if(!passwordEncoder.matches(password,member.getPassword())){
+            mav.addObject("msg","잘못된 패스워드입니다.");
+            mav.addObject("url","/members/checkPwd/%d".formatted(id));
             mav.setViewName("alert");
             return mav;
         }

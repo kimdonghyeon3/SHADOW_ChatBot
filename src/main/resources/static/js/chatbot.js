@@ -199,5 +199,5 @@
 
    function moveUrl(url,keyword,seq){
 
-        location.href=url+"?"+window.dyc.chatUid+"&keyword="+keyword+"&seq="+seq;
+        location.href=url+"?"+window.dyc.chatUid+"&shadow_keyword="+keyword+"&shadow_seq="+seq;
    }
