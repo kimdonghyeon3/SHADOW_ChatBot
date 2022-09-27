@@ -7,12 +7,16 @@ import com.example.shadow.global.exception.SignupUsernameDuplicatedException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -21,6 +25,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JavaMailSender emailSender;
 
     public void create(String username,String password, String name,  String email) {
         Member member = new Member(username, passwordEncoder.encode(password), name, email);
@@ -66,5 +71,22 @@ public class MemberService {
     public void login(String username, String password) {
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
         SecurityContextHolder.getContext().setAuthentication(token);
+    }
+
+    public String sendSimpleMessage(Member member) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("a2346532@gmail.com");
+        message.setTo(member.getEmail());
+        String code = UUID.randomUUID().toString().replace("-","");
+        String text = "인증코드 : " + code;
+        log.debug("msg text : "+text);
+        message.setSubject("%s 님의 비밀번호 인증코드 입니다.".formatted(member.getName()));
+        message.setText(text);
+        emailSender.send(message);
+        return code;
+    }
+
+    public Member findByEmail(String email) {
+        return memberRepository.findByEmail(email);
     }
 }
