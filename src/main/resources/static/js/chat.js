@@ -61,8 +61,8 @@
         window.addEventListener('load', function () {
         console.log('ShowChat2() 시작');
         let searchParams = new URLSearchParams(search);
-        var keyword=searchParams.get('keyword');
-        var seq = searchParams.get('seq');
+        var keyword=searchParams.get('shadow_keyword');
+        var seq = searchParams.get('shadow_seq');
         var url = location.protocol + "//"+location.host + location.pathname;
 
         console.log('keyword : '+keyword+' seq : '+seq + 'url'+ url+'인 chatbot 불러오기');
