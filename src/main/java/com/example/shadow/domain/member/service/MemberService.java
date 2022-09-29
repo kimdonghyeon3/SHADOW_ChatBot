@@ -61,6 +61,13 @@ public class MemberService {
         }
         memberRepository.save(member);
     }
+    public void update(Member member, String password ) {
+        if(!member.getPassword().equals(password)){
+            log.debug("패스워드 다름 : 변경 : "+ password + " 기존 : "+ member.getPassword());
+            member.setEncryptedPassword(passwordEncoder.encode(password));
+        }
+        memberRepository.save(member);
+    }
     public boolean checkUsername(String username) {
         return memberRepository.existsByUsername(username);
     }

@@ -222,8 +222,8 @@ public class MemberController {
         Member member = memberService.findByEmail(email);
         log.debug("[pw] member id :"+member.getId());
         log.debug("[pw] member email :"+member.getEmail());
-//        String code = memberService.sendSimpleMessage(member);
-        String code = "42a79d3d1dcc40d0ace263ca492eea9c";
+        String code = memberService.sendSimpleMessage(member);
+//        String code = "42a79d3d1dcc40d0ace263ca492eea9c";
         log.debug("code: "+code);
         model.addAttribute("member",member);
         return ResponseEntity.ok(ResultResponse.of("SEND_VERIFICATION_CODE","인증코드를 전송하였습니다.", code+"_"+member.getId()));
@@ -251,5 +251,16 @@ public class MemberController {
         mav.setViewName("member/changePwd");
         return mav;
     }
+    @PostMapping("/members/changePwd/{id}")
+    public String updatePwd(Model model,@PathVariable Long id, @Valid @ModelAttribute("password1") String password1, @Valid @ModelAttribute("password2") String password2, BindingResult bindingResult){
 
+        if (!password1.equals(password2)) {
+            bindingResult.rejectValue("memberPwd2", "passwordInCorrect",
+                    "2개의 패스워드가 일치하지 않습니다.");
+            return "member/changePwd";
+        }
+        memberService.update(memberService.findById(id), password1);
+        model.addAttribute("pageTitle", "User Modify");
+        return "redirect:/login";
+    }
 }

@@ -45,6 +45,8 @@ public class SecurityConfig {
             "/robots.txt/**"
     }; // 정적 파일 인가 없이 모두 허용
     private static final String[] AUTH_ALL_LIST = {
+            "/members/findPwd/**",
+            "/members/changePwd/**",
             "/chat/**",
             "/singup/**",
             "/login/**",

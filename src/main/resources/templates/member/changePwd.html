@@ -15,7 +15,7 @@
                     <div class="chart" style="height: 100%;">
                         <h2>Password Change</h2><hr>
 
-                        <form onsubmit="changePassword(this); return false;">
+                        <form th:action="@{|/members/changePwd/${member.id}|}" method="post">
                             <div class="mb-3">
                                 <label for="password" class="form-label">비밀번호</label>
                                 <input type="password" id="mpassword1" th:name="password1" class="form-control">
@@ -29,9 +29,6 @@
                                 <button type="button" class="btn btn-default" onclick="">취소</button>
                             </div>
                         </form>
-                        <script>
-
-                        </script>
                     </div>
                 </div>
             </div>
