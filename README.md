@@ -54,7 +54,7 @@ Shadow + you
 
 ### 🛠 Built With
 
-<p style="text-align:center">
+<p style="text-align:center" align="center" align="center">
 <img src="./src/main/resources/static/image/techstack.png" width="80%"/>
 </p>
 
@@ -70,10 +70,13 @@ Shadow + you
 ![techstack.png](./src/main/resources/static/image/webstructure.png)
 
 * chat MVC Structure (CHAT <-> 서버 구성 및 동작과정)
-![techstack.png](./src/main/resources/static/image/chatstructure.png)
+![chatstructure.png](./src/main/resources/static/image/chatstructure.png)
 
-* server MVC Structure (Server 구성 및 동작 과정)
-![techstack.png](./src/main/resources/static/image/serverstructure.png)
+* server Structure (Server 구성)
+![serverstructure.png](./src/main/resources/static/image/serverstructure.png)
+
+* server Distribute Flow (배포 흐름도)
+![serverdistribute.png](./src/main/resources/static/image/serverdistribute.png)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -110,7 +113,7 @@ feature-clova-apigw
 ```
 ### Contact& Team
 
-<div style="text-align:center; margin-left:25%;">
+<div style="text-align:center; margin-left:25%;" align="center">
 
 | <img alt="권재순" src="https://avatars.githubusercontent.com/u/91954574?v=4" height="80"/> | <img alt="김예진" src="https://avatars.githubusercontent.com/u/54703175?v=4" height="80"/> | <img alt="김동현" src="https://avatars.githubusercontent.com/u/63465578?v=4" height="80"/> | <img alt="박민준" src="https://avatars.githubusercontent.com/u/41327439?v=4" height="80"/> | <img alt="이지원" src="https://avatars.githubusercontent.com/u/102176567?v=4" height="80"/> |
 |:---------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------:|
