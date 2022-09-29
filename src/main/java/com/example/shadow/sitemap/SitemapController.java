@@ -10,18 +10,18 @@ import java.util.List;
 public class SitemapController {
     private String DOMAIN = "https://shadows.site";
 
-    @GetMapping(value = "/sitemap.xml", produces = "application/xml;")
-    @ResponseBody
-    public XmlUrlSet main() {
-        XmlUrlSet xmlUrlSet = new XmlUrlSet();
-
-        create(xmlUrlSet, "/", XmlUrl.Priority.HIGH);
-        create(xmlUrlSet, "/main", XmlUrl.Priority.HIGH);
-        create(xmlUrlSet, "/signup", XmlUrl.Priority.Low);
-        create(xmlUrlSet, "/login", XmlUrl.Priority.Low);
-
-        return xmlUrlSet;
-    }
+//    @GetMapping(value = "/sitemap.xml", produces = "application/xml;")
+//    @ResponseBody
+//    public XmlUrlSet main() {
+//        XmlUrlSet xmlUrlSet = new XmlUrlSet();
+//
+//        create(xmlUrlSet, "/", XmlUrl.Priority.HIGH);
+//        create(xmlUrlSet, "/main", XmlUrl.Priority.HIGH);
+//        create(xmlUrlSet, "/signup", XmlUrl.Priority.Low);
+//        create(xmlUrlSet, "/login", XmlUrl.Priority.Low);
+//
+//        return xmlUrlSet;
+//    }
 
     private void create(XmlUrlSet xmlUrlSet, String link, XmlUrl.Priority priority) {
         xmlUrlSet.addUrl(new XmlUrl(DOMAIN + link, priority));
