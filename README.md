@@ -70,25 +70,25 @@ Shadow + you
 
 ## ⚙ Project Structure
 
-* web MVC Structure (Spring 기본 웹 구성 및 동작과정)
+* **web MVC Structure (Spring 기본 웹 구성 및 동작과정)**
 
 <br />
 
 ![techstack.png](./src/main/resources/static/image/webstructure.png)
 
-* chat MVC Structure (CHAT <-> 서버 구성 및 동작과정)
+* **chat MVC Structure (CHAT <-> 서버 구성 및 동작과정)**
 
 <br />
 
 ![chatstructure.png](./src/main/resources/static/image/chatstructure.png)
 
-* server Structure (Server 구성)
+* **server Structure (Server 구성)**
 
 <br />
 
 ![serverstructure.png](./src/main/resources/static/image/serverstructure.png)
 
-* server Distribute Flow (배포 흐름도)
+* **server Distribute Flow (배포 흐름도)**
 
 <br />
 
@@ -102,7 +102,7 @@ Shadow + you
 
 <br />
 
-* Git Commit 메세지 규약
+* **Git Commit 메세지 규약**
 
 ```css
 feat : 새로운 기능 추가
@@ -117,7 +117,8 @@ perf : 성능 개선
 chore : 그 외 자잘한 수정
 ```
 <br>
-* Git Branch 규칙
+
+* **Git Branch 규칙**
 
 ```css
 feature-기능명
