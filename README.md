@@ -31,7 +31,7 @@ Shadow + you
 그림자처럼 쇼핑몰을 따라다니며, 어려운 부분을 도와주는 쇼핑몰 도우미, *Shadow*
 
 <br/>
-<p style="text-align:center">
+<p style="text-align:center" align="center">
 <img src="./src/main/resources/static/image/main.png" width="80%"/>
 </p>
 
@@ -54,7 +54,7 @@ Shadow + you
 
 ### 🛠 Built With
 
-<p style="text-align:center" align="center" align="center">
+<p style="text-align:center" align="center">
 <img src="./src/main/resources/static/image/techstack.png" width="80%"/>
 </p>
 
