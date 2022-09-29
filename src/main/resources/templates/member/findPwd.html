@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:th="http://www.thymeleaf.org"
+        layout:decorate="~{layout}">
+
+<div layout:fragment="content" class="container-fluid py-4">
+    <div class="row">
+        <div class="col-lg-15 mb-lg-0 mb-4">
+            <div class="card z-index-2 h-100">
+                <div class="card-header pb-0 pt-3 bg-transparent">
+                    <!--          <h2 class="text-capitalize mt-3">Shadow's</h2>-->
+                </div>
+                <div class="card-body p-3">
+                    <div class="chart" style="height: 100%;">
+                        <h2>Password Verification Code</h2><hr>
+
+                        <form th:method="post">
+                            <input type="text" th:id="member-name" th:name="name" class="form-control" placeholder="이름을 입력하세요.">
+                            <input type="text" th:id="member-email" th:name="email" class="form-control" placeholder="이메일을 입력하세요.">
+                            <button type="button" class="btn btn-default" onclick="sendPasswdCode(this);" >인증코드 전송</button>
+                        </form>
+
+                        <form th:action="@{|/members/findPwd/check|}" method="post">
+                        <div id="check-passwd-form" class="d-none form-floating mb-3">
+                                <input type="hidden" th:id="mid" th:name="mid">
+                                <input type="text" th:id="inputCode" th:name="inputCode" class="form-control" placeholder="인증코드를 입력하세요.">
+                                <input type="hidden" th:id="code" th:name="code" class="form-control">
+                                <label>인증코드</label>
+                                <button type="submit" class="btn btn-primary">인증코드 확인</button>
+                            </div>
+                        </form>
+                        <script>
+
+                            function sendPasswdCode(btn){
+                              console.log('click send password code');
+
+                               console.log('email: '+$('#member-email').val());
+                               console.log('name: '+$('#member-name').val());
+
+                               $.ajax({
+                                url: '/members/findPwd/send',
+                                type: 'POST',
+                                data: {
+                                    email: $('#member-email').val(),
+                                    name: $('#member-name').val()
+                                },
+                                success: function(result){
+                                    const arr =result.data.split("_");
+                                    console.log(result.data.split("_"));
+                                    console.log('code '+result.data);
+                                    console.log('msg '+result.message);
+                                    $('#mid').val(arr[1]);
+                                    $('#code').val(arr[0]);
+                                   console.log('id: '+ arr[1]);
+                                   console.log('form.mid : '+ $('#mid').val());
+                                    console.log($('#check-passwd-form').hasClass('d-none'));
+
+                                    if($('#check-passwd-form').hasClass('d-none')){
+                                        $('#check-passwd-form').removeClass('d-none');
+                                    }
+                                },
+                                error: function (){
+                                }
+                              });
+                            }
+
+                            function checkPasswdCode(form){
+                               console.log('click check password code');
+
+                               $.ajax({
+                                url: '/members/findPwd/check',
+                                type: 'POST',
+                                data: {
+                                    mid: $('#mid').val(),
+                                    inputCode : $('#inputCode').val(),
+                                    code : $('#code').val()
+                                },
+                                success: function(result){
+                                   // console.log('is right '+result.data);
+                                  //  console.log('msg '+result.message);
+                                   // if(result.data=='true'){
+                                  //      form.submit();
+                                 //   }
+
+                                },
+                                error: function (){
+                                }
+                              });
+
+                            }
+
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</html>

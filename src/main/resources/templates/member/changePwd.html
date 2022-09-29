@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:th="http://www.thymeleaf.org"
+        layout:decorate="~{layout}">
+
+<div layout:fragment="content" class="container-fluid py-4">
+    <div class="row">
+        <div class="col-lg-15 mb-lg-0 mb-4">
+            <div class="card z-index-2 h-100">
+                <div class="card-header pb-0 pt-3 bg-transparent">
+                    <!--          <h2 class="text-capitalize mt-3">Shadow's</h2>-->
+                </div>
+                <div class="card-body p-3">
+                    <div class="chart" style="height: 100%;">
+                        <h2>Password Change</h2><hr>
+
+                        <form th:action="@{|/members/changePwd/${member.id}|}" method="post">
+                            <div class="mb-3">
+                                <label for="password" class="form-label">비밀번호</label>
+                                <input type="password" id="mpassword1" th:name="password1" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">비밀번호 확인</label>
+                                <input type="password" id="mpassword2" th:name="password2" class="form-control">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">변경</button>
+                                <button type="button" class="btn btn-default" onclick="">취소</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</html>
