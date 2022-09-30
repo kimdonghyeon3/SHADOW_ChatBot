@@ -17,7 +17,7 @@
     <br />
     <a href="https://www.notion.so/Shadow-d5a5bf92a2d54ce9952e250b5029ee4b"><strong>View Project Detail »</strong></a>
     <br />
-    <a href="https://youtu.be/AKIw_EYDBk4"><strong>View Video »</strong></a>
+    <a href="https://youtu.be/_5Mzt7pyuLg"><strong>View Video »</strong></a>
     <br />
     <br />
 
